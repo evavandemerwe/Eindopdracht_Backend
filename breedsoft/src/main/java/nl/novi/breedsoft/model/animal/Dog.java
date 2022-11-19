@@ -3,7 +3,18 @@ package nl.novi.breedsoft.model.animal;
 import nl.novi.breedsoft.model.animal.enumerations.*;
 import java.util.ArrayList;
 
-public class Dog extends Mammal {
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+@Entity
+@Table(name="dogs")
+public class Dog {
+
+    @Id
+    @GeneratedValue
+    private long id;
     private String name;
     private long chipnumber;
     private Breed breed;
@@ -16,6 +27,9 @@ public class Dog extends Mammal {
         super();
     }
 
+    public long getId(){
+        return id;
+    }
     public String getName() {
         return name;
     }
@@ -57,7 +71,7 @@ public class Dog extends Mammal {
     }
 
     public int getDogYears() {
-        //dogYears = (getAge() * 7);
+       //dogYears = (getAge() * 7);
         return dogYears;
     }
 
