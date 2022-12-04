@@ -3,41 +3,39 @@ package nl.novi.breedsoft.model.animal;
 import nl.novi.breedsoft.model.animal.enumerations.*;
 import java.util.ArrayList;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name="dogs")
 public class Dog {
 
+    //Create primary key with a unique value, making sure each table starts counting at 1 and is self-incremental
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+
+    //Declaration of variables
     private String name;
-    private long chipnumber;
+    private Long chipnumber;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "breed")
     private Breed breed;
     private ArrayList<String> Litter;
     int dogYears;
-
+    @Enumerated(EnumType.STRING)
+    @Column(name = "breed_group")
     private BreedGroup breedGroup;
 
-    public Dog() {
-        super();
-    }
-
+    //Getters and setter
     public long getId(){
         return id;
     }
     public String getName() {
         return name;
     }
-
     public void setName(String name) {
         this.name = name;
     }
-
     public BreedGroup getBreedGroup() {
         return breedGroup;
     }
@@ -71,7 +69,7 @@ public class Dog {
     }
 
     public int getDogYears() {
-       //dogYears = (getAge() * 7);
+        //dogYears = (getAge() * 7);
         return dogYears;
     }
 
