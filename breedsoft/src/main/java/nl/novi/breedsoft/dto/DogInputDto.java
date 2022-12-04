@@ -16,7 +16,7 @@ public class DogInputDto {
     //A chipnumber is always exactly 15 numbers long
     public String chipnumber;
 
-    @Enumerated(EnumType.STRING)
+    @Enumerated(EnumType.ORDINAL)
     public Breed breed;
 
     @NotNull(message = "Please enter the age of the dog.")
@@ -25,6 +25,6 @@ public class DogInputDto {
     public int dogYears;
     public ArrayList<String> litter;
 
-    @Enumerated(EnumType.STRING)
+    @Enumerated(EnumType.ORDINAL)
     public BreedGroup breedGroup;
 }

@@ -40,6 +40,7 @@ public class DogService {
 
 
     public Long createDog(DogInputDto dogInputDto){
+
         Dog dog = transferToDog(dogInputDto);
         dogRepository.save(dog);
 
