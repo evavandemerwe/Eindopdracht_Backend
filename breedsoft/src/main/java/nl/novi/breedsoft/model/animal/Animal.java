@@ -2,10 +2,12 @@ package nl.novi.breedsoft.model.animal;
 
 import nl.novi.breedsoft.model.animal.enumerations.*;
 
+import javax.persistence.MappedSuperclass;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.List;
 
+@MappedSuperclass
 public abstract class Animal {
     private String food;
     private String color;
