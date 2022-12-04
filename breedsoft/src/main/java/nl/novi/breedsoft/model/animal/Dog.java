@@ -16,7 +16,7 @@ public class Dog {
 
     //Declaration of variables
     private String name;
-    private Long chipnumber;
+    private String chipnumber;
     @Enumerated(EnumType.STRING)
     @Column(name = "breed")
     private Breed breed;
@@ -44,11 +44,11 @@ public class Dog {
         this.breedGroup = breedGroup;
     }
 
-    public long getChipnumber() {
+    public String getChipnumber() {
         return chipnumber;
     }
 
-    public void setChipnumber(long chipnumber) {
+    public void setChipnumber(String chipnumber) {
         this.chipnumber = chipnumber;
     }
 

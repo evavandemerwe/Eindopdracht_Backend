@@ -1,32 +1,30 @@
 package nl.novi.breedsoft.dto;
 import nl.novi.breedsoft.model.animal.enumerations.Breed;
 import nl.novi.breedsoft.model.animal.enumerations.BreedGroup;
+import org.hibernate.validator.constraints.Range;
 
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 import java.util.ArrayList;
 
 public class DogInputDto {
-    @NotBlank
+    @NotEmpty(message = "Please enter the name of the dog")
     public String name;
-    @NotBlank
-    @Size(min=15, max=15)
+    @NotEmpty(message = "Please enter a chipnumber.")
+    @Pattern(regexp = "[0-9]{15}")
     //A chipnumber is always exactly 15 numbers long
-    public long chipnumber;
+    public String chipnumber;
 
-    @NotBlank
     @Enumerated(EnumType.ORDINAL)
     public Breed breed;
 
-    @NotBlank
-    @Size(min=0, max=20)
+    @NotNull(message = "Please enter the age of the dog.")
+    @Min(0)
+    @Max(22)
     public int dogYears;
+    public ArrayList<String> litter;
 
-    private ArrayList<String> Litter;
-
-    @NotBlank
     @Enumerated(EnumType.ORDINAL)
     public BreedGroup breedGroup;
 }
