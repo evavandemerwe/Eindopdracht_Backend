@@ -12,9 +12,6 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import javax.validation.Valid;
 import java.net.URI;
 
-
-
-
 @RestController
 @RequestMapping("dogs")
 public class DogController {
@@ -31,8 +28,8 @@ public class DogController {
         return ResponseEntity.ok(dogService.getAllDogs());
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<DogOutputDto> getDogById(@PathVariable("id") Long id) {
+    @GetMapping("/findbyid/")
+    public ResponseEntity<DogOutputDto> getDogById(@RequestParam("id") Long id) {
 
         DogOutputDto dogOutputDto = dogService.getDogById(id);
 
@@ -40,9 +37,17 @@ public class DogController {
 
     }
 
+    @GetMapping("/findbyname/")
+    public ResponseEntity<DogOutputDto> getDogByName(@RequestParam("name") String name) {
+
+        DogOutputDto dogOutputDto = dogService.getDogByName(name);
+
+        return ResponseEntity.ok().body(dogOutputDto);
+
+    }
+
     @PostMapping("")
     public ResponseEntity<Object> createDog(@Valid @RequestBody DogInputDto dogInputDto, BindingResult br) {
-
         if (br.hasErrors()) {
             // something's wrong
            return bindingResultError(br);
@@ -57,4 +62,27 @@ public class DogController {
             return ResponseEntity.created(uri).body("Dog is successfully created!");
         }
     }
+
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Object> deleteDog(@PathVariable Long id) {
+        dogService.deleteDog(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Object> updateDog(@PathVariable Long id, @Valid @RequestBody DogInputDto dogInputDto) {
+        Object dogOutputDto = dogService.updateDog(id, dogInputDto);
+        return ResponseEntity.ok().body(dogOutputDto);
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<DogOutputDto> patchDog(@PathVariable Long id,@Valid @RequestBody DogInputDto dogInputDto){
+
+        DogOutputDto dogOutputDto = dogService.patchDog(id, dogInputDto);
+        return ResponseEntity.ok().body(dogOutputDto);
+
+    }
+
+
 }

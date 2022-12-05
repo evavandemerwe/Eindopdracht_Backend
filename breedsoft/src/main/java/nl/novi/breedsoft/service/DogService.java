@@ -6,9 +6,11 @@ import nl.novi.breedsoft.exception.RecordNotFoundException;
 import nl.novi.breedsoft.model.animal.Dog;
 import nl.novi.breedsoft.repository.DogRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -38,6 +40,17 @@ public class DogService {
         }
     }
 
+    //Get one dog by Name
+    public DogOutputDto getDogByName(String name) {
+        if (dogRepository.findByNameContaining(name) != null){
+            Dog dog = dogRepository.findByNameContaining(name);
+            DogOutputDto dogOutputDto = transferToOutputDto(dog);
+            return dogOutputDto;
+        } else {
+            throw new RecordNotFoundException("Dog not found in database");
+        }
+    }
+
 
     public Long createDog(DogInputDto dogInputDto){
 
@@ -47,6 +60,74 @@ public class DogService {
         return dog.getId();
 
     }
+
+    public void deleteDog(@RequestBody Long id) {
+
+        if (dogRepository.findById(id).isPresent()){
+               dogRepository.deleteById(id);
+        } else {
+            throw new  RecordNotFoundException("No dogs with given ID found.");
+        }
+    }
+
+    //PUT sends an enclosed entity of a resource to the server.
+    //If the entity already exists, the server updates its data. Otherwise, the server creates a new entity
+    public Object updateDog(Long id, DogInputDto dogInputDto) {
+
+        if (dogRepository.findById(id).isPresent()){
+            Dog dog = dogRepository.findById(id).get();
+
+            Dog updatedDog = transferToDog(dogInputDto);
+            //Keeping the former id, as we will update the existing dog
+            updatedDog.setId(dog.getId());
+
+            dogRepository.save(updatedDog);
+
+            return transferToOutputDto(updatedDog);
+
+        } else {
+            createDog(dogInputDto);
+            return dogInputDto;
+        }
+
+    }
+
+    //PATCH will only update an existing object,
+    //with the properties mapped in the request body (that are not null).
+    public DogOutputDto patchDog(long id, DogInputDto dogInputDto) {
+        Optional<Dog> dogFound = dogRepository.findById(id);
+
+        if (dogFound.isPresent()) {
+
+            Dog updatedDog = dogRepository.getReferenceById(id);
+            if (dogInputDto.name != null) {
+                updatedDog.setName(dogInputDto.name);
+            }
+            if (dogInputDto.breed != null) {
+                updatedDog.setBreed(dogInputDto.breed);
+            }
+            if (dogInputDto.breedGroup != null) {
+                updatedDog.setBreedGroup(dogInputDto.breedGroup);
+            }
+            if (dogInputDto.chipnumber != null) {
+                updatedDog.setChipnumber(dogInputDto.chipnumber);
+            }
+
+            //Check on empty value has already been done in DTO
+            updatedDog.setDogYears(dogInputDto.dogYears);
+
+
+            dogRepository.save(updatedDog);
+
+            return transferToOutputDto(updatedDog);
+
+        } else {
+
+            throw new RecordNotFoundException("Dog is not found.");
+
+        }
+    }
+
 
 
     //DTO helper classes
