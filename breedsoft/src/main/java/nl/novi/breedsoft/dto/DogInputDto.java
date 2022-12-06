@@ -1,10 +1,9 @@
 package nl.novi.breedsoft.dto;
+
 import nl.novi.breedsoft.model.animal.enumerations.Breed;
 import nl.novi.breedsoft.model.animal.enumerations.BreedGroup;
-import org.hibernate.validator.constraints.Range;
+import nl.novi.breedsoft.utility.ValueOfEnum;
 
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.validation.constraints.*;
 import java.util.ArrayList;
 
@@ -16,8 +15,10 @@ public class DogInputDto {
     //A chipnumber is always exactly 15 numbers long
     public String chipnumber;
 
-    @Enumerated(EnumType.ORDINAL)
-    public Breed breed;
+    //@Enumerated(EnumType.ORDINAL)
+    @NotEmpty(message = "Please enter a breed")
+    @ValueOfEnum(enumClass = Breed.class, message = "Invalid breed")
+    public String breed;
 
     @NotNull(message = "Please enter the age of the dog.")
     @Min(0)
@@ -25,6 +26,7 @@ public class DogInputDto {
     public int dogYears;
     public ArrayList<String> litter;
 
-    @Enumerated(EnumType.ORDINAL)
-    public BreedGroup breedGroup;
+    @NotEmpty(message = "Please enter a breed group.")
+    @ValueOfEnum(enumClass = BreedGroup.class, message = "Invalid breed group")
+    public String breedGroup;
 }

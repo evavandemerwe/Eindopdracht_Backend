@@ -4,6 +4,8 @@ import nl.novi.breedsoft.dto.DogInputDto;
 import nl.novi.breedsoft.dto.DogOutputDto;
 import nl.novi.breedsoft.exception.RecordNotFoundException;
 import nl.novi.breedsoft.model.animal.Dog;
+import nl.novi.breedsoft.model.animal.enumerations.Breed;
+import nl.novi.breedsoft.model.animal.enumerations.BreedGroup;
 import nl.novi.breedsoft.repository.DogRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -104,10 +106,10 @@ public class DogService {
                 updatedDog.setName(dogInputDto.name);
             }
             if (dogInputDto.breed != null) {
-                updatedDog.setBreed(dogInputDto.breed);
+                updatedDog.setBreed(Breed.valueOf(dogInputDto.breed));
             }
             if (dogInputDto.breedGroup != null) {
-                updatedDog.setBreedGroup(dogInputDto.breedGroup);
+                updatedDog.setBreedGroup(BreedGroup.valueOf(dogInputDto.breedGroup));
             }
             if (dogInputDto.chipnumber != null) {
                 updatedDog.setChipnumber(dogInputDto.chipnumber);
@@ -159,9 +161,9 @@ public class DogService {
 
         dog.setName(dto.name);
         dog.setChipnumber(dto.chipnumber);
-        dog.setBreed(dto.breed);
+        dog.setBreed(Breed.valueOf(dto.breed));
         dog.setDogYears(dto.dogYears);
-        dog.setBreedGroup(dto.breedGroup);
+        dog.setBreedGroup(BreedGroup.valueOf(dto.breedGroup));
         dog.setLitter(dto.litter);
 
         return dog;
