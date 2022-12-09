@@ -1,10 +1,7 @@
 package nl.novi.breedsoft.dto;
 import nl.novi.breedsoft.model.animal.enumerations.Breed;
 import nl.novi.breedsoft.model.animal.enumerations.BreedGroup;
-import org.hibernate.validator.constraints.Range;
-
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
+import nl.novi.breedsoft.utility.ValueOfEnum;
 import javax.validation.constraints.*;
 import java.util.ArrayList;
 
@@ -17,8 +14,9 @@ public class DogInputDto {
     @Pattern(regexp = "[0-9]{15}")
     private String chipnumber;
 
-    @Enumerated(EnumType.ORDINAL)
-    private Breed breed;
+    @NotEmpty(message = "Please enter a breed.")
+    @ValueOfEnum(enumClass = Breed.class, message = "Invalid breed")
+    private String breed;
 
     @NotNull(message = "Please enter the age of the dog.")
     @Min(0)
@@ -26,8 +24,9 @@ public class DogInputDto {
     private int dogYears;
     private ArrayList<String> litter;
 
-    @Enumerated(EnumType.ORDINAL)
-    private BreedGroup breedGroup;
+    @NotEmpty(message = "Please enter a breed group.")
+    @ValueOfEnum(enumClass = BreedGroup.class, message = "Invalid breed group")
+    private String breedGroup;
 
     public String getName() {
         return name;
@@ -46,11 +45,11 @@ public class DogInputDto {
     }
 
     public Breed getBreed() {
-        return breed;
+        return Breed.valueOf(breed);
     }
 
     public void setBreed(Breed breed) {
-        this.breed = breed;
+        this.breed = breed.toString();
     }
 
     public int getDogYears() {
@@ -70,10 +69,10 @@ public class DogInputDto {
     }
 
     public BreedGroup getBreedGroup() {
-        return breedGroup;
+        return BreedGroup.valueOf(this.breedGroup);
     }
 
     public void setBreedGroup(BreedGroup breedGroup) {
-        this.breedGroup = breedGroup;
+        this.breedGroup = breedGroup.toString();
     }
 }
