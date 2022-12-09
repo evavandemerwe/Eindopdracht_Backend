@@ -100,22 +100,22 @@ public class DogService {
         if (dogFound.isPresent()) {
 
             Dog updatedDog = dogRepository.getReferenceById(id);
-            if (dogInputDto.name != null) {
-                updatedDog.setName(dogInputDto.name);
+            if (dogInputDto.getName() != null) {
+                updatedDog.setName(dogInputDto.getName());
             }
-            if (dogInputDto.breed != null) {
-                updatedDog.setBreed(dogInputDto.breed);
+            if (dogInputDto.getBreed() != null) {
+                updatedDog.setBreed(dogInputDto.getBreed());
             }
-            if (dogInputDto.breedGroup != null) {
-                updatedDog.setBreedGroup(dogInputDto.breedGroup);
+            if (dogInputDto.getBreedGroup() != null) {
+                updatedDog.setBreedGroup(dogInputDto.getBreedGroup());
             }
-            if (dogInputDto.chipnumber != null) {
-                updatedDog.setChipnumber(dogInputDto.chipnumber);
+            if (dogInputDto.getChipnumber() != null) {
+                updatedDog.setChipnumber(dogInputDto.getChipnumber());
             }
 
-            //Check on empty value has already been done in DTO
-            updatedDog.setDogYears(dogInputDto.dogYears);
-
+            if (dogInputDto.getDogYears() >= 0) {
+                updatedDog.setDogYears(dogInputDto.getDogYears());
+            }
 
             dogRepository.save(updatedDog);
 
@@ -144,12 +144,12 @@ public class DogService {
     public DogOutputDto transferToOutputDto(Dog dog){
 
         DogOutputDto dogDto = new DogOutputDto();
-        dogDto.id = dog.getId();
-        dogDto.name = dog.getName();
-        dogDto.chipnumber = dog.getChipnumber();
-        dogDto.dogYears = dog.getDogYears();
-        dogDto.breed = dog.getBreed();
-        dogDto.breedGroup = dog.getBreedGroup();
+        dogDto.setId(dog.getId());
+        dogDto.setName(dog.getName());
+        dogDto.setChipnumber(dog.getChipnumber());
+        dogDto.setDogYears(dog.getDogYears());
+        dogDto.setBreed(dog.getBreed());
+        dogDto.setBreedGroup(dog.getBreedGroup());
 
         return dogDto;
     }
@@ -157,12 +157,12 @@ public class DogService {
     public Dog transferToDog(DogInputDto dto){
         Dog dog = new Dog();
 
-        dog.setName(dto.name);
-        dog.setChipnumber(dto.chipnumber);
-        dog.setBreed(dto.breed);
-        dog.setDogYears(dto.dogYears);
-        dog.setBreedGroup(dto.breedGroup);
-        dog.setLitter(dto.litter);
+        dog.setName(dto.getName());
+        dog.setChipnumber(dto.getChipnumber());
+        dog.setBreed(dto.getBreed());
+        dog.setDogYears(dto.getDogYears());
+        dog.setBreedGroup(dto.getBreedGroup());
+        dog.setLitter(dto.getLitter());
 
         return dog;
     }

@@ -10,21 +10,70 @@ import java.util.ArrayList;
 
 public class DogInputDto {
     @NotEmpty(message = "Please enter the name of the dog")
-    public String name;
+    private String name;
+
+    //A chipnumber is always exactly 15 numbers long
     @NotEmpty(message = "Please enter a chipnumber.")
     @Pattern(regexp = "[0-9]{15}")
-    //A chipnumber is always exactly 15 numbers long
-    public String chipnumber;
+    private String chipnumber;
 
     @Enumerated(EnumType.ORDINAL)
-    public Breed breed;
+    private Breed breed;
 
     @NotNull(message = "Please enter the age of the dog.")
     @Min(0)
     @Max(22)
-    public int dogYears;
-    public ArrayList<String> litter;
+    private int dogYears;
+    private ArrayList<String> litter;
 
     @Enumerated(EnumType.ORDINAL)
-    public BreedGroup breedGroup;
+    private BreedGroup breedGroup;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getChipnumber() {
+        return chipnumber;
+    }
+
+    public void setChipnumber(String chipnumber) {
+        this.chipnumber = chipnumber;
+    }
+
+    public Breed getBreed() {
+        return breed;
+    }
+
+    public void setBreed(Breed breed) {
+        this.breed = breed;
+    }
+
+    public int getDogYears() {
+        return dogYears;
+    }
+
+    public void setDogYears(int dogYears) {
+        this.dogYears = dogYears;
+    }
+
+    public ArrayList<String> getLitter() {
+        return litter;
+    }
+
+    public void setLitter(ArrayList<String> litter) {
+        this.litter = litter;
+    }
+
+    public BreedGroup getBreedGroup() {
+        return breedGroup;
+    }
+
+    public void setBreedGroup(BreedGroup breedGroup) {
+        this.breedGroup = breedGroup;
+    }
 }
