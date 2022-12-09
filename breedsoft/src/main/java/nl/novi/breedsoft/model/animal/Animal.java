@@ -1,27 +1,52 @@
 package nl.novi.breedsoft.model.animal;
-
 import nl.novi.breedsoft.model.animal.enumerations.*;
-
-import javax.persistence.MappedSuperclass;
+import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.Period;
-import java.util.List;
 
-@MappedSuperclass
+@Entity
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(
+        name = "ANIMAL",
+        discriminatorType = DiscriminatorType.STRING
+)
 public abstract class Animal {
+
+    //Create primary key with a unique value, making sure each table starts counting at 1 and is self-incremental
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private String food;
     private String color;
     private double weightInGrams;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "sex")
     private Sex sex;
     private LocalDate dateOfBirth;
     private LocalDate dateOfDeath;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "bloodtemperature")
     private Bloodtemperature bloodtemperature;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "birthmethod")
     private Birthmethod birthmethod;
-    private AnimalType animalType;
-    private Animal father;
-    private Animal mother;
-    private List<Animal> siblings;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "animalType")
+    private AnimalType animalType;
+
+    //private Animal father;
+
+    //private Animal mother;
+    //private List<Animal> siblings;
+
+    public long getId(){
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
     public String getFood() {
         return food;
     }
@@ -92,7 +117,7 @@ public abstract class Animal {
         this.birthmethod = birthmethod;
     }
 
-    public Animal getFather() {
+ /*   public Animal getFather() {
         return father;
     }
 
@@ -106,5 +131,5 @@ public abstract class Animal {
 
     public void setMother(Animal mother) {
         this.mother = mother;
-    }
+    }*/
 }
