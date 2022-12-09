@@ -6,13 +6,8 @@ import java.util.ArrayList;
 import javax.persistence.*;
 
 @Entity
-@Table(name="dogs")
-public class Dog {
-
-    //Create primary key with a unique value, making sure each table starts counting at 1 and is self-incremental
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+@DiscriminatorValue(value = "DOG")
+public class Dog extends Mammal{
 
     //Declaration of variables
     private String name;
@@ -27,14 +22,6 @@ public class Dog {
     private BreedGroup breedGroup;
 
     //Getters and setter
-    public long getId(){
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
     public String getName() {
         return name;
     }
