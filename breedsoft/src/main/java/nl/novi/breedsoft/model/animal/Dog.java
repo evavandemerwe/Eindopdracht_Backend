@@ -30,8 +30,8 @@ public class Dog extends Mammal{
 
     public Dog() {
         super.setNumberOfTeeth(42);
-        super.setBirthmethod(Birthmethod.livebirth);
-        super.setBloodtemperature(Bloodtemperature.warmblooded);
+        super.setBirthMethod(Birthmethod.livebirth);
+        super.setBloodTemperature(Bloodtemperature.warmblooded);
         super.setAnimalType(AnimalType.carnivore);
     }
 

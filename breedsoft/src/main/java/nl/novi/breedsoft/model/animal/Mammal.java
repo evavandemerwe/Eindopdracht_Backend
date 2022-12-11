@@ -13,7 +13,7 @@ public abstract class Mammal extends Animal {
 
     public Mammal() {
         super();
-        super.setBloodtemperature(Bloodtemperature.warmblooded);
+        super.setBloodTemperature(Bloodtemperature.warmblooded);
     }
 
     public String getKindOfHair() {

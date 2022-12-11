@@ -25,8 +25,8 @@ private String country;
     public Person() {
         super();
         super.setNumberOfTeeth(32);
-        super.setBirthmethod(Birthmethod.livebirth);
-        super.setBloodtemperature(Bloodtemperature.warmblooded);
+        super.setBirthMethod(Birthmethod.livebirth);
+        super.setBloodTemperature(Bloodtemperature.warmblooded);
         super.setAnimalType(AnimalType.omnivore);
     }
 

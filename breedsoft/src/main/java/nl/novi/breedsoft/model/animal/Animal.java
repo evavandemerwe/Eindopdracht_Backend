@@ -13,7 +13,7 @@ public abstract class Animal {
     @GeneratedValue(strategy = GenerationType.TABLE)
     private Long id;
     private String food;
-    private String color;
+    private String hairColor;
     private double weightInGrams;
     @Enumerated(EnumType.STRING)
     @Column(name = "sex")
@@ -21,11 +21,11 @@ public abstract class Animal {
     private LocalDate dateOfBirth;
     private LocalDate dateOfDeath;
     @Enumerated(EnumType.STRING)
-    @Column(name = "bloodtemperature")
-    private Bloodtemperature bloodtemperature;
+    @Column(name = "blood_temperature")
+    private Bloodtemperature bloodTemperature;
     @Enumerated(EnumType.STRING)
-    @Column(name = "birthmethod")
-    private Birthmethod birthmethod;
+    @Column(name = "birth_method")
+    private Birthmethod birthMethod;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "animalType")
@@ -40,12 +40,12 @@ public abstract class Animal {
         this.food = food;
     }
 
-    public String getColor() {
-        return color;
+    public String getHairColor() {
+        return hairColor;
     }
 
-    public void setColor(String color) {
-        this.color = color;
+    public void setHairColor(String hairColor) {
+        this.hairColor = hairColor;
     }
 
     public int getAge() {
@@ -86,20 +86,20 @@ public abstract class Animal {
         this.dateOfDeath = dateOfDeath;
     }
 
-    public Bloodtemperature getBloodtemperature() {
-        return bloodtemperature;
+    public Bloodtemperature getBloodTemperature() {
+        return bloodTemperature;
     }
 
-    public void setBloodtemperature(Bloodtemperature bloodtemperature) {
-        this.bloodtemperature = bloodtemperature;
+    public void setBloodTemperature(Bloodtemperature bloodTemperature) {
+        this.bloodTemperature = bloodTemperature;
     }
 
-    public Birthmethod getBirthmethod() {
-        return birthmethod;
+    public Birthmethod getBirthMethod() {
+        return birthMethod;
     }
 
-    public void setBirthmethod(Birthmethod birthmethod) {
-        this.birthmethod = birthmethod;
+    public void setBirthMethod(Birthmethod birthMethod) {
+        this.birthMethod = birthMethod;
     }
 
     public AnimalType getAnimalType() {
