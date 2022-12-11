@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import javax.persistence.*;
 
 @Entity
-@DiscriminatorValue(value = "DOG")
+@Table(name = "dogs")
 public class Dog extends Mammal{
 
     //Declaration of variables

@@ -5,16 +5,12 @@ import java.time.LocalDate;
 import java.time.Period;
 
 @Entity
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(
-        name = "ANIMAL",
-        discriminatorType = DiscriminatorType.STRING
-)
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public abstract class Animal {
 
     //Create primary key with a unique value, making sure each table starts counting at 1 and is self-incremental
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.TABLE)
     private Long id;
     private String food;
     private String color;

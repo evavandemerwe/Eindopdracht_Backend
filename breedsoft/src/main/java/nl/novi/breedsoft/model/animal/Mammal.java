@@ -4,7 +4,7 @@ import nl.novi.breedsoft.model.animal.enumerations.*;
 
 import javax.persistence.*;
 @Entity
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public abstract class Mammal extends Animal {
 
     private static final Birthmethod birthmethod = Birthmethod.livebirth;
