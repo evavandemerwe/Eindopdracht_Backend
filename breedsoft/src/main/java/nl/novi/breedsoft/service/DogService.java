@@ -105,18 +105,38 @@ public class DogService {
             if (dogInputDto.getName() != null) {
                 updatedDog.setName(dogInputDto.getName());
             }
+            if (dogInputDto.getColor() != null) {
+                updatedDog.setColor(dogInputDto.getColor());
+            }
+            if (dogInputDto.getFood() != null) {
+                updatedDog.setFood(dogInputDto.getFood());
+            }
+            if (dogInputDto.getSex() != null) {
+                //updatedDog.setName(Sex.valueOf(dogInputDto.getSex()));
+            }
+            if (dogInputDto.getWeightInGrams() > 0.0) {
+                updatedDog.setWeightInGrams(dogInputDto.getWeightInGrams());
+            }
+            if (dogInputDto.getKindOfHair() != null) {
+                updatedDog.setKindOfHair(dogInputDto.getKindOfHair());
+            }
+            if (dogInputDto.getDateOfBirth() != null) {
+                updatedDog.setDateOfBirth(dogInputDto.getDateOfBirth());
+            }
+            if (dogInputDto.getDateOfDeath() != null) {
+                updatedDog.setDateOfDeath(dogInputDto.getDateOfDeath());
+            }
+            if (dogInputDto.getFood() != null) {
+                updatedDog.setFood(dogInputDto.getFood());
+            }
             if (dogInputDto.getBreed() != null) {
                 updatedDog.setBreed(Breed.valueOf(dogInputDto.getBreed()));
             }
             if (dogInputDto.getBreedGroup() != null) {
                 updatedDog.setBreedGroup(BreedGroup.valueOf(dogInputDto.getBreedGroup()));
             }
-            if (dogInputDto.getChipnumber() != null) {
-                updatedDog.setChipnumber(dogInputDto.getChipnumber());
-            }
-
-            if (dogInputDto.getDogYears() >= 0) {
-                updatedDog.setDogYears(dogInputDto.getDogYears());
+            if (dogInputDto.getChipNumber() != null) {
+                updatedDog.setChipnumber(dogInputDto.getChipNumber());
             }
 
             dogRepository.save(updatedDog);
@@ -148,8 +168,15 @@ public class DogService {
         DogOutputDto dogDto = new DogOutputDto();
         dogDto.setId(dog.getId());
         dogDto.setName(dog.getName());
-        dogDto.setChipnumber(dog.getChipnumber());
+        dogDto.setColor(dog.getColor());
+        dogDto.setFood(dog.getFood());
+        dogDto.setSex(dog.getSex());
+        dogDto.setWeightInGrams(dog.getWeightInGrams());
+        dogDto.setKindOfHair(dog.getKindOfHair());
         dogDto.setDogYears(dog.getDogYears());
+        dogDto.setDateOfBirth(dog.getDateOfBirth());
+        dogDto.setDateOfDeath(dog.getDateOfDeath());
+        dogDto.setChipNumber(dog.getChipnumber());
         dogDto.setBreed(dog.getBreed());
         dogDto.setBreedGroup(dog.getBreedGroup());
 
@@ -160,7 +187,15 @@ public class DogService {
         Dog dog = new Dog();
 
         dog.setName(dto.getName());
-        dog.setChipnumber(dto.getChipnumber());
+        dog.setColor(dto.getColor());
+        dog.setFood(dto.getFood());
+        //dog.setSex(dto.getSex());
+        dog.setWeightInGrams(dto.getWeightInGrams());
+        dog.setKindOfHair(dto.getKindOfHair());
+        dog.setDogYears(dto.getDogYears());
+        dog.setDateOfBirth(dto.getDateOfBirth());
+        dog.setDateOfDeath(dto.getDateOfDeath());
+        dog.setChipnumber(dto.getChipNumber());
         dog.setBreed(Breed.valueOf(dto.getBreed()));
         dog.setDogYears(dto.getDogYears());
         dog.setBreedGroup(BreedGroup.valueOf(dto.getBreedGroup()));

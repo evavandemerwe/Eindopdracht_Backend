@@ -16,7 +16,7 @@ public class Dog extends Mammal{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-    private String chipnumber;
+    private String chipNumber;
     @Enumerated(EnumType.STRING)
     @Column(name = "breed")
     private Breed breed;
@@ -60,11 +60,11 @@ public class Dog extends Mammal{
     }
 
     public String getChipnumber() {
-        return chipnumber;
+        return chipNumber;
     }
 
     public void setChipnumber(String chipnumber) {
-        this.chipnumber = chipnumber;
+        this.chipNumber = chipnumber;
     }
 
     public Breed getBreed() {
