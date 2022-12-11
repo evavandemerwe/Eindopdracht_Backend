@@ -105,8 +105,8 @@ public class DogService {
             if (dogInputDto.getName() != null) {
                 updatedDog.setName(dogInputDto.getName());
             }
-            if (dogInputDto.getColor() != null) {
-                updatedDog.setHairColor(dogInputDto.getColor());
+            if (dogInputDto.getHairColor() != null) {
+                updatedDog.setHairColor(dogInputDto.getHairColor());
             }
             if (dogInputDto.getFood() != null) {
                 updatedDog.setFood(dogInputDto.getFood());
@@ -168,7 +168,7 @@ public class DogService {
         DogOutputDto dogDto = new DogOutputDto();
         dogDto.setId(dog.getId());
         dogDto.setName(dog.getName());
-        dogDto.setColor(dog.getHairColor());
+        dogDto.setHairColor(dog.getHairColor());
         dogDto.setFood(dog.getFood());
         dogDto.setSex(dog.getSex());
         dogDto.setWeightInGrams(dog.getWeightInGrams());
@@ -187,7 +187,7 @@ public class DogService {
         Dog dog = new Dog();
 
         dog.setName(dto.getName());
-        dog.setHairColor(dto.getColor());
+        dog.setHairColor(dto.getHairColor());
         dog.setFood(dto.getFood());
         //dog.setSex(dto.getSex());
         dog.setWeightInGrams(dto.getWeightInGrams());

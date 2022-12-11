@@ -15,7 +15,7 @@ private String firstName;
 private String lastName;
 private String street;
 private int houseNumber;
-private String houseNumberExtention;
+private String houseNumberExtension;
 private String zipCode;
 private String city;
 private String country;
@@ -63,12 +63,12 @@ private String country;
         this.houseNumber = houseNumber;
     }
 
-    public String getHouseNumberExtention() {
-        return houseNumberExtention;
+    public String getHouseNumberExtension() {
+        return houseNumberExtension;
     }
 
-    public void setHouseNumberExtention(String houseNumberExtention) {
-        this.houseNumberExtention = houseNumberExtention;
+    public void setHouseNumberExtension(String houseNumberExtension) {
+        this.houseNumberExtension = houseNumberExtension;
     }
 
     public String getZipCode() {
