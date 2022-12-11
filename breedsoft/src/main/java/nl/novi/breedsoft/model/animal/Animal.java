@@ -31,18 +31,7 @@ public abstract class Animal {
     @Column(name = "animalType")
     private AnimalType animalType;
 
-    //private Animal father;
-
-    //private Animal mother;
-    //private List<Animal> siblings;
-
-    public long getId(){
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
+    //Getters and Setters
     public String getFood() {
         return food;
     }
@@ -113,7 +102,15 @@ public abstract class Animal {
         this.birthmethod = birthmethod;
     }
 
- /*   public Animal getFather() {
+    public AnimalType getAnimalType() {
+        return animalType;
+    }
+
+    public void setAnimalType(AnimalType animalType) {
+        this.animalType = animalType;
+    }
+
+    /*   public Animal getFather() {
         return father;
     }
 
