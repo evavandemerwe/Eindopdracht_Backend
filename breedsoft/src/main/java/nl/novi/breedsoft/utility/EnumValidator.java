@@ -11,7 +11,7 @@ import java.util.stream.Stream;
  * Can be used as an Annotation to validate Strings against Enumerations.
  * @see ConstraintValidator
  */
-public class ValueOfEnumValidator implements ConstraintValidator<ValueOfEnum, CharSequence> {
+public class EnumValidator implements ConstraintValidator<ValueOfEnum, CharSequence> {
     private List<String> acceptedValues;
 
     /**

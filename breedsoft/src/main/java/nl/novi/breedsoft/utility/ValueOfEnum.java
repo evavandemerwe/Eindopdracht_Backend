@@ -13,10 +13,10 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  * Annotation to validate if a given String value is part of a given Enumeration using the
  * ValueOfEnumValidator.
  *
- * @see ValueOfEnumValidator
+ * @see EnumValidator
  */
 @Documented
-@Constraint(validatedBy = ValueOfEnumValidator.class)
+@Constraint(validatedBy = EnumValidator.class)
 @Target({METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE})
 @Retention(RUNTIME)
 public @interface ValueOfEnum {
