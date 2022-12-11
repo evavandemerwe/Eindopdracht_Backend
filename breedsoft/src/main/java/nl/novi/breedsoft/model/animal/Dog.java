@@ -10,6 +10,11 @@ import javax.persistence.*;
 public class Dog extends Mammal{
 
     //Declaration of variables
+
+    //Create primary key with a unique value, making sure each table starts counting at 1 and is self-incremental
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private String name;
     private String chipnumber;
     @Enumerated(EnumType.STRING)
@@ -21,7 +26,25 @@ public class Dog extends Mammal{
     @Column(name = "breed_group")
     private BreedGroup breedGroup;
 
+    //Constructor
+
+    public Dog() {
+        super.setNumberOfTeeth(42);
+        super.setBirthmethod(Birthmethod.livebirth);
+        super.setBloodtemperature(Bloodtemperature.warmblooded);
+        super.setAnimalType(AnimalType.carnivore);
+    }
+
     //Getters and setter
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public String getName() {
         return name;
     }
@@ -61,11 +84,21 @@ public class Dog extends Mammal{
     }
 
     public int getDogYears() {
-        //dogYears = (getAge() * 7);
-        return dogYears;
+        if(super.getDateOfBirth() == null) {
+            return 0;
+        }else {
+            dogYears = (super.getAge() * 7);
+            return dogYears;
+        }
     }
 
     public void setDogYears(int dogYears) {
-        this.dogYears = dogYears;
+        if(super.getDateOfBirth() == null) {
+            this.dogYears = 0;
+        }
+        else {
+            dogYears = (super.getAge() * 7);
+            this.dogYears = dogYears;
+        }
     }
 }
