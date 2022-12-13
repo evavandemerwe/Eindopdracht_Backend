@@ -6,6 +6,7 @@ import nl.novi.breedsoft.exception.RecordNotFoundException;
 import nl.novi.breedsoft.model.animal.Dog;
 import nl.novi.breedsoft.model.animal.enumerations.Breed;
 import nl.novi.breedsoft.model.animal.enumerations.BreedGroup;
+import nl.novi.breedsoft.model.animal.enumerations.Sex;
 import nl.novi.breedsoft.repository.DogRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -105,14 +106,14 @@ public class DogService {
             if (dogInputDto.getName() != null) {
                 updatedDog.setName(dogInputDto.getName());
             }
-            if (dogInputDto.getColor() != null) {
-                updatedDog.setColor(dogInputDto.getColor());
+            if (dogInputDto.getHairColor() != null) {
+                updatedDog.setHairColor(dogInputDto.getHairColor());
             }
             if (dogInputDto.getFood() != null) {
                 updatedDog.setFood(dogInputDto.getFood());
             }
             if (dogInputDto.getSex() != null) {
-                //updatedDog.setName(Sex.valueOf(dogInputDto.getSex()));
+                updatedDog.setSex(Sex.valueOf(dogInputDto.getSex()));
             }
             if (dogInputDto.getWeightInGrams() > 0.0) {
                 updatedDog.setWeightInGrams(dogInputDto.getWeightInGrams());
@@ -168,7 +169,7 @@ public class DogService {
         DogOutputDto dogDto = new DogOutputDto();
         dogDto.setId(dog.getId());
         dogDto.setName(dog.getName());
-        dogDto.setColor(dog.getColor());
+        dogDto.setHairColor(dog.getHairColor());
         dogDto.setFood(dog.getFood());
         dogDto.setSex(dog.getSex());
         dogDto.setWeightInGrams(dog.getWeightInGrams());
@@ -187,9 +188,9 @@ public class DogService {
         Dog dog = new Dog();
 
         dog.setName(dto.getName());
-        dog.setColor(dto.getColor());
+        dog.setHairColor(dto.getHairColor());
         dog.setFood(dto.getFood());
-        //dog.setSex(dto.getSex());
+        dog.setSex(Sex.valueOf(dto.getSex()));
         dog.setWeightInGrams(dto.getWeightInGrams());
         dog.setKindOfHair(dto.getKindOfHair());
         dog.setDogYears(dto.getDogYears());

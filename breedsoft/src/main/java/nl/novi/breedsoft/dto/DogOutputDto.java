@@ -12,7 +12,7 @@ import java.util.ArrayList;
 public class DogOutputDto {
     private long id;
     private String name;
-    private String color;
+    private String hairColor;
     private String food;
     private Sex sex;
     private double weightInGrams;

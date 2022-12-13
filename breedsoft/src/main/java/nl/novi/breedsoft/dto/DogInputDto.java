@@ -14,7 +14,7 @@ public class DogInputDto {
     private String name;
 
     @NotEmpty(message = "Please enter the hair color of the dog")
-    private String color;
+    private String hairColor;
 
     @NotEmpty(message = "Please enter dog's food")
     private String food;
@@ -29,11 +29,10 @@ public class DogInputDto {
     @NotEmpty(message = "Please enter kind of hair")
     private String kindOfHair;
 
-    private int dogYears;
-
     @NotNull
     private LocalDate dateOfBirth;
 
+    //Can be empty
     private LocalDate dateOfDeath;
 
     @NotEmpty(message = "Please enter a chip number.")
@@ -48,5 +47,8 @@ public class DogInputDto {
     @ValueOfEnum(enumClass = BreedGroup.class, message = "Invalid breed group")
     private String breedGroup;
 
+    //Can be empty
     private ArrayList<String> litter;
+
+    private int dogYears;
 }
