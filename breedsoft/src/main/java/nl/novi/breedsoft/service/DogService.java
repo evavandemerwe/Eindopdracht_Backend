@@ -25,7 +25,7 @@ public class DogService {
         this.dogRepository = repo;
     }
 
-    //Output Dto is used for data from database
+    //Output Dto is used for representing data from database to the user
     //Get all dogs
     public List<DogOutputDto> getAllDogs() {
         List<Dog> dogList = dogRepository.findAll();
@@ -36,8 +36,7 @@ public class DogService {
     public DogOutputDto getDogById(Long id) {
         if (dogRepository.findById(id).isPresent()){
             Dog dog = dogRepository.findById(id).get();
-            DogOutputDto dogOutputDto = transferToOutputDto(dog);
-            return dogOutputDto;
+            return transferToOutputDto(dog);
         } else {
             throw new RecordNotFoundException("Dog not found in database");
         }
@@ -47,8 +46,7 @@ public class DogService {
     public DogOutputDto getDogByName(String name) {
         if (dogRepository.findByNameContaining(name) != null){
             Dog dog = dogRepository.findByNameContaining(name);
-            DogOutputDto dogOutputDto = transferToOutputDto(dog);
-            return dogOutputDto;
+            return transferToOutputDto(dog);
         } else {
             throw new RecordNotFoundException("Dog not found in database");
         }
