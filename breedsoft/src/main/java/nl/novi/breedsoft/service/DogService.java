@@ -18,7 +18,7 @@ import java.util.Optional;
 
 @Service
 public class DogService {
-    private DogRepository dogRepository;
+    private final DogRepository dogRepository;
 
     //Constructor injection
     public DogService(DogRepository repo){
@@ -54,7 +54,7 @@ public class DogService {
         }
     }
 
-
+    //Create creates a new entity in the database
     public Long createDog(DogInputDto dogInputDto){
 
         Dog dog = transferToDog(dogInputDto);
@@ -64,6 +64,7 @@ public class DogService {
 
     }
 
+    //DELETE deletes an entity from the database if found
     public void deleteDog(@RequestBody Long id) {
 
         if (dogRepository.findById(id).isPresent()){
@@ -150,8 +151,6 @@ public class DogService {
 
         }
     }
-
-
 
     //DTO helper classes
     public List<DogOutputDto> transferDogListToDtoList(List<Dog> dogs){
