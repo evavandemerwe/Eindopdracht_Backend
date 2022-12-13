@@ -33,7 +33,7 @@ public class PersonInputDto {
     private String houseNumberExtension;
 
     @NotEmpty(message = "Please enter a zipcode")
-    @Pattern(regexp = "[1-9][0-9]{3}['']?[A-Za-z]{2}$/i")
+    @Pattern(regexp = "[1-9][0-9]{3}?[a-z]{2}")
     private String zipCode;
 
     @NotEmpty(message = "Please enter a city")
