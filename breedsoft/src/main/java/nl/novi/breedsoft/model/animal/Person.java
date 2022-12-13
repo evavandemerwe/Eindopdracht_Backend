@@ -4,24 +4,27 @@ import nl.novi.breedsoft.model.animal.enumerations.AnimalType;
 import nl.novi.breedsoft.model.animal.enumerations.Birthmethod;
 import nl.novi.breedsoft.model.animal.enumerations.Bloodtemperature;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "persons")
-public class Person extends Human{
+public class Person extends Mammal {
 
-private String firstName;
-private String lastName;
-private String street;
-private int houseNumber;
-private String houseNumberExtension;
-private String zipCode;
-private String city;
-private String country;
+    //Declaration of variables
+    //Create primary key with a unique value, making sure each table starts counting at 1 and is self-incremental
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private String firstName;
+    private String lastName;
+    private String street;
+    private int houseNumber;
+    private String houseNumberExtension;
+    private String zipCode;
+    private String city;
+    private String country;
 
-//constructor
-
+    //constructor
     public Person() {
         super();
         super.setNumberOfTeeth(32);
@@ -30,7 +33,15 @@ private String country;
         super.setAnimalType(AnimalType.omnivore);
     }
 
-//getters and setters
+    //getters and setters
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public String getFirstName() {
         return firstName;
     }

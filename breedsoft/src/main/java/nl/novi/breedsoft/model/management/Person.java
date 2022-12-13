@@ -1,9 +1,10 @@
 package nl.novi.breedsoft.model.management;
 
-import nl.novi.breedsoft.model.animal.Human;
+import nl.novi.breedsoft.model.animal.Mammal;
+
 import java.util.List;
 
-public class Person extends Human {
+public class Person extends Mammal {
     private String firstName;
     private String lastName;
     private String streetName;

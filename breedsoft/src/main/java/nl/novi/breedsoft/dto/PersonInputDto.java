@@ -32,6 +32,7 @@ public class PersonInputDto {
     //Can be empty
     private String houseNumberExtension;
 
+    //Zipcode must follow Dutch zipcode rules
     @NotEmpty(message = "Please enter a zipcode")
     @Pattern(regexp = "[1-9][0-9]{3}?[a-z]{2}")
     private String zipCode;

@@ -7,6 +7,7 @@ import nl.novi.breedsoft.model.animal.enumerations.Sex;
 @Data
 public class PersonOutputDto {
     //We do not have to show everything in Person database for the purpose of this application
+    private Long id;
     private String firstName;
     private String lastName;
     private Sex sex;
