@@ -76,8 +76,9 @@ public class DogController {
         return ResponseEntity.ok().body(dogOutputDto);
     }
 
+    //@Valid niet toegepast, omdat je op een PATCH alleen de velden mee geeft die aangepast moeten worden
     @PatchMapping("/{id}")
-    public ResponseEntity<DogOutputDto> patchDog(@PathVariable Long id,@Valid @RequestBody DogInputDto dogInputDto){
+    public ResponseEntity<DogOutputDto> patchDog(@PathVariable Long id, @RequestBody DogInputDto dogInputDto){
 
         DogOutputDto dogOutputDto = dogService.patchDog(id, dogInputDto);
         return ResponseEntity.ok().body(dogOutputDto);

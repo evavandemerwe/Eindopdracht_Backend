@@ -1,13 +1,8 @@
 package nl.novi.breedsoft.service;
-import nl.novi.breedsoft.dto.DogInputDto;
-import nl.novi.breedsoft.dto.DogOutputDto;
 import nl.novi.breedsoft.dto.PersonInputDto;
 import nl.novi.breedsoft.dto.PersonOutputDto;
 import nl.novi.breedsoft.exception.RecordNotFoundException;
-import nl.novi.breedsoft.model.animal.Dog;
 import nl.novi.breedsoft.model.animal.Person;
-import nl.novi.breedsoft.model.animal.enumerations.Breed;
-import nl.novi.breedsoft.model.animal.enumerations.BreedGroup;
 import nl.novi.breedsoft.model.animal.enumerations.Sex;
 import nl.novi.breedsoft.repository.PersonRepository;
 import org.springframework.stereotype.Service;
@@ -25,6 +20,32 @@ public class PersonService {
         this.personRepository = personRepository;
     }
 
+    //Output Dto is used for representing data from database to the user
+    //Get all persons
+    public List<PersonOutputDto> getAllPersons() {
+        List<Person> personList = personRepository.findAll();
+        return transferPersonListToDtoList(personList);
+    }
+
+    //Get one person by ID
+    public PersonOutputDto getPersonById(Long id) {
+        if (personRepository.findById(id).isPresent()){
+            Person person = personRepository.findById(id).get();
+            return transferToOutputDto(person);
+        } else {
+            throw new RecordNotFoundException("Person not found in database");
+        }
+    }
+
+    //Get one person by Name
+    public PersonOutputDto getPersonByName(String lastName) {
+        if (personRepository.findByLastNameContaining(lastName) != null){
+            Person person = personRepository.findByLastNameContaining(lastName);
+            return transferToOutputDto(person);
+        } else {
+            throw new RecordNotFoundException("Person not found in database");
+        }
+    }
 
     //Create creates a new entity in the database
     public Long createPerson(PersonInputDto personInputDto){
