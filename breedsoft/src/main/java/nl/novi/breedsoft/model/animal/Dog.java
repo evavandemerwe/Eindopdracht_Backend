@@ -101,4 +101,12 @@ public class Dog extends Mammal{
             this.dogYears = dogYears;
         }
     }
+
+    public String getChipNumber() {
+        return chipNumber;
+    }
+
+    public void setChipNumber(String chipNumber) {
+        this.chipNumber = chipNumber;
+    }
 }

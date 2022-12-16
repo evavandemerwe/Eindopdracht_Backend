@@ -1,10 +1,11 @@
 package nl.novi.breedsoft.dto;
+import javax.validation.constraints.*;
+
 import lombok.Data;
 import nl.novi.breedsoft.model.animal.enumerations.Breed;
 import nl.novi.breedsoft.model.animal.enumerations.BreedGroup;
 import nl.novi.breedsoft.model.animal.enumerations.Sex;
 import nl.novi.breedsoft.utility.ValueOfEnum;
-import javax.validation.constraints.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 

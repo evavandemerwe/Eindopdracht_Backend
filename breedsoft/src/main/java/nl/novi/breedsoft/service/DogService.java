@@ -2,12 +2,14 @@ package nl.novi.breedsoft.service;
 
 import nl.novi.breedsoft.dto.DogInputDto;
 import nl.novi.breedsoft.dto.DogOutputDto;
+import nl.novi.breedsoft.dto.DogPatchDto;
 import nl.novi.breedsoft.exception.RecordNotFoundException;
 import nl.novi.breedsoft.model.animal.Dog;
 import nl.novi.breedsoft.model.animal.enumerations.Breed;
 import nl.novi.breedsoft.model.animal.enumerations.BreedGroup;
 import nl.novi.breedsoft.model.animal.enumerations.Sex;
 import nl.novi.breedsoft.repository.DogRepository;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -101,47 +103,61 @@ public class DogService {
 
     //PATCH will only update an existing object,
     //with the properties mapped in the request body (that are not null).
-    public DogOutputDto patchDog(long id, DogInputDto dogInputDto) {
+    public DogOutputDto patchDog(long id, DogPatchDto dogPatchDto) {
         Optional<Dog> dogFound = dogRepository.findById(id);
 
         if (dogFound.isPresent()) {
 
             Dog updatedDog = dogRepository.getReferenceById(id);
-            if (dogInputDto.getName() != null) {
-                updatedDog.setName(dogInputDto.getName());
+            if (dogPatchDto.getName() != null) {
+                updatedDog.setName(dogPatchDto.getName());
             }
-            if (dogInputDto.getHairColor() != null) {
-                updatedDog.setHairColor(dogInputDto.getHairColor());
+            if (dogPatchDto.getHairColor() != null) {
+                updatedDog.setHairColor(dogPatchDto.getHairColor());
             }
-            if (dogInputDto.getFood() != null) {
-                updatedDog.setFood(dogInputDto.getFood());
+            if (dogPatchDto.getFood() != null) {
+                updatedDog.setFood(dogPatchDto.getFood());
             }
-            if (dogInputDto.getSex() != null) {
-                updatedDog.setSex(Sex.valueOf(dogInputDto.getSex()));
+            if (dogPatchDto.getSex() != null) {
+                for(Sex s : Sex.values()){
+                    if(s.name().equalsIgnoreCase(dogPatchDto.getSex().toString())) {
+
+                        updatedDog.setSex(Sex.valueOf(dogPatchDto.getSex()));
+                    }
+                }
             }
-            if (dogInputDto.getWeightInGrams() > 0.0) {
-                updatedDog.setWeightInGrams(dogInputDto.getWeightInGrams());
+            if (dogPatchDto.getWeightInGrams() > 0.0) {
+                updatedDog.setWeightInGrams(dogPatchDto.getWeightInGrams());
             }
-            if (dogInputDto.getKindOfHair() != null) {
-                updatedDog.setKindOfHair(dogInputDto.getKindOfHair());
+            if (dogPatchDto.getKindOfHair() != null) {
+                updatedDog.setKindOfHair(dogPatchDto.getKindOfHair());
             }
-            if (dogInputDto.getDateOfBirth() != null) {
-                updatedDog.setDateOfBirth(dogInputDto.getDateOfBirth());
+            if (dogPatchDto.getDateOfBirth() != null) {
+                updatedDog.setDateOfBirth(dogPatchDto.getDateOfBirth());
             }
-            if (dogInputDto.getDateOfDeath() != null) {
-                updatedDog.setDateOfDeath(dogInputDto.getDateOfDeath());
+            if (dogPatchDto.getDateOfDeath() != null) {
+                updatedDog.setDateOfDeath(dogPatchDto.getDateOfDeath());
             }
-            if (dogInputDto.getFood() != null) {
-                updatedDog.setFood(dogInputDto.getFood());
+            if (dogPatchDto.getFood() != null) {
+                updatedDog.setFood(dogPatchDto.getFood());
             }
-            if (dogInputDto.getBreed() != null) {
-                updatedDog.setBreed(Breed.valueOf(dogInputDto.getBreed()));
+            if (dogPatchDto.getBreed() != null) {
+                for(Breed b : Breed.values()){
+                    if(b.name().equalsIgnoreCase(dogPatchDto.getBreed().toString())) {
+
+                        updatedDog.setBreed(Breed.valueOf(dogPatchDto.getBreed()));
+                    }
+                }
             }
-            if (dogInputDto.getBreedGroup() != null) {
-                updatedDog.setBreedGroup(BreedGroup.valueOf(dogInputDto.getBreedGroup()));
+            if (dogPatchDto.getBreedGroup() != null) {
+                for(BreedGroup b : BreedGroup.values()){
+                    if(b.name().equalsIgnoreCase(dogPatchDto.getBreedGroup().toString())) {
+                        updatedDog.setBreedGroup(BreedGroup.valueOf(dogPatchDto.getBreedGroup()));
+                    }
+                }
             }
-            if (dogInputDto.getChipNumber() != null) {
-                updatedDog.setChipnumber(dogInputDto.getChipNumber());
+            if (dogPatchDto.getChipNumber() != null) {
+                updatedDog.setChipnumber(dogPatchDto.getChipNumber());
             }
 
             dogRepository.save(updatedDog);
