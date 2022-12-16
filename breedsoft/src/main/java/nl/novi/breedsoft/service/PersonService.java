@@ -37,13 +37,17 @@ public class PersonService {
         }
     }
 
-    //Get one person by Name
-    public PersonOutputDto getPersonByName(String lastName) {
+    //Get person list by Name
+    public List<PersonOutputDto> getPersonByName(String lastName) {
         if (personRepository.findByLastNameContaining(lastName) != null){
-            Person person = personRepository.findByLastNameContaining(lastName);
-            return transferToOutputDto(person);
+            List<Person> personList = personRepository.findByLastNameContaining(lastName);
+            List<PersonOutputDto> personOutputDtoList = new ArrayList<>();
+            for(Person person: personList) {
+                personOutputDtoList.add(transferToOutputDto(person));
+            }
+            return personOutputDtoList;
         } else {
-            throw new RecordNotFoundException("Person not found in database");
+            throw new RecordNotFoundException("No person with this name found in database");
         }
     }
 
