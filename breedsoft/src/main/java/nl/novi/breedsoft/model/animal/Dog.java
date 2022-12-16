@@ -26,8 +26,22 @@ public class Dog extends Mammal{
     @Column(name = "breed_group")
     private BreedGroup breedGroup;
 
-    //Constructor
 
+/*
+    @ManyToOne
+    @JoinColumn(name = "person_id")
+    private Person person;
+
+    public Person getPerson() {
+        return person;
+    }
+
+    public void setPerson(Person person) {
+        this.person = person;
+    }
+*/
+
+    //Constructor
     public Dog() {
         super.setNumberOfTeeth(42);
         super.setBirthMethod(Birthmethod.livebirth);

@@ -24,6 +24,11 @@ public class Person extends Mammal {
     private String city;
     private String country;
 
+    /*
+    @OneToMany(mappedBy = "person", cascade = CascadeType.ALL)
+    private Dog dog;
+    */
+
     //constructor
     public Person() {
         super();
