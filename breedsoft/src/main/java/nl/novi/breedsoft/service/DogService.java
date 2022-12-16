@@ -42,13 +42,17 @@ public class DogService {
         }
     }
 
-    //Get one dog by Name
-    public DogOutputDto getDogByName(String name) {
+    //Get dog list by Name
+    public List<DogOutputDto> getDogByName(String name) {
         if (dogRepository.findByNameContaining(name) != null){
-            Dog dog = dogRepository.findByNameContaining(name);
-            return transferToOutputDto(dog);
+            List<Dog> dogList = dogRepository.findByNameContaining(name);
+            List<DogOutputDto> dogOutputDtosList = new ArrayList<>();
+            for(Dog dog : dogList){
+                dogOutputDtosList.add(transferToOutputDto(dog));
+            }
+            return dogOutputDtosList;
         } else {
-            throw new RecordNotFoundException("Dog not found in database");
+            throw new RecordNotFoundException("No dog with this name found in database");
         }
     }
 
@@ -63,7 +67,7 @@ public class DogService {
     }
 
     //DELETE deletes an entity from the database if found
-    public void deleteDog(@RequestBody Long id) {
+    public void deleteDog(Long id) {
 
         if (dogRepository.findById(id).isPresent()){
                dogRepository.deleteById(id);
@@ -80,6 +84,7 @@ public class DogService {
             Dog dog = dogRepository.findById(id).get();
 
             Dog updatedDog = transferToDog(dogInputDto);
+
             //Keeping the former id, as we will update the existing dog
             updatedDog.setId(dog.getId());
 

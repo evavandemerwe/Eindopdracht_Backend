@@ -4,6 +4,7 @@ import nl.novi.breedsoft.dto.DogInputDto;
 import nl.novi.breedsoft.dto.DogOutputDto;
 import nl.novi.breedsoft.service.DogService;
 import static nl.novi.breedsoft.utility.BindingResultErrorUtility.bindingResultError;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -11,9 +12,10 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.net.URI;
+import java.util.List;
 
 @RestController
-@RequestMapping("dogs")
+@RequestMapping()
 public class DogController {
 
     private final DogService dogService;
@@ -23,12 +25,13 @@ public class DogController {
     }
 
     //Get mapping to get all dogs from the database
-    @GetMapping("")
+    @GetMapping("/dogs")
     public ResponseEntity<Iterable<DogOutputDto>> getAllDogs() {
         return ResponseEntity.ok(dogService.getAllDogs());
     }
 
-    @GetMapping("/findbyid/")
+    //Get mapping to get one dog by id from the database
+    @GetMapping("/dogs/findbyid/")
     public ResponseEntity<DogOutputDto> getDogById(@RequestParam("id") Long id) {
 
         DogOutputDto dogOutputDto = dogService.getDogById(id);
@@ -37,19 +40,20 @@ public class DogController {
 
     }
 
-    @GetMapping("/findbyname/")
-    public ResponseEntity<DogOutputDto> getDogByName(@RequestParam("name") String name) {
+    //Get mapping to get one dog by name from the database
+    @GetMapping("/dogs/findbyname/")
+    public ResponseEntity<Object> getDogByName(@RequestParam("name") String name) {
 
-        DogOutputDto dogOutputDto = dogService.getDogByName(name);
+        List<DogOutputDto> dogOutputDtoList = dogService.getDogByName(name);
 
-        return ResponseEntity.ok().body(dogOutputDto);
-
+        return ResponseEntity.ok().body(dogOutputDtoList);
     }
 
-    @PostMapping("")
+    //Create a new dog in the database
+    @PostMapping("/dogs")
     public ResponseEntity<Object> createDog(@Valid @RequestBody DogInputDto dogInputDto, BindingResult br) {
+        //If there is an error in the binding
         if (br.hasErrors()) {
-            // something's wrong
            return bindingResultError(br);
         } else {
             // Dog is created, return new dog URI
@@ -64,26 +68,30 @@ public class DogController {
     }
 
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/dogs/{id}")
     public ResponseEntity<Object> deleteDog(@PathVariable Long id) {
         dogService.deleteDog(id);
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Object> updateDog(@PathVariable Long id, @Valid @RequestBody DogInputDto dogInputDto) {
-        Object dogOutputDto = dogService.updateDog(id, dogInputDto);
-        return ResponseEntity.ok().body(dogOutputDto);
+    @PutMapping("/dogs/{id}")
+    public ResponseEntity<Object> updateDog(@PathVariable("id") Long id, @Valid @RequestBody DogInputDto dogInputDto, BindingResult br) {
+        //If there is an error in the binding
+        if (br.hasErrors()) {
+            return bindingResultError(br);
+        } else {
+            Object dogOutputDto = dogService.updateDog(id, dogInputDto);
+            return ResponseEntity.ok().body(dogOutputDto);
+        }
     }
 
     //@Valid niet toegepast, omdat je op een PATCH alleen de velden mee geeft die aangepast moeten worden
-    @PatchMapping("/{id}")
-    public ResponseEntity<DogOutputDto> patchDog(@PathVariable Long id, @RequestBody DogInputDto dogInputDto){
+    @PatchMapping("/dogs/{id}")
+    public ResponseEntity<Object> patchDog(@PathVariable("id") Long id, @RequestBody DogInputDto dogInputDto){
 
         DogOutputDto dogOutputDto = dogService.patchDog(id, dogInputDto);
         return ResponseEntity.ok().body(dogOutputDto);
-
+        
     }
-
-
 }
+
