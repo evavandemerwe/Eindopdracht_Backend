@@ -119,10 +119,15 @@ public class DogService {
                 updatedDog.setFood(dogPatchDto.getFood());
             }
             if (dogPatchDto.getSex() != null) {
-                for(Sex s : Sex.values()){
-                    if(s.name().equalsIgnoreCase(dogPatchDto.getSex().toString())) {
-
+                for(Sex s : Sex.values()) {
+                    boolean isSexFound = false;
+                    if (s.name().equalsIgnoreCase(dogPatchDto.getSex().toString())) {
                         updatedDog.setSex(Sex.valueOf(dogPatchDto.getSex()));
+                        isSexFound = true;
+                        break;
+                    }
+                    if (!isSexFound) {
+                        throw new RecordNotFoundException("Sex not found");
                     }
                 }
             }
@@ -142,18 +147,29 @@ public class DogService {
                 updatedDog.setFood(dogPatchDto.getFood());
             }
             if (dogPatchDto.getBreed() != null) {
+                boolean isBreedFound = false;
                 for(Breed b : Breed.values()){
-                    if(b.name().equalsIgnoreCase(dogPatchDto.getBreed().toString())) {
-
+                    if(b.name().equalsIgnoreCase(dogPatchDto.getBreed())) {
                         updatedDog.setBreed(Breed.valueOf(dogPatchDto.getBreed()));
+                        isBreedFound = true;
+                        break;
                     }
+                }
+                if(!isBreedFound) {
+                    throw new RecordNotFoundException("Breed not found");
                 }
             }
             if (dogPatchDto.getBreedGroup() != null) {
+                boolean isBreedGroupFound = false;
                 for(BreedGroup b : BreedGroup.values()){
-                    if(b.name().equalsIgnoreCase(dogPatchDto.getBreedGroup().toString())) {
+                    if(b.name().equalsIgnoreCase(dogPatchDto.getBreedGroup())) {
                         updatedDog.setBreedGroup(BreedGroup.valueOf(dogPatchDto.getBreedGroup()));
+                        isBreedGroupFound = true;
+                        break;
                     }
+                }
+                if(!isBreedGroupFound) {
+                    throw new RecordNotFoundException("Breed group not found");
                 }
             }
             if (dogPatchDto.getChipNumber() != null) {
@@ -172,7 +188,8 @@ public class DogService {
     }
 
     //DTO helper classes
-    public List<DogOutputDto> transferDogListToDtoList(List<Dog> dogs){
+
+        public List<DogOutputDto> transferDogListToDtoList(List<Dog> dogs){
         List<DogOutputDto> dogDtoList = new ArrayList<>();
 
         for(Dog dog : dogs) {
