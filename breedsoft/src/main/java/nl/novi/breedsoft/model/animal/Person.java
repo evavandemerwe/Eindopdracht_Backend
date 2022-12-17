@@ -1,10 +1,12 @@
 package nl.novi.breedsoft.model.animal;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import nl.novi.breedsoft.model.animal.enumerations.AnimalType;
 import nl.novi.breedsoft.model.animal.enumerations.Birthmethod;
 import nl.novi.breedsoft.model.animal.enumerations.Bloodtemperature;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "persons")
@@ -24,10 +26,10 @@ public class Person extends Mammal {
     private String city;
     private String country;
 
-    /*
-    @OneToMany(mappedBy = "person", cascade = CascadeType.ALL)
-    private Dog dog;
-    */
+    //A person can have 0 to * dogs
+    @OneToMany(mappedBy = "person")
+    @JsonIgnore
+    private List<Dog> dogs;
 
     //constructor
     public Person() {
@@ -109,5 +111,13 @@ public class Person extends Mammal {
 
     public void setCountry(String country) {
         this.country = country;
+    }
+
+    public List<Dog> getDogs() {
+        return dogs;
+    }
+
+    public void setDogs(List<Dog> dogs) {
+        this.dogs = dogs;
     }
 }
