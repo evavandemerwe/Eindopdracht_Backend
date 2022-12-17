@@ -31,7 +31,6 @@ public class Dog extends Mammal{
     @JoinColumn(name = "person_id")
     private Person person;
 
-
     //Constructor
     public Dog() {
         super.setNumberOfTeeth(42);
@@ -114,7 +113,6 @@ public class Dog extends Mammal{
     public void setChipNumber(String chipNumber) {
         this.chipNumber = chipNumber;
     }
-
     public Person getPerson() {
         return this.person;
     }

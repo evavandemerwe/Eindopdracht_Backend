@@ -2,6 +2,8 @@ package nl.novi.breedsoft.controller;
 
 import nl.novi.breedsoft.dto.DogInputDto;
 import nl.novi.breedsoft.dto.DogOutputDto;
+import nl.novi.breedsoft.dto.DogPatchDto;
+import nl.novi.breedsoft.model.animal.Dog;
 import nl.novi.breedsoft.service.DogService;
 import static nl.novi.breedsoft.utility.BindingResultErrorUtility.bindingResultError;
 
@@ -87,10 +89,14 @@ public class DogController {
 
     //@Valid niet toegepast, omdat je op een PATCH alleen de velden mee geeft die aangepast moeten worden
     @PatchMapping("/dogs/{id}")
-    public ResponseEntity<Object> patchDog(@PathVariable("id") Long id, @RequestBody DogInputDto dogInputDto){
-
-        DogOutputDto dogOutputDto = dogService.patchDog(id, dogInputDto);
-        return ResponseEntity.ok().body(dogOutputDto);
+    public ResponseEntity<Object> patchDog(@PathVariable("id") Long id, @Valid @RequestBody DogPatchDto dogPatchDto, BindingResult br){
+        //If there is an error in the binding
+        if (br.hasErrors()) {
+            return bindingResultError(br);
+        } else {
+            DogOutputDto dogOutputDto = dogService.patchDog(id, dogPatchDto);
+            return ResponseEntity.ok().body(dogOutputDto);
+        }
     }
 }
 
