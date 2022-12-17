@@ -1,5 +1,6 @@
 package nl.novi.breedsoft.model.animal;
 
+import nl.novi.breedsoft.dto.PersonInputDto;
 import nl.novi.breedsoft.model.animal.enumerations.*;
 import java.util.ArrayList;
 
@@ -10,7 +11,6 @@ import javax.persistence.*;
 public class Dog extends Mammal{
 
     //Declaration of variables
-
     //Create primary key with a unique value, making sure each table starts counting at 1 and is self-incremental
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,8 +26,13 @@ public class Dog extends Mammal{
     @Column(name = "breed_group")
     private BreedGroup breedGroup;
 
-    //Constructor
+    //A dog has one owner
+    @ManyToOne
+    @JoinColumn(name = "person_id")
+    private Person person;
 
+
+    //Constructor
     public Dog() {
         super.setNumberOfTeeth(42);
         super.setBirthMethod(Birthmethod.livebirth);
@@ -100,5 +105,21 @@ public class Dog extends Mammal{
             dogYears = (super.getAge() * 7);
             this.dogYears = dogYears;
         }
+    }
+
+    public String getChipNumber() {
+        return chipNumber;
+    }
+
+    public void setChipNumber(String chipNumber) {
+        this.chipNumber = chipNumber;
+    }
+
+    public Person getPerson() {
+        return this.person;
+    }
+
+    public void setPerson(Person person) {
+        this.person = person;
     }
 }

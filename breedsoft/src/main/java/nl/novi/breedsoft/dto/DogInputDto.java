@@ -1,5 +1,6 @@
 package nl.novi.breedsoft.dto;
 import lombok.Data;
+import nl.novi.breedsoft.model.animal.Person;
 import nl.novi.breedsoft.model.animal.enumerations.Breed;
 import nl.novi.breedsoft.model.animal.enumerations.BreedGroup;
 import nl.novi.breedsoft.model.animal.enumerations.Sex;
@@ -51,4 +52,6 @@ public class DogInputDto {
     private ArrayList<String> litter;
 
     private int dogYears;
+
+    private Person person;
 }

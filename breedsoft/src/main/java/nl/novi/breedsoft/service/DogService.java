@@ -1,5 +1,6 @@
 package nl.novi.breedsoft.service;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import nl.novi.breedsoft.dto.DogInputDto;
 import nl.novi.breedsoft.dto.DogOutputDto;
 import nl.novi.breedsoft.exception.RecordNotFoundException;
@@ -9,8 +10,6 @@ import nl.novi.breedsoft.model.animal.enumerations.BreedGroup;
 import nl.novi.breedsoft.model.animal.enumerations.Sex;
 import nl.novi.breedsoft.repository.DogRepository;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -143,6 +142,9 @@ public class DogService {
             if (dogInputDto.getChipNumber() != null) {
                 updatedDog.setChipnumber(dogInputDto.getChipNumber());
             }
+            if (dogInputDto.getPerson() != null) {
+                updatedDog.setPerson(dogInputDto.getPerson());
+            }
 
             dogRepository.save(updatedDog);
 
@@ -182,6 +184,7 @@ public class DogService {
         dogDto.setChipNumber(dog.getChipnumber());
         dogDto.setBreed(dog.getBreed());
         dogDto.setBreedGroup(dog.getBreedGroup());
+        dogDto.setPerson(dog.getPerson());
 
         return dogDto;
     }
@@ -203,6 +206,7 @@ public class DogService {
         dog.setDogYears(dto.getDogYears());
         dog.setBreedGroup(BreedGroup.valueOf(dto.getBreedGroup()));
         dog.setLitter(dto.getLitter());
+        dog.setPerson(dto.getPerson());
 
         return dog;
     }

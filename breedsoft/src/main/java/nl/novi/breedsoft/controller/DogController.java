@@ -91,7 +91,6 @@ public class DogController {
 
         DogOutputDto dogOutputDto = dogService.patchDog(id, dogInputDto);
         return ResponseEntity.ok().body(dogOutputDto);
-        
     }
 }
 
