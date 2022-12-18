@@ -52,7 +52,7 @@ public class DogController {
     }
 
     //Create a new dog in the database
-    @PostMapping("/dogs/")
+    @PostMapping("/dogs")
     public ResponseEntity<Object> createDog(@Valid @RequestBody DogInputDto dogInputDto, BindingResult br) {
         //If there is an error in the binding
         if (br.hasErrors()) {
