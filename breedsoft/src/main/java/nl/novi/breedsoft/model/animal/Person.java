@@ -28,7 +28,6 @@ public class Person extends Mammal {
 
     //A person can have 0 to * dogs
     @OneToMany(mappedBy = "person")
-    @JsonIgnore
     private List<Dog> dogs;
 
     //constructor

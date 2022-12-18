@@ -1,8 +1,8 @@
 package nl.novi.breedsoft.dto;
 
+import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 import lombok.Data;
-import nl.novi.breedsoft.model.animal.enumerations.Breed;
-import nl.novi.breedsoft.model.animal.enumerations.BreedGroup;
+import nl.novi.breedsoft.model.animal.Person;
 import nl.novi.breedsoft.model.animal.enumerations.Sex;
 
 import java.time.LocalDate;
@@ -24,4 +24,7 @@ public class DogPatchDto {
     private String breed;
     private String breedGroup;
     private ArrayList<String> Litter;
+
+    @JsonIncludeProperties({"id", "firstName", "lastName", "street", "houseNumber", "houseNumberExtension", "zipCode", "city", "country"})
+    private Person person;
 }

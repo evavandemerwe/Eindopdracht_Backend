@@ -1,29 +1,35 @@
 package nl.novi.breedsoft.service;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import nl.novi.breedsoft.dto.DogInputDto;
 import nl.novi.breedsoft.dto.DogOutputDto;
 import nl.novi.breedsoft.dto.DogPatchDto;
 import nl.novi.breedsoft.exception.RecordNotFoundException;
 import nl.novi.breedsoft.model.animal.Dog;
+import nl.novi.breedsoft.model.animal.Person;
+import nl.novi.breedsoft.repository.PersonRepository;
 import nl.novi.breedsoft.model.animal.enumerations.Breed;
 import nl.novi.breedsoft.model.animal.enumerations.BreedGroup;
 import nl.novi.breedsoft.model.animal.enumerations.Sex;
 import nl.novi.breedsoft.repository.DogRepository;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 
 @Service
 public class DogService {
     private final DogRepository dogRepository;
+    private final PersonRepository personRepository;
 
     //Constructor injection
-    public DogService(DogRepository repo){
-        this.dogRepository = repo;
+    public DogService(
+            DogRepository dogRepository,
+            PersonRepository personRepository
+    ){
+        this.dogRepository = dogRepository;
+        this.personRepository = personRepository;
     }
 
     //Output Dto is used for representing data from database to the user
@@ -84,8 +90,16 @@ public class DogService {
         if (dogRepository.findById(id).isPresent()){
             Dog dog = dogRepository.findById(id).get();
 
-            Dog updatedDog = transferToDog(dogInputDto);
+            Person dogOwner;
+            //Check if given Person id exists in database
+            try {
+                dogOwner = personRepository.findById(dog.getPerson().getId()).get();
+            } catch (NoSuchElementException ex) {
+                throw new RecordNotFoundException("Person not found");
+            }
 
+            Dog updatedDog = transferToDog(dogInputDto);
+            updatedDog.setPerson(dogOwner);
             //Keeping the former id, as we will update the existing dog
             updatedDog.setId(dog.getId());
 
@@ -118,17 +132,15 @@ public class DogService {
                 updatedDog.setFood(dogPatchDto.getFood());
             }
             if (dogPatchDto.getSex() != null) {
-                for(Sex s : Sex.values()) {
-                    boolean isSexFound = false;
-                    if (s.name().equalsIgnoreCase(dogPatchDto.getSex().toString())) {
-                        updatedDog.setSex(Sex.valueOf(dogPatchDto.getSex()));
-                        isSexFound = true;
-                        break;
-                    }
-                    if (!isSexFound) {
-                        throw new RecordNotFoundException("Sex not found");
-                    }
+                String newSexString = dogPatchDto.getSex();
+                Sex newSex;
+                //Check if given value exists in enumeration
+                try {
+                    newSex = Sex.valueOf(newSexString);
+                } catch (IllegalArgumentException ex) {
+                    throw new RecordNotFoundException("Sex not found");
                 }
+                updatedDog.setSex(newSex);
             }
             if (dogPatchDto.getWeightInGrams() > 0.0) {
                 updatedDog.setWeightInGrams(dogPatchDto.getWeightInGrams());
@@ -146,36 +158,39 @@ public class DogService {
                 updatedDog.setFood(dogPatchDto.getFood());
             }
             if (dogPatchDto.getBreed() != null) {
-                boolean isBreedFound = false;
-                for(Breed b : Breed.values()){
-                    if(b.name().equalsIgnoreCase(dogPatchDto.getBreed())) {
-                        updatedDog.setBreed(Breed.valueOf(dogPatchDto.getBreed()));
-                        isBreedFound = true;
-                        break;
-                    }
-                }
-                if(!isBreedFound) {
+                String newBreedString = dogPatchDto.getBreed();
+                Breed newBreed;
+                //Check if given value exists in enumeration
+                try {
+                    newBreed = Breed.valueOf(newBreedString);
+                } catch (IllegalArgumentException ex) {
                     throw new RecordNotFoundException("Breed not found");
                 }
+                updatedDog.setBreed(newBreed);
             }
             if (dogPatchDto.getBreedGroup() != null) {
-                boolean isBreedGroupFound = false;
-                for(BreedGroup b : BreedGroup.values()){
-                    if(b.name().equalsIgnoreCase(dogPatchDto.getBreedGroup())) {
-                        updatedDog.setBreedGroup(BreedGroup.valueOf(dogPatchDto.getBreedGroup()));
-                        isBreedGroupFound = true;
-                        break;
-                    }
-                }
-                if(!isBreedGroupFound) {
+                String newBreedGroupString = dogPatchDto.getBreedGroup();
+                BreedGroup newBreedGroup;
+                //Check if given value exists in enumeration
+                try {
+                    newBreedGroup = BreedGroup.valueOf(newBreedGroupString);
+                } catch (IllegalArgumentException ex) {
                     throw new RecordNotFoundException("Breed group not found");
                 }
+                updatedDog.setBreedGroup(newBreedGroup);
             }
             if (dogPatchDto.getChipNumber() != null) {
                 updatedDog.setChipnumber(dogPatchDto.getChipNumber());
             }
-            if (dogInputDto.getPerson() != null) {
-                updatedDog.setPerson(dogInputDto.getPerson());
+            if (dogPatchDto.getPerson() != null) {
+                Person dogOwner;
+                //Check if given Person id exists in database
+                try {
+                    dogOwner = personRepository.findById(dogPatchDto.getPerson().getId()).get();
+                } catch (NoSuchElementException ex) {
+                    throw new RecordNotFoundException("Person not found");
+                }
+                updatedDog.setPerson(dogOwner);
             }
 
             dogRepository.save(updatedDog);

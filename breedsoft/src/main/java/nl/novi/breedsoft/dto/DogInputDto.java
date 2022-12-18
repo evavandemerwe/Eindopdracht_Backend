@@ -1,6 +1,7 @@
 package nl.novi.breedsoft.dto;
 import javax.validation.constraints.*;
 
+import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 import lombok.Data;
 import nl.novi.breedsoft.model.animal.Person;
 import nl.novi.breedsoft.model.animal.enumerations.Breed;
@@ -54,5 +55,6 @@ public class DogInputDto {
 
     private int dogYears;
 
+    @JsonIncludeProperties({"id", "firstName", "lastName", "street", "houseNumber", "houseNumberExtension", "zipCode", "city", "country"})
     private Person person;
 }

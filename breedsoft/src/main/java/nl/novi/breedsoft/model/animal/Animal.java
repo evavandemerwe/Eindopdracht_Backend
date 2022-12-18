@@ -49,9 +49,13 @@ public abstract class Animal {
     }
 
     public int getAge() {
-        LocalDate today = LocalDate.now();
-        Period periodBetweenTodayAndBirthDate = Period.between(getDateOfBirth(), today);
-        return  periodBetweenTodayAndBirthDate.getYears();
+        if(getDateOfBirth() == null) {
+            return 0;
+        }else {
+            LocalDate today = LocalDate.now();
+            Period periodBetweenTodayAndBirthDate = Period.between(getDateOfBirth(), today);
+            return periodBetweenTodayAndBirthDate.getYears();
+        }
     }
 
     public double getWeightInGrams() {

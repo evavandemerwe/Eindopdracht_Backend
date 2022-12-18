@@ -1,6 +1,7 @@
 package nl.novi.breedsoft.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 import lombok.Data;
 import nl.novi.breedsoft.model.animal.Person;
 import nl.novi.breedsoft.model.animal.enumerations.Breed;
@@ -26,5 +27,7 @@ public class DogOutputDto {
     private Breed breed;
     private BreedGroup breedGroup;
     private ArrayList<String> Litter;
+
+    @JsonIncludeProperties({"id", "firstName", "lastName", "street", "houseNumber", "houseNumberExtension", "zipCode", "city", "country"})
     private Person person;
 }
