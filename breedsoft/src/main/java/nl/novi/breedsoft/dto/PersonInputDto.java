@@ -1,6 +1,9 @@
 package nl.novi.breedsoft.dto;
 import javax.validation.constraints.*;
+
+import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 import lombok.Data;
+import nl.novi.breedsoft.model.animal.Dog;
 import nl.novi.breedsoft.model.animal.enumerations.Sex;
 import nl.novi.breedsoft.utility.ValueOfEnum;
 import java.time.LocalDate;
@@ -41,4 +44,7 @@ public class PersonInputDto {
 
     @NotEmpty(message = "Please enter a country")
     private String country;
+
+    @JsonIncludeProperties("id")
+    private Dog dog;
 }

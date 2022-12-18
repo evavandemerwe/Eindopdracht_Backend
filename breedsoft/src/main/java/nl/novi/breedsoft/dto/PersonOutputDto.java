@@ -1,6 +1,8 @@
 package nl.novi.breedsoft.dto;
 
+import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 import lombok.Data;
+import nl.novi.breedsoft.model.animal.Dog;
 import nl.novi.breedsoft.model.animal.enumerations.Sex;
 
 
@@ -18,4 +20,7 @@ public class PersonOutputDto {
     private String zipCode;
     private String city;
     private String country;
+
+    @JsonIncludeProperties("id")
+    private Dog dog;
 }
