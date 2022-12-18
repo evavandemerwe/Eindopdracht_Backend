@@ -1,15 +1,16 @@
 package nl.novi.breedsoft.dto;
-import javax.validation.constraints.*;
+import jakarta.validation.constraints.*;
 
 import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 import lombok.Data;
+import nl.novi.breedsoft.model.animal.Dog;
 import nl.novi.breedsoft.model.animal.Person;
 import nl.novi.breedsoft.model.animal.enumerations.Breed;
 import nl.novi.breedsoft.model.animal.enumerations.BreedGroup;
 import nl.novi.breedsoft.model.animal.enumerations.Sex;
 import nl.novi.breedsoft.utility.ValueOfEnum;
 import java.time.LocalDate;
-import java.util.ArrayList;
+import java.util.List;
 
 @Data
 public class DogInputDto {
@@ -51,7 +52,7 @@ public class DogInputDto {
     private String breedGroup;
 
     //Can be empty
-    private ArrayList<String> litter;
+    private List<Dog> litter;
 
     private int dogYears;
 

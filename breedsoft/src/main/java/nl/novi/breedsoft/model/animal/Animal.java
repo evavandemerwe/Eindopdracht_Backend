@@ -1,6 +1,6 @@
 package nl.novi.breedsoft.model.animal;
 import nl.novi.breedsoft.model.animal.enumerations.*;
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.time.Period;
 
