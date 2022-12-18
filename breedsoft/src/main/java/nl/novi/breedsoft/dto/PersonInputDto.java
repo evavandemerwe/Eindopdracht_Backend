@@ -45,6 +45,6 @@ public class PersonInputDto {
     @NotEmpty(message = "Please enter a country")
     private String country;
 
-    @JsonIncludeProperties("id")
+    @JsonIncludeProperties({"id", "name", "sex", "dateOfBirth", "breed", "kindOfHair", "haircolor"})
     private Dog dog;
 }

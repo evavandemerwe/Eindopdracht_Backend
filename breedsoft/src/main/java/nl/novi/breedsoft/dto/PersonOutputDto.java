@@ -21,6 +21,6 @@ public class PersonOutputDto {
     private String city;
     private String country;
 
-    @JsonIncludeProperties("id")
+    @JsonIncludeProperties({"id", "name", "sex", "dateOfBirth", "breed", "kindOfHair", "haircolor"})
     private Dog dog;
 }
