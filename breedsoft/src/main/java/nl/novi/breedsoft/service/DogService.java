@@ -67,6 +67,16 @@ public class DogService {
     //Create creates a new entity in the database
     public Long createDog(DogInputDto dogInputDto){
 
+        //Check if a dog owner is given
+        if(dogInputDto.getPerson() != null) {
+            try {
+                // if so, check if the owner exists
+                personRepository.findById(dogInputDto.getPerson().getId()).get();
+            } catch (NoSuchElementException ex) {
+                throw new RecordNotFoundException("Person not found");
+            }
+        }
+
         Dog dog = transferToDog(dogInputDto);
         dogRepository.save(dog);
 
