@@ -25,8 +25,10 @@ public class Person extends Mammal {
     private String city;
     private String country;
 
+    @Column(nullable = true)
     private boolean canHear = true;
 
+    @Column(nullable = true)
     private boolean canSee = true;
 
     //A person can have 0 to * dogs
