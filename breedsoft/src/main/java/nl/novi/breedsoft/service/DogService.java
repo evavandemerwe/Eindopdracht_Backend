@@ -3,6 +3,7 @@ package nl.novi.breedsoft.service;
 import nl.novi.breedsoft.dto.DogInputDto;
 import nl.novi.breedsoft.dto.DogOutputDto;
 import nl.novi.breedsoft.dto.DogPatchDto;
+import nl.novi.breedsoft.dto.PersonInputDto;
 import nl.novi.breedsoft.exception.RecordNotFoundException;
 import nl.novi.breedsoft.model.animal.Dog;
 import nl.novi.breedsoft.model.animal.Person;
@@ -90,8 +91,16 @@ public class DogService {
         if (dogRepository.findById(id).isPresent()){
             Dog dog = dogRepository.findById(id).get();
 
-            Dog updatedDog = transferToDog(dogInputDto);
+            Person dogOwner;
+            //Check if given Person id exists in database
+            try {
+                dogOwner = personRepository.findById(dog.getPerson().getId()).get();
+            } catch (NoSuchElementException ex) {
+                throw new RecordNotFoundException("Person not found");
+            }
 
+            Dog updatedDog = transferToDog(dogInputDto);
+            updatedDog.setPerson(dogOwner);
             //Keeping the former id, as we will update the existing dog
             updatedDog.setId(dog.getId());
 
