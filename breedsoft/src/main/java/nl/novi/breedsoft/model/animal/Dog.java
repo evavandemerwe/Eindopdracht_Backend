@@ -1,5 +1,6 @@
 package nl.novi.breedsoft.model.animal;
 
+import jakarta.annotation.Nullable;
 import nl.novi.breedsoft.dto.PersonInputDto;
 import nl.novi.breedsoft.model.animal.enumerations.*;
 import java.util.List;
@@ -27,8 +28,10 @@ public class Dog extends Mammal{
     @Column(name = "breed_group")
     private BreedGroup breedGroup;
 
+    @Column(nullable = true)
     private boolean canHear = true;
 
+    @Column(nullable = true)
     private boolean canSee = true;
     //A dog has one owner
     @ManyToOne
