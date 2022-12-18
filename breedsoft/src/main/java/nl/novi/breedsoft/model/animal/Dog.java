@@ -2,9 +2,9 @@ package nl.novi.breedsoft.model.animal;
 
 import nl.novi.breedsoft.dto.PersonInputDto;
 import nl.novi.breedsoft.model.animal.enumerations.*;
-import java.util.ArrayList;
+import java.util.List;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "dogs")
@@ -20,7 +20,8 @@ public class Dog extends Mammal{
     @Enumerated(EnumType.STRING)
     @Column(name = "breed")
     private Breed breed;
-    private ArrayList<String> Litter;
+    @OneToMany
+    private List<Dog> Litter;
     int dogYears;
     @Enumerated(EnumType.STRING)
     @Column(name = "breed_group")
@@ -79,11 +80,11 @@ public class Dog extends Mammal{
         this.breed = breed;
     }
 
-    public ArrayList<String> getLitter() {
+    public List<Dog> getLitter() {
         return Litter;
     }
 
-    public void setLitter(ArrayList<String> litter) {
+    public void setLitter(List<Dog> litter) {
         Litter = litter;
     }
 

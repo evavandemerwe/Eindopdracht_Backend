@@ -1,5 +1,5 @@
 package nl.novi.breedsoft.dto;
-import javax.validation.constraints.*;
+import jakarta.validation.constraints.*;
 
 import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 import lombok.Data;

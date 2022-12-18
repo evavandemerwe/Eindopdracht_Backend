@@ -2,7 +2,7 @@ package nl.novi.breedsoft.model.animal;
 
 import nl.novi.breedsoft.model.animal.enumerations.*;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public abstract class Mammal extends Animal {

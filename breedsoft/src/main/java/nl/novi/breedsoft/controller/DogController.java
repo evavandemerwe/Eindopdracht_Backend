@@ -12,7 +12,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import java.net.URI;
 import java.util.List;
 
@@ -52,7 +52,7 @@ public class DogController {
     }
 
     //Create a new dog in the database
-    @PostMapping("/dogs")
+    @PostMapping("/dogs/")
     public ResponseEntity<Object> createDog(@Valid @RequestBody DogInputDto dogInputDto, BindingResult br) {
         //If there is an error in the binding
         if (br.hasErrors()) {
