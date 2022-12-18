@@ -2,11 +2,10 @@ package nl.novi.breedsoft.dto;
 
 import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 import lombok.Data;
+import nl.novi.breedsoft.model.animal.Dog;
 import nl.novi.breedsoft.model.animal.Person;
-import nl.novi.breedsoft.model.animal.enumerations.Sex;
-
 import java.time.LocalDate;
-import java.util.ArrayList;
+import java.util.List;
 
 @Data
 public class DogPatchDto {
@@ -23,7 +22,9 @@ public class DogPatchDto {
     private String chipNumber;
     private String breed;
     private String breedGroup;
-    private ArrayList<String> Litter;
+    private List<Dog> Litter;
+    private boolean canSee;
+    private boolean canHear;
 
     @JsonIncludeProperties({"id", "firstName", "lastName", "street", "houseNumber", "houseNumberExtension", "zipCode", "city", "country"})
     private Person person;

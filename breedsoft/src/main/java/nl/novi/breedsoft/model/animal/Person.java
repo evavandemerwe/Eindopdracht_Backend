@@ -1,6 +1,5 @@
 package nl.novi.breedsoft.model.animal;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import nl.novi.breedsoft.model.animal.enumerations.AnimalType;
 import nl.novi.breedsoft.model.animal.enumerations.Birthmethod;
 import nl.novi.breedsoft.model.animal.enumerations.Bloodtemperature;
@@ -25,6 +24,10 @@ public class Person extends Mammal {
     private String zipCode;
     private String city;
     private String country;
+
+    private boolean canHear = true;
+
+    private boolean canSee = true;
 
     //A person can have 0 to * dogs
     @OneToMany(mappedBy = "person")
@@ -118,5 +121,15 @@ public class Person extends Mammal {
 
     public void setDogs(List<Dog> dogs) {
         this.dogs = dogs;
+    }
+
+    @Override
+    public boolean canHear() {
+        return canHear;
+    }
+
+    @Override
+    public boolean canSee() {
+        return canSee;
     }
 }

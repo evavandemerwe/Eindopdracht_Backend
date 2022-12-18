@@ -56,6 +56,10 @@ public class DogInputDto {
 
     private int dogYears;
 
+    private boolean canSee;
+
+    private boolean canHear;
+
     @JsonIncludeProperties({"id", "firstName", "lastName", "street", "houseNumber", "houseNumberExtension", "zipCode", "city", "country"})
     private Person person;
 }
