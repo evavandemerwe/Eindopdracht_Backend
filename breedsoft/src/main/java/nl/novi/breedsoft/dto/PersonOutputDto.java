@@ -5,6 +5,8 @@ import lombok.Data;
 import nl.novi.breedsoft.model.animal.Dog;
 import nl.novi.breedsoft.model.animal.enumerations.Sex;
 
+import java.util.List;
+
 
 @Data
 public class PersonOutputDto {
@@ -22,5 +24,5 @@ public class PersonOutputDto {
     private String country;
 
     @JsonIncludeProperties({"id", "name", "sex", "dateOfBirth", "breed", "kindOfHair", "haircolor"})
-    private Dog dog;
+    private List<Dog> dogs;
 }

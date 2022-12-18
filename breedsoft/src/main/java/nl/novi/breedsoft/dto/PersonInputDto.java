@@ -7,6 +7,7 @@ import nl.novi.breedsoft.model.animal.Dog;
 import nl.novi.breedsoft.model.animal.enumerations.Sex;
 import nl.novi.breedsoft.utility.ValueOfEnum;
 import java.time.LocalDate;
+import java.util.List;
 
 @Data
 public class PersonInputDto {
@@ -46,5 +47,5 @@ public class PersonInputDto {
     private String country;
 
     @JsonIncludeProperties({"id", "name", "sex", "dateOfBirth", "breed", "kindOfHair", "haircolor"})
-    private Dog dog;
+    private List<Dog> dogs;
 }

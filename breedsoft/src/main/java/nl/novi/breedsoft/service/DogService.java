@@ -3,7 +3,6 @@ package nl.novi.breedsoft.service;
 import nl.novi.breedsoft.dto.DogInputDto;
 import nl.novi.breedsoft.dto.DogOutputDto;
 import nl.novi.breedsoft.dto.DogPatchDto;
-import nl.novi.breedsoft.dto.PersonInputDto;
 import nl.novi.breedsoft.exception.RecordNotFoundException;
 import nl.novi.breedsoft.model.animal.Dog;
 import nl.novi.breedsoft.model.animal.Person;
@@ -26,10 +25,10 @@ public class DogService {
 
     //Constructor injection
     public DogService(
-            DogRepository repo,
+            DogRepository dogRepository,
             PersonRepository personRepository
     ){
-        this.dogRepository = repo;
+        this.dogRepository = dogRepository;
         this.personRepository = personRepository;
     }
 

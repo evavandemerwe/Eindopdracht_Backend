@@ -2,22 +2,31 @@ package nl.novi.breedsoft.service;
 import nl.novi.breedsoft.dto.PersonInputDto;
 import nl.novi.breedsoft.dto.PersonOutputDto;
 import nl.novi.breedsoft.exception.RecordNotFoundException;
+import nl.novi.breedsoft.model.animal.Dog;
 import nl.novi.breedsoft.model.animal.Person;
 import nl.novi.breedsoft.model.animal.enumerations.Sex;
+import nl.novi.breedsoft.repository.DogRepository;
 import nl.novi.breedsoft.repository.PersonRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
 public class PersonService {
     private final PersonRepository personRepository;
 
-    public PersonService(PersonRepository personRepository) {
+    private final DogRepository dogRepository;
+
+    public PersonService(
+            PersonRepository personRepository,
+            DogRepository dogRepository
+    ) {
         this.personRepository = personRepository;
+        this.dogRepository = dogRepository;
     }
 
     //Output Dto is used for representing data from database to the user
@@ -76,12 +85,17 @@ public class PersonService {
 
         if (personRepository.findById(id).isPresent()){
             Person person = personRepository.findById(id).get();
-
             Person updatedPerson = transferToPerson(personInputDto);
-
+            List<Dog> dogs = updatedPerson.getDogs();
+            for(Dog dog : dogs){
+                long foundDogId = dog.getId();
+                Optional <Dog> dogFound = dogRepository.findById(foundDogId);
+                if(!dogFound.isPresent()) {
+                    throw new RecordNotFoundException("Dog " + foundDogId + " not found");
+                }
+            }
             //Keeping the former id, as we will update the existing dog
             updatedPerson.setId(person.getId());
-
             personRepository.save(updatedPerson);
 
             return transferToOutputDto(updatedPerson);
@@ -168,6 +182,7 @@ public class PersonService {
         personOutputDto.setZipCode(person.getZipCode());
         personOutputDto.setCity(person.getCity());
         personOutputDto.setCountry(person.getCountry());
+        personOutputDto.setDogs(person.getDogs());
 
         return personOutputDto;
     }
@@ -185,6 +200,9 @@ public class PersonService {
         person.setZipCode(dto.getZipCode());
         person.setCity(dto.getCity());
         person.setCountry(dto.getCountry());
+        if(dto.getDogs() != null){
+            person.setDogs(dto.getDogs());
+        }
 
         return person;
     }
