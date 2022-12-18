@@ -27,6 +27,9 @@ public class Dog extends Mammal{
     @Column(name = "breed_group")
     private BreedGroup breedGroup;
 
+    private boolean canHear = true;
+
+    private boolean canSee = true;
     //A dog has one owner
     @ManyToOne
     @JoinColumn(name = "person_id")
@@ -120,5 +123,15 @@ public class Dog extends Mammal{
 
     public void setPerson(Person person) {
         this.person = person;
+    }
+
+    @Override
+    public boolean canHear() {
+        return canHear;
+    }
+
+    @Override
+    public boolean canSee() {
+        return canSee;
     }
 }
