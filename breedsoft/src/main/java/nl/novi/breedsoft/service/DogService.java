@@ -3,6 +3,7 @@ package nl.novi.breedsoft.service;
 import nl.novi.breedsoft.dto.DogInputDto;
 import nl.novi.breedsoft.dto.DogOutputDto;
 import nl.novi.breedsoft.dto.DogPatchDto;
+import nl.novi.breedsoft.exception.EnumValueNotFoundException;
 import nl.novi.breedsoft.exception.RecordNotFoundException;
 import nl.novi.breedsoft.model.animal.Dog;
 import nl.novi.breedsoft.model.animal.Person;
@@ -138,7 +139,7 @@ public class DogService {
                 try {
                     newSex = Sex.valueOf(newSexString);
                 } catch (IllegalArgumentException ex) {
-                    throw new RecordNotFoundException("Sex not found");
+                    throw new EnumValueNotFoundException("Sex not found");
                 }
                 updatedDog.setSex(newSex);
             }
@@ -164,7 +165,7 @@ public class DogService {
                 try {
                     newBreed = Breed.valueOf(newBreedString);
                 } catch (IllegalArgumentException ex) {
-                    throw new RecordNotFoundException("Breed not found");
+                    throw new EnumValueNotFoundException("Breed not found");
                 }
                 updatedDog.setBreed(newBreed);
             }
@@ -175,7 +176,7 @@ public class DogService {
                 try {
                     newBreedGroup = BreedGroup.valueOf(newBreedGroupString);
                 } catch (IllegalArgumentException ex) {
-                    throw new RecordNotFoundException("Breed group not found");
+                    throw new EnumValueNotFoundException("Breed group not found");
                 }
                 updatedDog.setBreedGroup(newBreedGroup);
             }
