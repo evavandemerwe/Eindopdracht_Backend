@@ -69,14 +69,14 @@ public class DogService {
 
         //Check if a dog owner is given
         if(dogInputDto.getPerson() != null) {
-            try {
-                // if so, check if the owner exists
-                personRepository.findById(dogInputDto.getPerson().getId()).get();
-            } catch (NoSuchElementException ex) {
+            Long personId = dogInputDto.getPerson().getId();
+            if (personId == 0) {
+                throw new RecordNotFoundException("Person can only be added by ID");
+            }
+            if(!personRepository.findById(personId).isPresent()) {
                 throw new RecordNotFoundException("Person not found");
             }
         }
-
         Dog dog = transferToDog(dogInputDto);
         dogRepository.save(dog);
 
@@ -100,15 +100,17 @@ public class DogService {
 
         if (dogRepository.findById(id).isPresent()){
             Dog dog = dogRepository.findById(id).get();
-
+            long personId = dogInputDto.getPerson().getId();
+            if(personId == 0) {
+                throw new RecordNotFoundException("Person can only be added by ID");
+            }
             Person dogOwner;
             //Check if given Person id exists in database
             try {
-                dogOwner = personRepository.findById(dog.getPerson().getId()).get();
+                dogOwner = personRepository.findById(personId).get();
             } catch (NoSuchElementException ex) {
                 throw new RecordNotFoundException("Person not found");
             }
-
             Dog updatedDog = transferToDog(dogInputDto);
             updatedDog.setPerson(dogOwner);
             //Keeping the former id, as we will update the existing dog
@@ -194,10 +196,14 @@ public class DogService {
                 updatedDog.setChipnumber(dogPatchDto.getChipNumber());
             }
             if (dogPatchDto.getPerson() != null) {
+                long personId = dogPatchDto.getPerson().getId();
+                if(personId == 0) {
+                    throw new RecordNotFoundException("Person can only be added by ID");
+                }
                 Person dogOwner;
                 //Check if given Person id exists in database
                 try {
-                    dogOwner = personRepository.findById(dogPatchDto.getPerson().getId()).get();
+                    dogOwner = personRepository.findById(personId).get();
                 } catch (NoSuchElementException ex) {
                     throw new RecordNotFoundException("Person not found");
                 }
@@ -217,7 +223,7 @@ public class DogService {
 
     //DTO helper classes
 
-        public List<DogOutputDto> transferDogListToDtoList(List<Dog> dogs){
+    public List<DogOutputDto> transferDogListToDtoList(List<Dog> dogs){
         List<DogOutputDto> dogDtoList = new ArrayList<>();
 
         for(Dog dog : dogs) {

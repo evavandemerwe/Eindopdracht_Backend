@@ -25,10 +25,12 @@ public class Person extends Mammal {
     private String city;
     private String country;
 
-    @Column(nullable = true)
+    // boolean is a primitive type so cannot be null or nullable, default value has to be set
+    @Column(columnDefinition = "boolean default true")
     private boolean canHear = true;
 
-    @Column(nullable = true)
+    // boolean is a primitive type so cannot be null or nullable, default value has to be set
+    @Column(columnDefinition = "boolean default true")
     private boolean canSee = true;
 
     //A person can have 0 to * dogs
@@ -46,7 +48,7 @@ public class Person extends Mammal {
 
     //getters and setters
     public Long getId() {
-        return id;
+        return (id != null) ? id : 0;
     }
 
     public void setId(Long id) {

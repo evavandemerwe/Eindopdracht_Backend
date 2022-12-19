@@ -28,10 +28,12 @@ public class Dog extends Mammal{
     @Column(name = "breed_group")
     private BreedGroup breedGroup;
 
-    @Column(nullable = true)
+    // boolean is a primitive type so cannot be null or nullable, default value has to be set
+    @Column(columnDefinition = "boolean default true")
     private boolean canHear = true;
 
-    @Column(nullable = true)
+    // boolean is a primitive type so cannot be null or nullable, default value has to be set
+    @Column(columnDefinition = "boolean default true")
     private boolean canSee = true;
     //A dog has one owner
     @ManyToOne
