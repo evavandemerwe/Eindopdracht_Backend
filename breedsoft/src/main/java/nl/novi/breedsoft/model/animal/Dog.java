@@ -1,5 +1,6 @@
 package nl.novi.breedsoft.model.animal;
 
+import jakarta.annotation.Nullable;
 import nl.novi.breedsoft.dto.PersonInputDto;
 import nl.novi.breedsoft.model.animal.enumerations.*;
 import java.util.List;
@@ -27,6 +28,13 @@ public class Dog extends Mammal{
     @Column(name = "breed_group")
     private BreedGroup breedGroup;
 
+    // boolean is a primitive type so cannot be null or nullable, default value has to be set
+    @Column(columnDefinition = "boolean default true")
+    private boolean canHear = true;
+
+    // boolean is a primitive type so cannot be null or nullable, default value has to be set
+    @Column(columnDefinition = "boolean default true")
+    private boolean canSee = true;
     //A dog has one owner
     @ManyToOne
     @JoinColumn(name = "person_id")
@@ -120,5 +128,15 @@ public class Dog extends Mammal{
 
     public void setPerson(Person person) {
         this.person = person;
+    }
+
+    @Override
+    public boolean canHear() {
+        return canHear;
+    }
+
+    @Override
+    public boolean canSee() {
+        return canSee;
     }
 }
