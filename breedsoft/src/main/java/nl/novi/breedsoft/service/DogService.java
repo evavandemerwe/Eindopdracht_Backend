@@ -3,6 +3,7 @@ package nl.novi.breedsoft.service;
 import nl.novi.breedsoft.dto.DogInputDto;
 import nl.novi.breedsoft.dto.DogOutputDto;
 import nl.novi.breedsoft.dto.DogPatchDto;
+import nl.novi.breedsoft.exception.EnumValueNotFoundException;
 import nl.novi.breedsoft.exception.RecordNotFoundException;
 import nl.novi.breedsoft.model.animal.Dog;
 import nl.novi.breedsoft.model.animal.Person;
@@ -66,6 +67,16 @@ public class DogService {
     //Create creates a new entity in the database
     public Long createDog(DogInputDto dogInputDto){
 
+        //Check if a dog owner is given
+        if(dogInputDto.getPerson() != null) {
+            Long personId = dogInputDto.getPerson().getId();
+            if (personId == 0) {
+                throw new RecordNotFoundException("Person can only be added by ID");
+            }
+            if(!personRepository.findById(personId).isPresent()) {
+                throw new RecordNotFoundException("Person not found");
+            }
+        }
         Dog dog = transferToDog(dogInputDto);
         dogRepository.save(dog);
 
@@ -89,15 +100,17 @@ public class DogService {
 
         if (dogRepository.findById(id).isPresent()){
             Dog dog = dogRepository.findById(id).get();
-
+            long personId = dogInputDto.getPerson().getId();
+            if(personId == 0) {
+                throw new RecordNotFoundException("Person can only be added by ID");
+            }
             Person dogOwner;
             //Check if given Person id exists in database
             try {
-                dogOwner = personRepository.findById(dog.getPerson().getId()).get();
+                dogOwner = personRepository.findById(personId).get();
             } catch (NoSuchElementException ex) {
                 throw new RecordNotFoundException("Person not found");
             }
-
             Dog updatedDog = transferToDog(dogInputDto);
             updatedDog.setPerson(dogOwner);
             //Keeping the former id, as we will update the existing dog
@@ -138,7 +151,7 @@ public class DogService {
                 try {
                     newSex = Sex.valueOf(newSexString);
                 } catch (IllegalArgumentException ex) {
-                    throw new RecordNotFoundException("Sex not found");
+                    throw new EnumValueNotFoundException("Sex not found");
                 }
                 updatedDog.setSex(newSex);
             }
@@ -164,7 +177,7 @@ public class DogService {
                 try {
                     newBreed = Breed.valueOf(newBreedString);
                 } catch (IllegalArgumentException ex) {
-                    throw new RecordNotFoundException("Breed not found");
+                    throw new EnumValueNotFoundException("Breed not found");
                 }
                 updatedDog.setBreed(newBreed);
             }
@@ -175,7 +188,7 @@ public class DogService {
                 try {
                     newBreedGroup = BreedGroup.valueOf(newBreedGroupString);
                 } catch (IllegalArgumentException ex) {
-                    throw new RecordNotFoundException("Breed group not found");
+                    throw new EnumValueNotFoundException("Breed group not found");
                 }
                 updatedDog.setBreedGroup(newBreedGroup);
             }
@@ -183,10 +196,14 @@ public class DogService {
                 updatedDog.setChipnumber(dogPatchDto.getChipNumber());
             }
             if (dogPatchDto.getPerson() != null) {
+                long personId = dogPatchDto.getPerson().getId();
+                if(personId == 0) {
+                    throw new RecordNotFoundException("Person can only be added by ID");
+                }
                 Person dogOwner;
                 //Check if given Person id exists in database
                 try {
-                    dogOwner = personRepository.findById(dogPatchDto.getPerson().getId()).get();
+                    dogOwner = personRepository.findById(personId).get();
                 } catch (NoSuchElementException ex) {
                     throw new RecordNotFoundException("Person not found");
                 }
@@ -206,7 +223,7 @@ public class DogService {
 
     //DTO helper classes
 
-        public List<DogOutputDto> transferDogListToDtoList(List<Dog> dogs){
+    public List<DogOutputDto> transferDogListToDtoList(List<Dog> dogs){
         List<DogOutputDto> dogDtoList = new ArrayList<>();
 
         for(Dog dog : dogs) {

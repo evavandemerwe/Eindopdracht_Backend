@@ -1,6 +1,5 @@
 package nl.novi.breedsoft.model.animal;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import nl.novi.breedsoft.model.animal.enumerations.AnimalType;
 import nl.novi.breedsoft.model.animal.enumerations.Birthmethod;
 import nl.novi.breedsoft.model.animal.enumerations.Bloodtemperature;
@@ -26,6 +25,14 @@ public class Person extends Mammal {
     private String city;
     private String country;
 
+    // boolean is a primitive type so cannot be null or nullable, default value has to be set
+    @Column(columnDefinition = "boolean default true")
+    private boolean canHear = true;
+
+    // boolean is a primitive type so cannot be null or nullable, default value has to be set
+    @Column(columnDefinition = "boolean default true")
+    private boolean canSee = true;
+
     //A person can have 0 to * dogs
     @OneToMany(mappedBy = "person")
     private List<Dog> dogs;
@@ -41,7 +48,7 @@ public class Person extends Mammal {
 
     //getters and setters
     public Long getId() {
-        return id;
+        return (id != null) ? id : 0;
     }
 
     public void setId(Long id) {
@@ -118,5 +125,15 @@ public class Person extends Mammal {
 
     public void setDogs(List<Dog> dogs) {
         this.dogs = dogs;
+    }
+
+    @Override
+    public boolean canHear() {
+        return canHear;
+    }
+
+    @Override
+    public boolean canSee() {
+        return canSee;
     }
 }

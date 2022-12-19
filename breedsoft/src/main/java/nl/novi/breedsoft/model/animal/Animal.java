@@ -1,12 +1,15 @@
 package nl.novi.breedsoft.model.animal;
 import nl.novi.breedsoft.model.animal.enumerations.*;
 import jakarta.persistence.*;
+import nl.novi.breedsoft.model.animal.interfaces.Hearable;
+import nl.novi.breedsoft.model.animal.interfaces.Seeable;
+
 import java.time.LocalDate;
 import java.time.Period;
 
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-public abstract class Animal {
+public abstract class Animal implements Hearable, Seeable {
 
     //Create primary key with a unique value, making sure each table starts counting at 1 and is self-incremental
     @Id
