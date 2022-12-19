@@ -66,22 +66,16 @@ public class DogService {
 
     //Create creates a new entity in the database
     public Long createDog(DogInputDto dogInputDto){
-
         //Check if a dog owner is given
         if(dogInputDto.getPerson() != null) {
-            Long personId = dogInputDto.getPerson().getId();
-            if (personId == 0) {
-                throw new RecordNotFoundException("Person can only be added by ID");
-            }
-            if(!personRepository.findById(personId).isPresent()) {
-                throw new RecordNotFoundException("Person not found");
+            Person dogOwner = getCompletePersonById(dogInputDto.getPerson().getId());
+            if (dogOwner == null) {
+                throw new RecordNotFoundException("Provided dog owner does not exist");
             }
         }
         Dog dog = transferToDog(dogInputDto);
         dogRepository.save(dog);
-
         return dog.getId();
-
     }
 
     //DELETE deletes an entity from the database if found
@@ -97,38 +91,20 @@ public class DogService {
     //PUT sends an enclosed entity of a resource to the server.
     //If the entity already exists, the server updates its data. Otherwise, the server creates a new entity
     public Object updateDog(Long id, DogInputDto dogInputDto) {
-
         if (dogRepository.findById(id).isPresent()){
             Dog dog = dogRepository.findById(id).get();
             Dog updatedDog = transferToDog(dogInputDto);
-
-            if(dogInputDto.getPerson() != null) {
-                Person dogOwner;
-                long personId = dogInputDto.getPerson().getId();
-
-                if (personId == 0) {
-                    throw new RecordNotFoundException("Person can only be added by ID");
-                }
-                if (!personRepository.findById(personId).isPresent()) {
-                    throw new RecordNotFoundException("Person not found");
-                }
-
-                //Check if given Person id exists in database
-                try {
-                    dogOwner = personRepository.findById(personId).get();
-                } catch (NoSuchElementException ex) {
-                    throw new RecordNotFoundException("Person not found");
+            if (dogInputDto.getPerson() != null) {
+                Person dogOwner = getCompletePersonById(dogInputDto.getPerson().getId());
+                if (dogOwner == null) {
+                    throw new RecordNotFoundException("Provided dog owner does not exist");
                 }
                 updatedDog.setPerson(dogOwner);
             }
-
             //Keeping the former id, as we will update the existing dog
             updatedDog.setId(dog.getId());
-
             dogRepository.save(updatedDog);
-
             return transferToOutputDto(updatedDog);
-
         } else {
             createDog(dogInputDto);
             return dogInputDto;
@@ -205,34 +181,22 @@ public class DogService {
                 updatedDog.setChipnumber(dogPatchDto.getChipNumber());
             }
             if (dogPatchDto.getPerson() != null) {
-                long personId = dogPatchDto.getPerson().getId();
-                if(personId == 0) {
-                    throw new RecordNotFoundException("Person can only be added by ID");
-                }
-                Person dogOwner;
-                //Check if given Person id exists in database
-                try {
-                    dogOwner = personRepository.findById(personId).get();
-                } catch (NoSuchElementException ex) {
-                    throw new RecordNotFoundException("Person not found");
+                Person dogOwner = getCompletePersonById(dogPatchDto.getPerson().getId());
+                if (dogOwner == null) {
+                    throw new RecordNotFoundException("Provided dog owner does not exist");
                 }
                 updatedDog.setPerson(dogOwner);
             }
-
             dogRepository.save(updatedDog);
-
             return transferToOutputDto(updatedDog);
-
         } else {
-
             throw new RecordNotFoundException("Dog is not found.");
-
         }
     }
 
     //DTO helper classes
 
-    public List<DogOutputDto> transferDogListToDtoList(List<Dog> dogs){
+    private List<DogOutputDto> transferDogListToDtoList(List<Dog> dogs){
         List<DogOutputDto> dogDtoList = new ArrayList<>();
 
         for(Dog dog : dogs) {
@@ -242,7 +206,7 @@ public class DogService {
         return dogDtoList;
     }
 
-    public DogOutputDto transferToOutputDto(Dog dog){
+    private DogOutputDto transferToOutputDto(Dog dog){
 
         DogOutputDto dogDto = new DogOutputDto();
         dogDto.setId(dog.getId());
@@ -263,7 +227,7 @@ public class DogService {
         return dogDto;
     }
 
-    public Dog transferToDog(DogInputDto dto){
+    private Dog transferToDog(DogInputDto dto){
         Dog dog = new Dog();
 
         dog.setName(dto.getName());
@@ -283,5 +247,18 @@ public class DogService {
         dog.setPerson(dto.getPerson());
 
         return dog;
+    }
+
+    /**
+     * Get all person information recorded by give ID.
+     * @param personId ID of the person information requested
+     * @return Person or null if not present.
+     */
+    private Person getCompletePersonById(Long personId) {
+        if (personId == 0) {
+            throw new RecordNotFoundException("Missing Person ID");
+        }
+        Optional<Person> person = personRepository.findById(personId);
+        return (person.isPresent()) ? person.get() : null;
     }
 }
