@@ -15,7 +15,6 @@ import nl.novi.breedsoft.repository.DogRepository;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 
@@ -75,6 +74,7 @@ public class DogService {
         }
         Dog dog = transferToDog(dogInputDto);
         dogRepository.save(dog);
+
         return dog.getId();
     }
 
@@ -109,7 +109,6 @@ public class DogService {
             createDog(dogInputDto);
             return dogInputDto;
         }
-
     }
 
     //PATCH will only update an existing object,
@@ -133,10 +132,12 @@ public class DogService {
                 String newSexString = dogPatchDto.getSex();
                 Sex newSex;
                 //Check if given value exists in enumeration
+                //Because patchDTO has no checks on enumerations,
+                //We have to throw an exception if the value does not exist in the enum
                 try {
                     newSex = Sex.valueOf(newSexString);
                 } catch (IllegalArgumentException ex) {
-                    throw new EnumValueNotFoundException("Sex not found");
+                    throw new EnumValueNotFoundException("Sex is not found");
                 }
                 updatedDog.setSex(newSex);
             }
@@ -159,10 +160,12 @@ public class DogService {
                 String newBreedString = dogPatchDto.getBreed();
                 Breed newBreed;
                 //Check if given value exists in enumeration
+                //Because patchDTO has no checks on enumerations,
+                //We have to throw an exception if the value does not exist in the enum
                 try {
                     newBreed = Breed.valueOf(newBreedString);
                 } catch (IllegalArgumentException ex) {
-                    throw new EnumValueNotFoundException("Breed not found");
+                    throw new EnumValueNotFoundException("Breed is not found");
                 }
                 updatedDog.setBreed(newBreed);
             }
@@ -170,10 +173,12 @@ public class DogService {
                 String newBreedGroupString = dogPatchDto.getBreedGroup();
                 BreedGroup newBreedGroup;
                 //Check if given value exists in enumeration
+                //Because patchDTO has no checks on enumerations,
+                //We have to throw an exception if the value does not exist in the enum
                 try {
                     newBreedGroup = BreedGroup.valueOf(newBreedGroupString);
                 } catch (IllegalArgumentException ex) {
-                    throw new EnumValueNotFoundException("Breed group not found");
+                    throw new EnumValueNotFoundException("Breedgroup is not found");
                 }
                 updatedDog.setBreedGroup(newBreedGroup);
             }

@@ -17,7 +17,7 @@ import java.net.URI;
 import java.util.List;
 
 @RestController
-@RequestMapping()
+@RequestMapping("dogs")
 public class DogController {
 
     private final DogService dogService;
@@ -27,13 +27,13 @@ public class DogController {
     }
 
     //Get mapping to get all dogs from the database
-    @GetMapping("/dogs")
+    @GetMapping("")
     public ResponseEntity<Iterable<DogOutputDto>> getAllDogs() {
         return ResponseEntity.ok(dogService.getAllDogs());
     }
 
     //Get mapping to get one dog by id from the database
-    @GetMapping("/dogs/findbyid/")
+    @GetMapping("/findbyid/")
     public ResponseEntity<DogOutputDto> getDogById(@RequestParam("id") Long id) {
 
         DogOutputDto dogOutputDto = dogService.getDogById(id);
@@ -43,7 +43,7 @@ public class DogController {
     }
 
     //Get mapping to get one dog by name from the database
-    @GetMapping("/dogs/findbyname/")
+    @GetMapping("/findbyname/")
     public ResponseEntity<Object> getDogByName(@RequestParam("name") String name) {
 
         List<DogOutputDto> dogOutputDtoList = dogService.getDogByName(name);
@@ -52,7 +52,7 @@ public class DogController {
     }
 
     //Create a new dog in the database
-    @PostMapping("/dogs")
+    @PostMapping("")
     public ResponseEntity<Object> createDog(@Valid @RequestBody DogInputDto dogInputDto, BindingResult br) {
         //If there is an error in the binding
         if (br.hasErrors()) {
@@ -70,7 +70,7 @@ public class DogController {
     }
 
 
-    @DeleteMapping("/dogs/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Object> deleteDog(@PathVariable Long id) {
         dogService.deleteDog(id);
         return ResponseEntity.noContent().build();
