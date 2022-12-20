@@ -103,7 +103,7 @@ public class PersonService {
             for(Dog dog : dogs){
                 long foundDogId = dog.getId();
                 Optional <Dog> dogFound = dogRepository.findById(foundDogId);
-                if(!dogFound.isPresent()) {
+                if(dogFound.isEmpty()) {
                     throw new RecordNotFoundException("Dog " + foundDogId + " not found");
                 }
             }
