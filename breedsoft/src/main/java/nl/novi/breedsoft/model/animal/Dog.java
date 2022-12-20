@@ -51,7 +51,7 @@ public class Dog extends Mammal{
     //Getters and setter
 
     public Long getId() {
-        return id;
+        return (id != null) ? id : 0;
     }
 
     public void setId(Long id) {

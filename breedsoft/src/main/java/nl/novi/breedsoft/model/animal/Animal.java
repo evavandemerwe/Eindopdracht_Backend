@@ -117,19 +117,4 @@ public abstract class Animal implements Hearable, Seeable {
         this.animalType = animalType;
     }
 
-    /*   public Animal getFather() {
-        return father;
-    }
-
-    public void setFather(Animal father) {
-        this.father = father;
-    }
-
-    public Animal getMother() {
-        return mother;
-    }
-
-    public void setMother(Animal mother) {
-        this.mother = mother;
-    }*/
 }
