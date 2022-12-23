@@ -40,7 +40,7 @@ public class PersonController {
     }
 
     //Get mapping to get one person by last name from the database
-    @GetMapping("/findbyname/")
+    @GetMapping("/findbyname")
     public ResponseEntity<Object> getPersonByName(@RequestParam("lastName") String lastName) {
 
         List<PersonOutputDto> personOutputDtoList = personService.getPersonByName(lastName);
