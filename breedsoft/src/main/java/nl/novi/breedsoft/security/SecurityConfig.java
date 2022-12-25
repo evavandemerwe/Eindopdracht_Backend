@@ -1,4 +1,4 @@
-package nl.novi.breedsoft.config;
+package nl.novi.breedsoft.security;
 
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.jwk.JWKSet;
