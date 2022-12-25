@@ -11,4 +11,13 @@ public class HomeController {
         return "Username: " + authentication.getName();
     }
 
+    @GetMapping("/user")
+    public String user(Authentication authentication) {
+        return "Username: " + authentication.getName();
+    }
+
+    @GetMapping("/admin")
+    public String admin(Authentication authentication) {
+        return "Username: " + authentication.getName();
+    }
 }
