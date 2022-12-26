@@ -77,7 +77,7 @@ public class SecurityConfig {
                 // CSRF disabled because we are working with stateless sessions
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/user").hasAnyAuthority("ROLE_USER","ROLE_ADMIN")
+                        .requestMatchers("/users").hasAnyAuthority("ROLE_ADMIN")
                         .requestMatchers("/admin").hasAuthority("ROLE_ADMIN")
                         .anyRequest().authenticated()
                 )

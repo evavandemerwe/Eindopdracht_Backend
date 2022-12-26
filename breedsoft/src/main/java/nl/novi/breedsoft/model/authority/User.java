@@ -1,12 +1,9 @@
 package nl.novi.breedsoft.model.authority;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
-
-import java.util.Collection;
 import java.util.List;
-import java.util.Set;
+
 
 @Data
 @NoArgsConstructor
@@ -35,7 +32,7 @@ public class User {
                 @JoinColumn(name = "AUTHORITIES_ID", referencedColumnName = "ID")
             }
         )
-    private Set<Authority> authorities;
+    private List<Authority> authorities;
 
     public Long getId() {
         return (id != null) ? id : 0;

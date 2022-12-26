@@ -76,7 +76,7 @@ public class DogController {
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("/dogs/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<Object> updateDog(@PathVariable("id") Long id, @Valid @RequestBody DogInputDto dogInputDto, BindingResult br) {
         //If there is an error in the binding
         if (br.hasErrors()) {
@@ -88,7 +88,7 @@ public class DogController {
     }
 
     //@Valid niet toegepast, omdat je op een PATCH alleen de velden mee geeft die aangepast moeten worden
-    @PatchMapping("/dogs/{id}")
+    @PatchMapping("/{id}")
     public ResponseEntity<Object> patchDog(@PathVariable("id") Long id, @Valid @RequestBody DogPatchDto dogPatchDto, BindingResult br){
         //If there is an error in the binding
         if (br.hasErrors()) {
