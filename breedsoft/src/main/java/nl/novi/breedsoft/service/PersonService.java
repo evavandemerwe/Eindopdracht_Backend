@@ -83,7 +83,7 @@ public class PersonService {
     }
 
     //DELETE deletes an entity from the database if found
-    public void deletePerson(@RequestBody Long id) {
+    public void deletePerson(Long id) {
 
         if (personRepository.findById(id).isPresent()){
             personRepository.deleteById(id);

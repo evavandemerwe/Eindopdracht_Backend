@@ -1,3 +1,15 @@
+/*Inserting users into the database*/
+INSERT INTO users(id, password, username) VALUES (1001, '$2a$10$iC70FZ8fTk.yvsm.xPSmK.c7iaJGQQ.7CTFwG.m5jRQr9E5H9fiWq', 'Breeder01');
+INSERT INTO users(id, password, username) VALUES (1002, '$2a$10$hT9Emljbs0176Yd5bES/YuH2j2/4HdC./sq4oqbBmSEte9pAQUzw2', 'User01');
+
+/*Inserting roles into the database*/
+INSERT INTO authorities(id, authority) VALUES (1001, 'ROLE_ADMIN');
+INSERT INTO authorities(id, authority) VALUES (1002, 'ROLE_USER');
+
+/*Inserting authorisation id and user id to JOIN table*/
+INSERT INTO users_authorities(users_id, authorities_id)	VALUES (1001, 1001);
+INSERT INTO users_authorities(users_id, authorities_id)	VALUES (1002, 1002);
+
 /* Inserting dogs into the database */
 INSERT INTO dogs (id, animal_type, birth_method, blood_temperature, hair_color, date_of_birth, date_of_death, food, sex, weight_in_grams, kind_of_hair, number_of_teeth, breed, breed_group, chip_number, dog_years, name, can_see, can_hear) VALUES (1001, 'carnivore', 'livebirth', 'warmblooded', 'brown', '2017-1-13', null, 'dogchow', 'female', 10.0, 'long haired', 42, 'Dachschund', 'Hound', 111111111111111, 5, 'Saartje', true, true);
 INSERT INTO dogs (id, animal_type, birth_method, blood_temperature, hair_color, date_of_birth, date_of_death, food, sex, weight_in_grams, kind_of_hair, number_of_teeth, breed, breed_group, chip_number, dog_years, name, can_see, can_hear) VALUES (1002, 'carnivore', 'livebirth', 'warmblooded', 'brown', '2017-1-13', null, 'dogchow', 'female', 10.0, 'long haired', 42, 'Dachschund', 'Hound', 222222222222222, 2, 'Lotje', true, true);
