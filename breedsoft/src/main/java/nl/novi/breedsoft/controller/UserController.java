@@ -3,6 +3,7 @@ package nl.novi.breedsoft.controller;
 import jakarta.validation.Valid;
 import nl.novi.breedsoft.dto.UserInputDto;
 import nl.novi.breedsoft.dto.UserOutputDto;
+import nl.novi.breedsoft.dto.UserPatchDto;
 import nl.novi.breedsoft.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -40,6 +41,23 @@ public class UserController {
                             .fromCurrentContextPath()
                             .path("/users/" + createdId).toUriString());
             return ResponseEntity.created(uri).body("User is successfully created!");
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Object> deleteUser(@PathVariable("id") Long id){
+        userService.deleteUser(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<Object> patchUser(@PathVariable("id") Long id, @Valid @RequestBody UserPatchDto userPatchDto, BindingResult br){
+        //If there is an error in the binding
+        if (br.hasErrors()) {
+            return bindingResultError(br);
+        } else {
+            UserOutputDto userOutputDto = userService.patchUser(id, userPatchDto);
+            return ResponseEntity.ok().body(userOutputDto);
         }
     }
 }

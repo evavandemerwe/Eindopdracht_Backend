@@ -2,6 +2,7 @@ package nl.novi.breedsoft.controller;
 
 import nl.novi.breedsoft.exception.DuplicateNotAllowedException;
 import nl.novi.breedsoft.exception.EnumValueNotFoundException;
+import nl.novi.breedsoft.exception.PasswordComplexityException;
 import nl.novi.breedsoft.exception.RecordNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -23,6 +24,11 @@ public class ExceptionController {
 
     @ExceptionHandler(value = DuplicateNotAllowedException.class)
     public ResponseEntity<Object> exception(DuplicateNotAllowedException exception) {
+        return new ResponseEntity<>(exception.getMessage(), HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(value = PasswordComplexityException.class)
+    public ResponseEntity<Object> exception(PasswordComplexityException exception) {
         return new ResponseEntity<>(exception.getMessage(), HttpStatus.CONFLICT);
     }
 
