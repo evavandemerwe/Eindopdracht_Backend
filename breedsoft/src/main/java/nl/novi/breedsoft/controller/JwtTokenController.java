@@ -8,11 +8,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class AuthController {
-    private static final Logger LOG = (Logger) LoggerFactory.getLogger(AuthController.class);
+public class JwtTokenController {
+    private static final Logger LOG = (Logger) LoggerFactory.getLogger(JwtTokenController.class);
     private final TokenService tokenService;
 
-    public AuthController(TokenService tokenService) {
+    public JwtTokenController(TokenService tokenService) {
         this.tokenService = tokenService;
     }
 

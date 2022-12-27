@@ -95,7 +95,7 @@ public class UserService {
                     if(optionalAuthority.isPresent()) {
                         foundAuthorities.add(optionalAuthority.get());
                     } else {
-                      throw new RecordNotFoundException("Giving authority is not found.");
+                      throw new RecordNotFoundException("Given authority is not found.");
                     }
                 }
                 updatedUser.setAuthorities(foundAuthorities);
@@ -107,25 +107,13 @@ public class UserService {
         }
     }
 
-    private User transferToUser(UserInputDto userInputDto){
-        User user = new User();
-        user.setUsername(userInputDto.getUsername());
-        user.setPassword(userInputDto.getPassword());
-
-        if(userInputDto.getAuthorities() != null) {
-            user.setAuthorities(userInputDto.getAuthorities());
-        }
-
-        return user;
-    }
-
     private List<UserOutputDto> transferToUserOutputDtoList(List<User> users){
-        List<UserOutputDto> userDtoList = new ArrayList<>();
+        List<UserOutputDto> userOutputDtoList = new ArrayList<>();
         for(User user : users){
             UserOutputDto outputDto = transferToUserOutputDto(user);
-            userDtoList.add(outputDto);
+            userOutputDtoList.add(outputDto);
         }
-        return userDtoList;
+        return userOutputDtoList;
     }
 
     private UserOutputDto transferToUserOutputDto(User user){
