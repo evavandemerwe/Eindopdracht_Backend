@@ -2,7 +2,11 @@ package nl.novi.breedsoft.service;
 
 import nl.novi.breedsoft.dto.PersonInputDto;
 import nl.novi.breedsoft.dto.PersonOutputDto;
+import nl.novi.breedsoft.dto.PersonPatchDto;
+import nl.novi.breedsoft.exception.EnumValueNotFoundException;
+import nl.novi.breedsoft.exception.PasswordComplexityException;
 import nl.novi.breedsoft.exception.RecordNotFoundException;
+import nl.novi.breedsoft.exception.ZipCodeFormatException;
 import nl.novi.breedsoft.model.animal.Dog;
 import nl.novi.breedsoft.model.animal.Person;
 import nl.novi.breedsoft.model.animal.enumerations.Sex;
@@ -26,7 +30,7 @@ public class PersonService {
         this.dogRepository = dogRepository;
     }
 
-    //Output Dto is used for representing data from database to the user
+    //Output Dto is used for representing data from the database to the user
     //Get all persons
     public List<PersonOutputDto> getAllPersons() {
         List<Person> personList = personRepository.findAll();
@@ -85,6 +89,17 @@ public class PersonService {
     public void deletePerson(Long id) {
 
         if (personRepository.findById(id).isPresent()){
+        // If a person is deleted from the database, this person is detached from owned dogs.
+            Person personFound = personRepository.getReferenceById(id);
+
+            if(personFound.getDogs() != null){
+                List<Dog> givenDogsList = personFound.getDogs();
+                //for each given dog, check if dog exists.
+                //if dog exists, add to foundDogsList
+                for(Dog dog : givenDogsList) {
+                    dog.setPerson(null);
+                }
+            }
             personRepository.deleteById(id);
         } else {
             throw new  RecordNotFoundException("No person with given ID found.");
@@ -120,41 +135,57 @@ public class PersonService {
     }
     //PATCH will only update an existing object,
     //with the properties mapped in the request body (that are not null).
-    public PersonOutputDto patchPerson(long id, PersonInputDto personInputDto) {
+    public PersonOutputDto patchPerson(long id, PersonPatchDto personPatchDto) {
         Optional<Person> personFound = personRepository.findById(id);
 
         if (personFound.isPresent()) {
 
             Person updatedPerson = personRepository.getReferenceById(id);
-            if (personInputDto.getFirstName() != null) {
-                updatedPerson.setFirstName(personInputDto.getFirstName());
+            if (personPatchDto.getFirstName() != null) {
+                updatedPerson.setFirstName(personPatchDto.getFirstName());
             }
-            if (personInputDto.getLastName() != null) {
-                updatedPerson.setLastName(personInputDto.getLastName());
+            if (personPatchDto.getLastName() != null) {
+                updatedPerson.setLastName(personPatchDto.getLastName());
             }
-            if (personInputDto.getSex() != null) {
-                updatedPerson.setSex(Sex.valueOf(personInputDto.getSex()));
+            if (personPatchDto.getSex() != null) {
+                String newSexString = personPatchDto.getSex();
+                Sex newSex;
+                try{
+                    newSex = Sex.valueOf(newSexString);
+                } catch (IllegalArgumentException ex) {
+                    throw new EnumValueNotFoundException("Sex is not found");
+                }
+                updatedPerson.setSex(newSex);
             }
-            if (personInputDto.getDateOfBirth() != null) {
-                updatedPerson.setDateOfBirth(personInputDto.getDateOfBirth());
+            if (personPatchDto.getDateOfBirth() != null) {
+                updatedPerson.setDateOfBirth(personPatchDto.getDateOfBirth());
             }
-            if (personInputDto.getStreet() != null) {
-                updatedPerson.setStreet(personInputDto.getStreet());
+            if (personPatchDto.getStreet() != null) {
+                updatedPerson.setStreet(personPatchDto.getStreet());
             }
-            if (personInputDto.getHouseNumber() > 0) {
-                updatedPerson.setHouseNumber(personInputDto.getHouseNumber());
+            if (personPatchDto.getHouseNumber() > 0) {
+                updatedPerson.setHouseNumber(personPatchDto.getHouseNumber());
             }
-            if (personInputDto.getHouseNumberExtension() != null) {
-                updatedPerson.setHouseNumberExtension(personInputDto.getHouseNumberExtension());
+            if (personPatchDto.getHouseNumberExtension() != null) {
+                updatedPerson.setHouseNumberExtension(personPatchDto.getHouseNumberExtension());
             }
-            if (personInputDto.getZipCode() != null) {
-                updatedPerson.setZipCode(personInputDto.getZipCode());
+            if (personPatchDto.getZipCode() != null) {
+                String zipcodeRegex = "^[1-9][0-9]{3}?[A-Z]{2}$";
+                if (personPatchDto.getZipCode().matches(zipcodeRegex)){
+                    updatedPerson.setZipCode(personPatchDto.getZipCode());
+                }else{
+                    throw new ZipCodeFormatException("Format zipcode as: 1111AA");
+                }
+                updatedPerson.setZipCode(personPatchDto.getZipCode());
             }
-            if (personInputDto.getCity() != null) {
-                updatedPerson.setCity(personInputDto.getCity());
+            if (personPatchDto.getCity() != null) {
+                updatedPerson.setCity(personPatchDto.getCity());
             }
-            if (personInputDto.getCountry() != null) {
-                updatedPerson.setCountry(personInputDto.getCountry());
+            if (personPatchDto.getCountry() != null) {
+                updatedPerson.setCountry(personPatchDto.getCountry());
+            }
+            if (personPatchDto.getDogs() != null){
+                updatedPerson.setDogs(personPatchDto.getDogs());
             }
 
             personRepository.save(updatedPerson);

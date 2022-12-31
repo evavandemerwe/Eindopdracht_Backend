@@ -1,11 +1,10 @@
 package nl.novi.breedsoft.model.animal;
 
-import jakarta.annotation.Nullable;
-import nl.novi.breedsoft.dto.PersonInputDto;
 import nl.novi.breedsoft.model.animal.enumerations.*;
 import java.util.List;
 
 import jakarta.persistence.*;
+import nl.novi.breedsoft.model.management.DogImage;
 
 @Entity
 @Table(name = "dogs")

@@ -34,4 +34,15 @@ public class ExceptionController {
         return new ResponseEntity<>(exception.getMessage(), HttpStatus.PRECONDITION_FAILED);
     }
 
+    @ExceptionHandler(value = ZipCodeFormatException.class)
+    public ResponseEntity<Object> exception(ZipCodeFormatException exception) {
+        return new ResponseEntity<>(exception.getMessage(), HttpStatus.PRECONDITION_FAILED);
+    }
+
+
+    @ExceptionHandler(value = BadFileException.class)
+    public ResponseEntity<Object> exception(BadFileException exception) {
+        return new ResponseEntity<>(exception.getMessage(), HttpStatus.PRECONDITION_FAILED);
+    }
+
 }

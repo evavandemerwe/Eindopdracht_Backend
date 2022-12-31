@@ -69,7 +69,7 @@ public class DogController {
         }
     }
 
-
+    //Delete a dog from the database by id
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> deleteDog(@PathVariable("id") Long id) {
         dogService.deleteDog(id);
