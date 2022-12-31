@@ -32,7 +32,7 @@ public class DogService {
         this.personRepository = personRepository;
     }
 
-    //Output Dto is used for representing data from database to the user
+    //Output Dto is used for representing data from the database to the user
     //Get all dogs
     public List<DogOutputDto> getAllDogs() {
         List<Dog> dogList = dogRepository.findAll();
