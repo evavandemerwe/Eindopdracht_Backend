@@ -4,7 +4,6 @@ import nl.novi.breedsoft.model.animal.enumerations.*;
 import java.util.List;
 
 import jakarta.persistence.*;
-import nl.novi.breedsoft.model.management.DogImage;
 
 @Entity
 @Table(name = "dogs")
@@ -20,8 +19,13 @@ public class Dog extends Mammal{
     @Enumerated(EnumType.STRING)
     @Column(name = "breed")
     private Breed breed;
-    @OneToMany
+
+    @Column(name="parent_id")
+    private Long parentId;
+    @OneToMany(fetch=FetchType.EAGER, cascade=CascadeType.MERGE)
+    @JoinColumn(name="parent_id")
     private List<Dog> Litter;
+
     int dogYears;
     @Enumerated(EnumType.STRING)
     @Column(name = "breed_group")
@@ -38,6 +42,8 @@ public class Dog extends Mammal{
     @ManyToOne
     @JoinColumn(name = "person_id")
     private Person person;
+
+    private byte[] dogImage;
 
     //Constructor
     public Dog() {
@@ -71,20 +77,20 @@ public class Dog extends Mammal{
         this.breedGroup = breedGroup;
     }
 
-    public String getChipnumber() {
-        return chipNumber;
-    }
-
-    public void setChipnumber(String chipnumber) {
-        this.chipNumber = chipnumber;
-    }
-
     public Breed getBreed() {
         return breed;
     }
 
     public void setBreed(Breed breed) {
         this.breed = breed;
+    }
+
+    public Long getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(Long parentId) {
+        this.parentId = parentId;
     }
 
     public List<Dog> getLitter() {
@@ -137,5 +143,13 @@ public class Dog extends Mammal{
     @Override
     public boolean canSee() {
         return canSee;
+    }
+
+    public byte[] getDogImage() {
+        return dogImage;
+    }
+
+    public void setDogImage(byte[] dogImage) {
+        this.dogImage = dogImage;
     }
 }
