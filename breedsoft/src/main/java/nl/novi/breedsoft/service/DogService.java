@@ -18,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 
@@ -64,6 +65,26 @@ public class DogService {
             }
             return dogOutputDtosList;
         }
+    }
+
+    public List<DogOutputDto> getAllChildren(Long id){
+        List<Dog> children = new ArrayList<>();
+
+        if(dogRepository.findById(id).isEmpty()){
+            throw new RecordNotFoundException("No dog with this id found in database");
+        } else {
+            List<Dog> allDogs = dogRepository.findAll();
+            for(Dog dog : allDogs){
+                if(Objects.equals(dog.getParentId(), id)){
+                    children.add(dog);
+                }
+            }
+            if(children.isEmpty()){
+                throw new RecordNotFoundException("This dog doesn't have children");
+            }
+        }
+
+        return transferDogListToDtoList(children);
     }
 
     //Create creates a new entity in the database

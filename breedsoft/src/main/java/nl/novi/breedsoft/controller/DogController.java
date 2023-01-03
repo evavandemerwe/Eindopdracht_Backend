@@ -54,6 +54,13 @@ public class DogController {
         return ResponseEntity.ok().body(dogOutputDtoList);
     }
 
+    //Get all children from a dog by id
+    @GetMapping("/{id}/getchildren/")
+    public List<DogOutputDto> getChildrenById(@PathVariable("id") Long id) {
+        List<DogOutputDto> children = dogService.getAllChildren(id);
+        return children;
+    }
+
     //Create a new dog in the database
     @PostMapping("")
     public ResponseEntity<Object> createDog(@Valid @RequestBody DogInputDto dogInputDto, BindingResult br) {
