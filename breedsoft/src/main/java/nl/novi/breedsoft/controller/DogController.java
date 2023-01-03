@@ -3,16 +3,19 @@ package nl.novi.breedsoft.controller;
 import nl.novi.breedsoft.dto.DogInputDto;
 import nl.novi.breedsoft.dto.DogOutputDto;
 import nl.novi.breedsoft.dto.DogPatchDto;
-import nl.novi.breedsoft.model.animal.Dog;
+import nl.novi.breedsoft.exception.BadFileException;
 import nl.novi.breedsoft.service.DogService;
 import static nl.novi.breedsoft.utility.BindingResultErrorUtility.bindingResultError;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import jakarta.validation.Valid;
+
+import java.io.IOException;
 import java.net.URI;
 import java.util.List;
 
@@ -51,6 +54,13 @@ public class DogController {
         return ResponseEntity.ok().body(dogOutputDtoList);
     }
 
+    //Get all children from a dog by id
+    @GetMapping("/{id}/getchildren/")
+    public List<DogOutputDto> getChildrenById(@PathVariable("id") Long id) {
+        List<DogOutputDto> children = dogService.getAllChildren(id);
+        return children;
+    }
+
     //Create a new dog in the database
     @PostMapping("")
     public ResponseEntity<Object> createDog(@Valid @RequestBody DogInputDto dogInputDto, BindingResult br) {
@@ -67,6 +77,25 @@ public class DogController {
                             .path("/dogs/" + createdId).toUriString());
             return ResponseEntity.created(uri).body("Dog is successfully created!");
         }
+    }
+
+    @PostMapping("/{id}/image")
+    public ResponseEntity<DogOutputDto> uploadDogImage(@PathVariable("id") Long id, @RequestParam("image") MultipartFile image) {
+        if(image.isEmpty()) {
+            throw new BadFileException("The provided file is empty");
+        }
+        try {
+            DogOutputDto dogOutputDto = dogService.storeDogImage(id, image);
+            return ResponseEntity.ok().body(dogOutputDto);
+        } catch (IOException ex){
+            throw new BadFileException("The provided file is not a valid image");
+        }
+    }
+
+    @DeleteMapping("/{id}/image")
+    public ResponseEntity<Object> deleteDogImage(@PathVariable("id") Long id) {
+        dogService.deleteDogImage(id);
+        return ResponseEntity.noContent().build();
     }
 
     //Delete a dog from the database by id

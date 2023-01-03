@@ -13,8 +13,12 @@ import nl.novi.breedsoft.model.animal.enumerations.BreedGroup;
 import nl.novi.breedsoft.model.animal.enumerations.Sex;
 import nl.novi.breedsoft.repository.DogRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 
@@ -61,6 +65,26 @@ public class DogService {
             }
             return dogOutputDtosList;
         }
+    }
+
+    public List<DogOutputDto> getAllChildren(Long id){
+        List<Dog> children = new ArrayList<>();
+
+        if(dogRepository.findById(id).isEmpty()){
+            throw new RecordNotFoundException("No dog with this id found in database");
+        } else {
+            List<Dog> allDogs = dogRepository.findAll();
+            for(Dog dog : allDogs){
+                if(Objects.equals(dog.getParentId(), id)){
+                    children.add(dog);
+                }
+            }
+            if(children.isEmpty()){
+                throw new RecordNotFoundException("This dog doesn't have children");
+            }
+        }
+
+        return transferDogListToDtoList(children);
     }
 
     //Create creates a new entity in the database
@@ -183,7 +207,7 @@ public class DogService {
                 updatedDog.setBreedGroup(newBreedGroup);
             }
             if (dogPatchDto.getChipNumber() != null) {
-                updatedDog.setChipnumber(dogPatchDto.getChipNumber());
+                updatedDog.setChipNumber(dogPatchDto.getChipNumber());
             }
             if (dogPatchDto.getPerson() != null) {
                 Person dogOwner = getCompletePersonById(dogPatchDto.getPerson().getId());
@@ -196,6 +220,32 @@ public class DogService {
             return transferToOutputDto(updatedDog);
         } else {
             throw new RecordNotFoundException("Dog is not found.");
+        }
+    }
+
+    public DogOutputDto storeDogImage(Long id, MultipartFile file) throws IOException {
+        if(file.isEmpty()) {
+            throw new IOException();
+        }
+        Optional<Dog> optionalDog = dogRepository.findById(id);
+        if(optionalDog.isPresent()) {
+            Dog dog = optionalDog.get();
+            dog.setDogImage(file.getBytes());
+            dogRepository.save(dog);
+            return (transferToOutputDto(dog));
+        } else {
+            throw new RecordNotFoundException("Dog is not found.");
+        }
+    }
+
+    public void deleteDogImage(Long id) {
+        Optional<Dog> optionalDog = dogRepository.findById(id);
+        if(optionalDog.isPresent()) {
+            Dog dog = optionalDog.get();
+            dog.setDogImage(null);
+            dogRepository.save(dog);
+        } else {
+            throw new  RecordNotFoundException("No dogs with given ID found.");
         }
     }
 
@@ -224,11 +274,20 @@ public class DogService {
         dogDto.setDogYears(dog.getDogYears());
         dogDto.setDateOfBirth(dog.getDateOfBirth());
         dogDto.setDateOfDeath(dog.getDateOfDeath());
-        dogDto.setChipNumber(dog.getChipnumber());
+        dogDto.setChipNumber(dog.getChipNumber());
         dogDto.setBreed(dog.getBreed());
         dogDto.setBreedGroup(dog.getBreedGroup());
         dogDto.setPerson(dog.getPerson());
-
+        dogDto.setDogImage(dog.getDogImage());
+        Long parentId = dog.getParentId();
+        if(parentId != null) {
+            Optional<Dog> parentDog = dogRepository.findById(parentId);
+            if (parentDog.isPresent()) {
+                dogDto.setParentId(dog.getParentId());
+            } else {
+                throw new RecordNotFoundException("Parent ID not found");
+            }
+        }
         return dogDto;
     }
 
@@ -244,13 +303,21 @@ public class DogService {
         dog.setDogYears(dto.getDogYears());
         dog.setDateOfBirth(dto.getDateOfBirth());
         dog.setDateOfDeath(dto.getDateOfDeath());
-        dog.setChipnumber(dto.getChipNumber());
+        dog.setChipNumber(dto.getChipNumber());
         dog.setBreed(Breed.valueOf(dto.getBreed()));
         dog.setDogYears(dto.getDogYears());
         dog.setBreedGroup(BreedGroup.valueOf(dto.getBreedGroup()));
         dog.setLitter(dto.getLitter());
         dog.setPerson(dto.getPerson());
-
+        Long parentId = dto.getParentId();
+        if(parentId != null) {
+            Optional<Dog> parentDog = dogRepository.findById(parentId);
+            if (parentDog.isPresent()) {
+                dog.setParentId(dto.getParentId());
+            } else {
+                throw new RecordNotFoundException("Parent ID not found");
+            }
+        }
         return dog;
     }
 
