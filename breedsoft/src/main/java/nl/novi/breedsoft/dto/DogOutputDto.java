@@ -7,6 +7,8 @@ import nl.novi.breedsoft.model.animal.Person;
 import nl.novi.breedsoft.model.animal.enumerations.Breed;
 import nl.novi.breedsoft.model.animal.enumerations.BreedGroup;
 import nl.novi.breedsoft.model.animal.enumerations.Sex;
+import nl.novi.breedsoft.model.animal.enumerations.Status;
+
 import java.time.LocalDate;
 import java.util.List;
 
@@ -30,6 +32,7 @@ public class DogOutputDto {
     private boolean canHear;
     private byte[] dogImage;
     private Long parentId;
+    private Status dogStatus;
 
     @JsonIncludeProperties({"id", "firstName", "lastName", "street", "houseNumber", "houseNumberExtension", "zipCode", "city", "country"})
     private Person person;

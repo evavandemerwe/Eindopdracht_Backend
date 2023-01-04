@@ -6,7 +6,6 @@ import nl.novi.breedsoft.dto.DogPatchDto;
 import nl.novi.breedsoft.exception.BadFileException;
 import nl.novi.breedsoft.service.DogService;
 import static nl.novi.breedsoft.utility.BindingResultErrorUtility.bindingResultError;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -46,7 +45,7 @@ public class DogController {
     }
 
     //Get mapping to get one dog by name from the database
-    @GetMapping("/findbyname/")
+    @GetMapping("/findbyname")
     public ResponseEntity<Object> getDogByName(@RequestParam("name") String name) {
 
         List<DogOutputDto> dogOutputDtoList = dogService.getDogByName(name);
@@ -55,7 +54,7 @@ public class DogController {
     }
 
     //Get all children from a dog by id
-    @GetMapping("/{id}/getchildren/")
+    @GetMapping("/{id}/children")
     public List<DogOutputDto> getChildrenById(@PathVariable("id") Long id) {
         List<DogOutputDto> children = dogService.getAllChildren(id);
         return children;
@@ -76,6 +75,17 @@ public class DogController {
                             .fromCurrentContextPath()
                             .path("/dogs/" + createdId).toUriString());
             return ResponseEntity.created(uri).body("Dog is successfully created!");
+        }
+    }
+
+    @PostMapping("/{id}/children")
+    public Object uploadLitter(@PathVariable("id") Long id, @Valid @RequestBody List<DogInputDto> dogInputDtoList, BindingResult br){
+        //If there is an error in the binding
+        if (br.hasErrors()) {
+            return bindingResultError(br);
+        } else {
+            List<DogOutputDto> createdDogsList = dogService.createLitterList(dogInputDtoList, id);
+            return createdDogsList;
         }
     }
 
@@ -122,8 +132,8 @@ public class DogController {
         if (br.hasErrors()) {
             return bindingResultError(br);
         } else {
-            DogOutputDto dogOutputDto = dogService.patchDog(id, dogPatchDto);
-            return ResponseEntity.ok().body(dogOutputDto);
+            String response = dogService.patchDog(id, dogPatchDto);
+            return ResponseEntity.ok().body(response);
         }
     }
 }
