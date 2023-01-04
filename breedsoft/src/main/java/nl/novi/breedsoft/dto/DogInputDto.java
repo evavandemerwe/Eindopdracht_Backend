@@ -1,6 +1,6 @@
 package nl.novi.breedsoft.dto;
-import jakarta.validation.constraints.*;
 
+import jakarta.validation.constraints.*;
 import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 import lombok.Data;
 import nl.novi.breedsoft.model.animal.Dog;
@@ -8,12 +8,16 @@ import nl.novi.breedsoft.model.animal.Person;
 import nl.novi.breedsoft.model.animal.enumerations.Breed;
 import nl.novi.breedsoft.model.animal.enumerations.BreedGroup;
 import nl.novi.breedsoft.model.animal.enumerations.Sex;
+import nl.novi.breedsoft.model.animal.enumerations.Status;
 import nl.novi.breedsoft.utility.ValueOfEnum;
 import java.time.LocalDate;
 import java.util.List;
 
 @Data
 public class DogInputDto {
+    @Null
+    public Long id;
+
     @NotEmpty(message = "Please enter the name of the dog")
     private String name;
 
@@ -44,11 +48,11 @@ public class DogInputDto {
     private String chipNumber;
 
     @NotEmpty(message = "Please enter a breed.")
-    @ValueOfEnum(enumClass = Breed.class, message = "Invalid breed")
+    @ValueOfEnum(enumClass = Breed.class, message = "Invalid breed.")
     private String breed;
 
     @NotEmpty(message = "Please enter a breed group.")
-    @ValueOfEnum(enumClass = BreedGroup.class, message = "Invalid breed group")
+    @ValueOfEnum(enumClass = BreedGroup.class, message = "Invalid breed group.")
     private String breedGroup;
 
     //Can be empty
@@ -61,6 +65,10 @@ public class DogInputDto {
     private boolean canHear;
 
     private Long parentId;
+
+    @NotEmpty(message = "Please enter a status for this dog.")
+    @ValueOfEnum(enumClass = Status.class, message = "Invalid status.")
+    private String dogStatus;
 
     @JsonIncludeProperties({"id", "firstName", "lastName", "street", "houseNumber", "houseNumberExtension", "zipCode", "city", "country"})
     private Person person;

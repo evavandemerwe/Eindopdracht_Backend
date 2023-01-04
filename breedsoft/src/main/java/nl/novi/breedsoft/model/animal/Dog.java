@@ -45,6 +45,10 @@ public class Dog extends Mammal{
 
     private byte[] dogImage;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "dog_status")
+    Status dogStatus;
+
     //Constructor
     public Dog() {
         super.setNumberOfTeeth(42);
@@ -69,6 +73,7 @@ public class Dog extends Mammal{
     public void setName(String name) {
         this.name = name;
     }
+
     public BreedGroup getBreedGroup() {
         return breedGroup;
     }
@@ -151,5 +156,13 @@ public class Dog extends Mammal{
 
     public void setDogImage(byte[] dogImage) {
         this.dogImage = dogImage;
+    }
+
+    public Status getDogStatus() {
+        return dogStatus;
+    }
+
+    public void setDogStatus(Status dogStatus) {
+        this.dogStatus = dogStatus;
     }
 }

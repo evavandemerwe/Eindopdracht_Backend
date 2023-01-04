@@ -26,6 +26,7 @@ public class DogPatchDto {
     private boolean canSee;
     private boolean canHear;
     private Long parentId;
+    private String dogStatus;
 
     @JsonIncludeProperties({"id", "firstName", "lastName", "street", "houseNumber", "houseNumberExtension", "zipCode", "city", "country"})
     private Person person;

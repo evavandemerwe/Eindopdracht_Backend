@@ -11,7 +11,7 @@
 	<groupId>nl.novi</groupId>
 	<artifactId>breedsoft</artifactId>
 	<version>1.0.0</version>
-	<name>breedsoft</name>
+	<name>BreedSoft</name>
 	<description>Eindopdracht Backend Eva van de Merwe</description>
 	<properties>
 		<java.version>17</java.version>
