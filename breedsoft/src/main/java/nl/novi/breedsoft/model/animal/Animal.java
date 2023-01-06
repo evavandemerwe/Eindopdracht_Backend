@@ -7,17 +7,15 @@ import nl.novi.breedsoft.model.animal.interfaces.Seeable;
 import java.time.LocalDate;
 import java.time.Period;
 
-@Entity
-@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+//Designates a class whose mapping information is applied to the entities that inherit from it.
+//A mapped superclass has no separate table defined for it.
+//Not used as an entity.
+@MappedSuperclass
 public abstract class Animal implements Hearable, Seeable {
-
-    //Create primary key with a unique value, making sure each table starts counting at 1 and is self-incremental
-    @Id
-    @GeneratedValue(strategy = GenerationType.TABLE)
-    private Long id;
     private String food;
     private String hairColor;
-    private double weightInGrams;
+
+   private double weightInGrams;
     @Enumerated(EnumType.STRING)
     @Column(name = "sex")
     private Sex sex;
@@ -31,7 +29,7 @@ public abstract class Animal implements Hearable, Seeable {
     private Birthmethod birthMethod;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "animalType")
+    @Column(name = "animal_type")
     private AnimalType animalType;
 
     //Getters and Setters

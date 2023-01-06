@@ -2,18 +2,18 @@ package nl.novi.breedsoft.model.animal;
 
 import nl.novi.breedsoft.model.animal.enumerations.*;
 import java.util.List;
-
 import jakarta.persistence.*;
-import nl.novi.breedsoft.model.management.Person;
-import nl.novi.breedsoft.model.management.enumerations.Breed;
-import nl.novi.breedsoft.model.management.enumerations.BreedGroup;
 
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public abstract class Dog extends Mammal{
 
     //Declaration of variables
-    //Create primary key with a unique value, making sure each table starts counting at 1 and is self-incremental
+    //Create primary key with a unique value, making sure that when someone want to insert a non-domesticated dog
+    //each table starts counting at 1 and is self-incremental
+    @Id
+    @GeneratedValue
+    private Long id;
     @Column(name="parent_id")
     private Long parentId;
     @OneToMany(fetch=FetchType.EAGER, cascade=CascadeType.MERGE)
@@ -32,6 +32,10 @@ public abstract class Dog extends Mammal{
     }
 
     //Getters and setter
+    public Long getId() {
+        return id;
+    }
+
     public Long getParentId() {
         return parentId;
     }
