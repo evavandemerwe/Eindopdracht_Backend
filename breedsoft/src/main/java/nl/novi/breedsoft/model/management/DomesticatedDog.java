@@ -6,8 +6,6 @@ import nl.novi.breedsoft.model.animal.enumerations.Status;
 import nl.novi.breedsoft.model.management.enumerations.Breed;
 import nl.novi.breedsoft.model.management.enumerations.BreedGroup;
 
-import java.util.ArrayList;
-
 @Entity
 @Table(name = "domesticated_dogs")
 public class DomesticatedDog extends Dog {
@@ -44,6 +42,10 @@ public class DomesticatedDog extends Dog {
     @Enumerated(EnumType.STRING)
     @Column(name = "dog_status")
     Status dogStatus;
+
+    public DomesticatedDog() {
+        super();
+    }
 
     public Long getId() {
         return (id != null) ? id : 0;

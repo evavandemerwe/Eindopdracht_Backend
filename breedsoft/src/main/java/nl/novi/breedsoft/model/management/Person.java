@@ -1,6 +1,5 @@
 package nl.novi.breedsoft.model.management;
 
-import nl.novi.breedsoft.model.animal.Dog;
 import nl.novi.breedsoft.model.animal.Mammal;
 import nl.novi.breedsoft.model.animal.enumerations.AnimalType;
 import nl.novi.breedsoft.model.animal.enumerations.Birthmethod;

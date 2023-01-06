@@ -1,10 +1,10 @@
 package nl.novi.breedsoft.model.management;
 
 import jakarta.persistence.*;
-
 import java.time.LocalDate;
 
 @Entity
+@Table(name = "medical_data")
 public class MedicalData {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
