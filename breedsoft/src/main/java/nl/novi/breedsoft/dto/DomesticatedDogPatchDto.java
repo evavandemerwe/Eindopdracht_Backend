@@ -3,36 +3,30 @@ package nl.novi.breedsoft.dto;
 import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 import lombok.Data;
 import nl.novi.breedsoft.model.animal.Dog;
-import nl.novi.breedsoft.model.animal.Person;
-import nl.novi.breedsoft.model.animal.enumerations.Breed;
-import nl.novi.breedsoft.model.animal.enumerations.BreedGroup;
-import nl.novi.breedsoft.model.animal.enumerations.Sex;
-import nl.novi.breedsoft.model.animal.enumerations.Status;
-
+import nl.novi.breedsoft.model.management.Person;
 import java.time.LocalDate;
 import java.util.List;
 
 @Data
-public class DogOutputDto {
+public class DomesticatedDogPatchDto {
     private long id;
     private String name;
     private String hairColor;
     private String food;
-    private Sex sex;
+    private String sex;
     private double weightInGrams;
     private String kindOfHair;
     private int dogYears;
     private LocalDate dateOfBirth;
     private LocalDate dateOfDeath;
     private String chipNumber;
-    private Breed breed;
-    private BreedGroup breedGroup;
+    private String breed;
+    private String breedGroup;
     private List<Dog> Litter;
     private boolean canSee;
     private boolean canHear;
-    private byte[] dogImage;
     private Long parentId;
-    private Status dogStatus;
+    private String dogStatus;
 
     @JsonIncludeProperties({"id", "firstName", "lastName", "street", "houseNumber", "houseNumberExtension", "zipCode", "city", "country"})
     private Person person;

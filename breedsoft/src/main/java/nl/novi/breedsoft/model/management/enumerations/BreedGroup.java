@@ -1,4 +1,4 @@
-package nl.novi.breedsoft.model.animal.enumerations;
+package nl.novi.breedsoft.model.management.enumerations;
 
 public enum BreedGroup{
     Working,

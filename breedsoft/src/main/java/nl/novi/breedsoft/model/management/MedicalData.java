@@ -1,12 +1,27 @@
 package nl.novi.breedsoft.model.management;
 
+import jakarta.persistence.*;
+
 import java.time.LocalDate;
 
-public abstract class MedicalData {
+@Entity
+public class MedicalData {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     private LocalDate dateOfMedicalTreatment;
     private String medicine;
     private String diagnose;
     private String treatMent;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getMedicine() {
         return medicine;

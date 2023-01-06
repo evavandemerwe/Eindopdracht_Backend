@@ -4,9 +4,9 @@ import jakarta.validation.constraints.*;
 import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 import lombok.Data;
 import nl.novi.breedsoft.model.animal.Dog;
-import nl.novi.breedsoft.model.animal.Person;
-import nl.novi.breedsoft.model.animal.enumerations.Breed;
-import nl.novi.breedsoft.model.animal.enumerations.BreedGroup;
+import nl.novi.breedsoft.model.management.Person;
+import nl.novi.breedsoft.model.management.enumerations.Breed;
+import nl.novi.breedsoft.model.management.enumerations.BreedGroup;
 import nl.novi.breedsoft.model.animal.enumerations.Sex;
 import nl.novi.breedsoft.model.animal.enumerations.Status;
 import nl.novi.breedsoft.utility.ValueOfEnum;
@@ -14,7 +14,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Data
-public class DogInputDto {
+public class DomesticatedDogInputDto {
     @Null
     public Long id;
 
