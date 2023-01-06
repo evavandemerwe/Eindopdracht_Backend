@@ -1,5 +1,7 @@
-package nl.novi.breedsoft.model.animal;
+package nl.novi.breedsoft.model.management;
 
+import nl.novi.breedsoft.model.animal.Dog;
+import nl.novi.breedsoft.model.animal.Mammal;
 import nl.novi.breedsoft.model.animal.enumerations.AnimalType;
 import nl.novi.breedsoft.model.animal.enumerations.Birthmethod;
 import nl.novi.breedsoft.model.animal.enumerations.Bloodtemperature;
@@ -35,7 +37,7 @@ public class Person extends Mammal {
 
     //A person can have 0 to * dogs
     @OneToMany(mappedBy = "person", cascade=CascadeType.MERGE  )
-    private List<Dog> dogs;
+    private List<DomesticatedDog> dogs;
 
     //constructor
     public Person() {
@@ -119,11 +121,11 @@ public class Person extends Mammal {
         this.country = country;
     }
 
-    public List<Dog> getDogs() {
+    public List<DomesticatedDog> getDogs() {
         return dogs;
     }
 
-    public void setDogs(List<Dog> dogs) {
+    public void setDogs(List<DomesticatedDog> dogs) {
         this.dogs = dogs;
     }
 

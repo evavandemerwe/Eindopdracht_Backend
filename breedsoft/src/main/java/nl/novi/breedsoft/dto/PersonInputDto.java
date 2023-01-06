@@ -3,8 +3,8 @@ import jakarta.validation.constraints.*;
 
 import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 import lombok.Data;
-import nl.novi.breedsoft.model.animal.Dog;
 import nl.novi.breedsoft.model.animal.enumerations.Sex;
+import nl.novi.breedsoft.model.management.DomesticatedDog;
 import nl.novi.breedsoft.utility.ValueOfEnum;
 import java.time.LocalDate;
 import java.util.List;
@@ -47,5 +47,5 @@ public class PersonInputDto {
     private String country;
 
     @JsonIncludeProperties({"id", "name", "sex", "dateOfBirth", "breed", "kindOfHair", "haircolor"})
-    private List<Dog> dogs;
+    private List<DomesticatedDog> dogs;
 }

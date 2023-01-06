@@ -4,13 +4,13 @@ import nl.novi.breedsoft.dto.PersonInputDto;
 import nl.novi.breedsoft.dto.PersonOutputDto;
 import nl.novi.breedsoft.dto.PersonPatchDto;
 import nl.novi.breedsoft.exception.EnumValueNotFoundException;
-import nl.novi.breedsoft.exception.PasswordComplexityException;
 import nl.novi.breedsoft.exception.RecordNotFoundException;
 import nl.novi.breedsoft.exception.ZipCodeFormatException;
 import nl.novi.breedsoft.model.animal.Dog;
-import nl.novi.breedsoft.model.animal.Person;
+import nl.novi.breedsoft.model.management.DomesticatedDog;
+import nl.novi.breedsoft.model.management.Person;
 import nl.novi.breedsoft.model.animal.enumerations.Sex;
-import nl.novi.breedsoft.repository.DogRepository;
+import nl.novi.breedsoft.repository.DomesticatedDogRepository;
 import nl.novi.breedsoft.repository.PersonRepository;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
@@ -20,14 +20,14 @@ import java.util.Optional;
 @Service
 public class PersonService {
     private final PersonRepository personRepository;
-    private final DogRepository dogRepository;
+    private final DomesticatedDogRepository domesticatedDogRepository;
 
     public PersonService(
             PersonRepository personRepository,
-            DogRepository dogRepository
+            DomesticatedDogRepository domesticatedDogRepository
     ) {
         this.personRepository = personRepository;
-        this.dogRepository = dogRepository;
+        this.domesticatedDogRepository = domesticatedDogRepository;
     }
 
     //Output Dto is used for representing data from the database to the user
@@ -61,17 +61,35 @@ public class PersonService {
         }
     }
 
+    public List<PersonOutputDto> getDogBreeders(){
+        List<Person> persons = personRepository.findAll();
+        List<Person> dogBreeders = new ArrayList<>();
+
+        for(Person person : persons){
+            List<DomesticatedDog> ownedDogs = person.getDogs();
+            for(DomesticatedDog domesticatedDog : ownedDogs){
+                if(domesticatedDog.getDogStatus().toString().equals("breedDog")){
+                    dogBreeders.add(person);
+                }
+            }
+        }
+        if(dogBreeders.isEmpty()){
+            throw new RecordNotFoundException("There are no dog breeders found");
+        }
+        return transferPersonListToDtoList(dogBreeders);
+    }
+
     //Create creates a new entity in the database
     public Long createPerson(PersonInputDto personInputDto){
     //Check if a dog is given
         if(personInputDto.getDogs() != null){
-            List<Dog> givenDogsList = personInputDto.getDogs();
-            List<Dog> foundDogsList = new ArrayList<>();
+            List<DomesticatedDog> givenDogsList = personInputDto.getDogs();
+            List<DomesticatedDog> foundDogsList = new ArrayList<>();
             //for each given dog, check if dog exists.
             //if dog exists, add to foundDogsList
-            for(Dog dog : givenDogsList){
-                Long dogId = dog.getId();
-                Dog foundDog = getCompleteDogId(dogId);
+            for(DomesticatedDog domesticatedDog : givenDogsList){
+                Long dogId = domesticatedDog.getId();
+                DomesticatedDog foundDog = getCompleteDogId(dogId);
                 if(foundDog != null){
                     foundDogsList.add(foundDog);
                 }
@@ -93,11 +111,11 @@ public class PersonService {
             Person personFound = personRepository.getReferenceById(id);
 
             if(personFound.getDogs() != null){
-                List<Dog> givenDogsList = personFound.getDogs();
+                List<DomesticatedDog> givenDogsList = personFound.getDogs();
                 //for each given dog, check if dog exists.
                 //if dog exists, add to foundDogsList
-                for(Dog dog : givenDogsList) {
-                    dog.setPerson(null);
+                for(DomesticatedDog domesticatedDog : givenDogsList) {
+                    domesticatedDog.setPerson(null);
                 }
             }
             personRepository.deleteById(id);
@@ -113,10 +131,10 @@ public class PersonService {
         if (personRepository.findById(id).isPresent()){
             Person person = personRepository.findById(id).get();
             Person updatedPerson = transferToPerson(personInputDto);
-            List<Dog> dogs = updatedPerson.getDogs();
-            for(Dog dog : dogs){
-                long foundDogId = dog.getId();
-                Optional <Dog> dogFound = dogRepository.findById(foundDogId);
+            List<DomesticatedDog> domesticatedDogList = updatedPerson.getDogs();
+            for(DomesticatedDog domesticatedDog : domesticatedDogList){
+                long foundDogId = domesticatedDog.getId();
+                Optional <DomesticatedDog> dogFound = domesticatedDogRepository.findById(foundDogId);
                 if(dogFound.isEmpty()) {
                     throw new RecordNotFoundException("Dog " + foundDogId + " not found");
                 }
@@ -131,7 +149,6 @@ public class PersonService {
             createPerson(personInputDto);
             return personInputDto;
         }
-
     }
     //PATCH will only update an existing object,
     //with the properties mapped in the request body (that are not null).
@@ -250,11 +267,11 @@ public class PersonService {
         return person;
     }
 
-    private Dog getCompleteDogId(Long dogId){
+    private DomesticatedDog getCompleteDogId(Long dogId){
         if(dogId == 0){
             throw new RecordNotFoundException("Missing Dog ID");
         }
-        Optional<Dog> dog = dogRepository.findById(dogId);
-        return (dog.isPresent()) ? dog.get() : null;
+        Optional<DomesticatedDog> domesticatedDog = domesticatedDogRepository.findById(dogId);
+        return (domesticatedDog.isPresent()) ? domesticatedDog.get() : null;
     }
 }

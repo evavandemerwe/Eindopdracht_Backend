@@ -7,6 +7,5 @@ public enum Status {
     soldPup,
     ownedDog,
     breedDog,
-    deceased,
-
+    deceased
 }

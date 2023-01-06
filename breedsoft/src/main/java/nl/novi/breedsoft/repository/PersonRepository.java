@@ -1,6 +1,6 @@
 package nl.novi.breedsoft.repository;
 
-import nl.novi.breedsoft.model.animal.Person;
+import nl.novi.breedsoft.model.management.Person;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

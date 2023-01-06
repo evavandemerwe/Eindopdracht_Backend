@@ -1,7 +1,6 @@
 package nl.novi.breedsoft.model.management;
 
 import nl.novi.breedsoft.model.animal.Animal;
-import nl.novi.breedsoft.model.animal.Person;
 
 import java.time.LocalDateTime;
 

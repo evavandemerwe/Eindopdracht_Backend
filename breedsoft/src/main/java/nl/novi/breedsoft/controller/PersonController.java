@@ -50,6 +50,11 @@ public class PersonController {
 
     }
 
+    @GetMapping("/dogbreeders")
+    public ResponseEntity<List<PersonOutputDto>> getDogBreeders(){
+        List<PersonOutputDto> dogBreeders = personService.getDogBreeders();
+        return ResponseEntity.ok().body(dogBreeders);
+    }
     //Create a new person in the database
     @PostMapping("")
     public ResponseEntity<Object> createPerson(@Valid @RequestBody PersonInputDto personInputDto, BindingResult br) {
