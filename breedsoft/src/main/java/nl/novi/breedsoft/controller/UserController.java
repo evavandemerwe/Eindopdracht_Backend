@@ -1,9 +1,9 @@
 package nl.novi.breedsoft.controller;
 
 import jakarta.validation.Valid;
-import nl.novi.breedsoft.dto.UserInputDto;
-import nl.novi.breedsoft.dto.UserOutputDto;
-import nl.novi.breedsoft.dto.UserPatchDto;
+import nl.novi.breedsoft.dto.userDtos.UserInputDto;
+import nl.novi.breedsoft.dto.userDtos.UserOutputDto;
+import nl.novi.breedsoft.dto.userDtos.UserPatchDto;
 import nl.novi.breedsoft.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;

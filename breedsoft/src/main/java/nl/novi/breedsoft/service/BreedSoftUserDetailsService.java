@@ -1,7 +1,5 @@
 package nl.novi.breedsoft.service;
 
-import lombok.extern.slf4j.Slf4j;
-import nl.novi.breedsoft.dto.UserOutputDto;
 import nl.novi.breedsoft.model.authority.User;
 import nl.novi.breedsoft.repository.UserRepository;
 import nl.novi.breedsoft.security.BreedSoftUser;
@@ -11,7 +9,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
 import java.util.Optional;

@@ -45,8 +45,18 @@ public class DomesticatedDog extends Dog {
     @Column(name = "dog_status")
     Status dogStatus;
 
+    @Column(name="parent_id")
+    private Long parentId;
+
+    @OneToMany(fetch=FetchType.EAGER, cascade=CascadeType.MERGE)
+    @JoinColumn(name="parent_id")
+    private List<DomesticatedDog> litter;
+
     @OneToMany(mappedBy = "domesticatedDog", cascade=CascadeType.MERGE)
-    private List<Appointment> appointment;
+    private List<Appointment> appointments;
+
+    @OneToMany(mappedBy = "domesticatedDog", cascade = CascadeType.MERGE)
+    private List<MedicalData> medicalData;
 
     public DomesticatedDog() {
         super();
@@ -115,6 +125,20 @@ public class DomesticatedDog extends Dog {
     public void setDogImage(byte[] dogImage) {
         this.dogImage = dogImage;
     }
+    public Long getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(Long parentId) {
+        this.parentId = parentId;
+    }
+
+    public List<DomesticatedDog> getLitter() {
+        return this.litter;
+    }
+    public void setLitter(List<DomesticatedDog> litter) {
+        litter = litter;
+    }
 
     public Status getDogStatus() {
         return dogStatus;
@@ -124,11 +148,19 @@ public class DomesticatedDog extends Dog {
         this.dogStatus = dogStatus;
     }
 
-    public List<Appointment> getAppointment() {
-        return appointment;
+    public List<Appointment> getAppointments() {
+        return appointments;
     }
 
-    public void setAppointment(List<Appointment> appointment) {
-        this.appointment = appointment;
+    public void setAppointments(List<Appointment> appointments) {
+        this.appointments = appointments;
+    }
+
+    public List<MedicalData> getMedicalData() {
+        return medicalData;
+    }
+
+    public void setMedicalData(List<MedicalData> medicalData) {
+        this.medicalData = medicalData;
     }
 }

@@ -38,6 +38,9 @@ public class Person extends Mammal {
     @OneToMany(mappedBy = "person", cascade=CascadeType.MERGE)
     private List<DomesticatedDog> dogs;
 
+    @OneToMany(mappedBy = "person", cascade = CascadeType.MERGE)
+    private List<WaitingListItem> waitingListItems;
+
     //constructor
     public Person() {
         super();
@@ -136,5 +139,12 @@ public class Person extends Mammal {
     @Override
     public boolean canSee() {
         return canSee;
+    }
+
+    public List<WaitingListItem> getWaitingListItems() {
+        return waitingListItems;
+    }
+    public void setWaitingListItems(List<WaitingListItem> waitingListItems) {
+        this.waitingListItems = waitingListItems;
     }
 }

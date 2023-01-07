@@ -1,4 +1,4 @@
-package nl.novi.breedsoft.dto;
+package nl.novi.breedsoft.dto.personDtos;
 import jakarta.validation.constraints.*;
 
 import com.fasterxml.jackson.annotation.JsonIncludeProperties;

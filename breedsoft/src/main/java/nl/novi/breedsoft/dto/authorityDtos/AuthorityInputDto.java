@@ -1,4 +1,4 @@
-package nl.novi.breedsoft.dto;
+package nl.novi.breedsoft.dto.authorityDtos;
 
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;

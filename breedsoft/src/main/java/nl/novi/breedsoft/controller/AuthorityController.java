@@ -1,8 +1,8 @@
 package nl.novi.breedsoft.controller;
 
 import jakarta.validation.Valid;
-import nl.novi.breedsoft.dto.AuthorityInputDto;
-import nl.novi.breedsoft.dto.AuthorityOutputDto;
+import nl.novi.breedsoft.dto.authorityDtos.AuthorityInputDto;
+import nl.novi.breedsoft.dto.authorityDtos.AuthorityOutputDto;
 import nl.novi.breedsoft.service.AuthorityService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
