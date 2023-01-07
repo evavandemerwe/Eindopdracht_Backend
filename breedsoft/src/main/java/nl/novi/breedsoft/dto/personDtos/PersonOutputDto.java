@@ -1,18 +1,20 @@
-package nl.novi.breedsoft.dto;
+package nl.novi.breedsoft.dto.personDtos;
 
 import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 import lombok.Data;
+import nl.novi.breedsoft.model.animal.enumerations.Sex;
 import nl.novi.breedsoft.model.management.DomesticatedDog;
 
-import java.time.LocalDate;
 import java.util.List;
 
+
 @Data
-public class PersonPatchDto {
+public class PersonOutputDto {
+    //We do not have to show everything in Person database for the purpose of this application
     private Long id;
     private String firstName;
     private String lastName;
-    private String sex;
+    private Sex sex;
     private int age;
     private String street;
     private int houseNumber;
@@ -20,7 +22,6 @@ public class PersonPatchDto {
     private String zipCode;
     private String city;
     private String country;
-    private LocalDate dateOfBirth;
 
     @JsonIncludeProperties({"id", "name", "sex", "dateOfBirth", "breed", "kindOfHair", "haircolor"})
     private List<DomesticatedDog> dogs;

@@ -5,7 +5,7 @@ import nl.novi.breedsoft.model.animal.enumerations.*;
 import nl.novi.breedsoft.model.management.enumerations.Breed;
 
 @Entity
-@Table(name = "waiting_list_item")
+@Table(name = "waiting_list_items")
 public class WaitingListItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

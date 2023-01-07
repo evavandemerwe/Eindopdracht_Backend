@@ -1,8 +1,8 @@
 package nl.novi.breedsoft.service;
 
-import nl.novi.breedsoft.dto.UserInputDto;
-import nl.novi.breedsoft.dto.UserOutputDto;
-import nl.novi.breedsoft.dto.UserPatchDto;
+import nl.novi.breedsoft.dto.userDtos.UserInputDto;
+import nl.novi.breedsoft.dto.userDtos.UserOutputDto;
+import nl.novi.breedsoft.dto.userDtos.UserPatchDto;
 import nl.novi.breedsoft.exception.DuplicateNotAllowedException;
 import nl.novi.breedsoft.exception.PasswordComplexityException;
 import nl.novi.breedsoft.exception.RecordNotFoundException;

@@ -1,9 +1,12 @@
-package nl.novi.breedsoft.dto;
+package nl.novi.breedsoft.dto.domesticatedDogDtos;
 
 import jakarta.validation.constraints.*;
 import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 import lombok.Data;
 import nl.novi.breedsoft.model.animal.Dog;
+import nl.novi.breedsoft.model.management.Appointment;
+import nl.novi.breedsoft.model.management.DomesticatedDog;
+import nl.novi.breedsoft.model.management.MedicalData;
 import nl.novi.breedsoft.model.management.Person;
 import nl.novi.breedsoft.model.management.enumerations.Breed;
 import nl.novi.breedsoft.model.management.enumerations.BreedGroup;
@@ -55,9 +58,6 @@ public class DomesticatedDogInputDto {
     @ValueOfEnum(enumClass = BreedGroup.class, message = "Invalid breed group.")
     private String breedGroup;
 
-    //Can be empty
-    private List<Dog> litter;
-
     private int dogYears;
 
     private boolean canSee;
@@ -72,4 +72,11 @@ public class DomesticatedDogInputDto {
 
     @JsonIncludeProperties({"id", "firstName", "lastName", "street", "houseNumber", "houseNumberExtension", "zipCode", "city", "country"})
     private Person person;
+
+    //Can be empty
+    private List<DomesticatedDog> litters;
+
+    private List<Appointment> appointments;
+
+    private List<MedicalData> medicalData;
 }

@@ -1,8 +1,8 @@
 package nl.novi.breedsoft.controller;
 
-import nl.novi.breedsoft.dto.PersonInputDto;
-import nl.novi.breedsoft.dto.PersonOutputDto;
-import nl.novi.breedsoft.dto.PersonPatchDto;
+import nl.novi.breedsoft.dto.personDtos.PersonInputDto;
+import nl.novi.breedsoft.dto.personDtos.PersonOutputDto;
+import nl.novi.breedsoft.dto.personDtos.PersonPatchDto;
 import nl.novi.breedsoft.service.PersonService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;

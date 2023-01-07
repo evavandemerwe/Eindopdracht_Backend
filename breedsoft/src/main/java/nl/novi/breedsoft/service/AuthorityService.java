@@ -1,7 +1,7 @@
 package nl.novi.breedsoft.service;
 
-import nl.novi.breedsoft.dto.AuthorityInputDto;
-import nl.novi.breedsoft.dto.AuthorityOutputDto;
+import nl.novi.breedsoft.dto.authorityDtos.AuthorityInputDto;
+import nl.novi.breedsoft.dto.authorityDtos.AuthorityOutputDto;
 import nl.novi.breedsoft.exception.AuthorityInUseException;
 import nl.novi.breedsoft.exception.DuplicateNotAllowedException;
 import nl.novi.breedsoft.exception.RecordNotFoundException;

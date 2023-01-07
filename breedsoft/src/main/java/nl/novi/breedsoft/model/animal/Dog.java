@@ -14,11 +14,6 @@ public abstract class Dog extends Mammal{
     @Id
     @GeneratedValue
     private Long id;
-    @Column(name="parent_id")
-    private Long parentId;
-    @OneToMany(fetch=FetchType.EAGER, cascade=CascadeType.MERGE)
-    @JoinColumn(name="parent_id")
-    private List<Dog> Litter;
 
     int dogYears;
 
@@ -34,22 +29,6 @@ public abstract class Dog extends Mammal{
     //Getters and setter
     public Long getId() {
         return id;
-    }
-
-    public Long getParentId() {
-        return parentId;
-    }
-
-    public void setParentId(Long parentId) {
-        this.parentId = parentId;
-    }
-
-    public List<Dog> getLitter() {
-        return Litter;
-    }
-
-    public void setLitter(List<Dog> litter) {
-        Litter = litter;
     }
 
     public int getDogYears() {

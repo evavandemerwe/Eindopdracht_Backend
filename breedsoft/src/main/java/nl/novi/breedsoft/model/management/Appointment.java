@@ -13,31 +13,36 @@ public class Appointment {
 
     private LocalDateTime appointmentDateTime;
     private String subject;
-    @ManyToOne
-    @JoinColumn(name = "appointer_id")
-    private Person appointer;
 
     @ManyToOne
-    @JoinColumn(name = "appointee_id")
-    private Person appointee;
+    @JoinColumn(name = "domesticated_dog_id")
+    private DomesticatedDog domesticatedDog;
+
+    public DomesticatedDog getDomesticatedDog() {
+        return domesticatedDog;
+    }
+
+    public void setDomesticatedDog(DomesticatedDog domesticatedDog) {
+        this.domesticatedDog = domesticatedDog;
+    }
 
     public Long getId() {
         return id;
     }
 
-    public Person getAppointee() {
-        return appointee;
+    public LocalDateTime getAppointmentDateTime() {
+        return appointmentDateTime;
     }
 
-    public void setAppointee(Person appointee) {
-        this.appointee = appointee;
+    public void setAppointmentDateTime(LocalDateTime appointmentDateTime) {
+        this.appointmentDateTime = appointmentDateTime;
     }
 
-    public Person getAppointer() {
-        return appointer;
+    public String getSubject() {
+        return subject;
     }
 
-    public void setAppointer(Person appointer) {
-        this.appointer = appointer;
+    public void setSubject(String subject) {
+        this.subject = subject;
     }
 }

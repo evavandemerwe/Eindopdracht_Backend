@@ -1,11 +1,13 @@
 package nl.novi.breedsoft.service;
 
-import nl.novi.breedsoft.dto.DomesticatedDogInputDto;
-import nl.novi.breedsoft.dto.DomesticatedDogOutputDto;
-import nl.novi.breedsoft.dto.DomesticatedDogPatchDto;
+import nl.novi.breedsoft.dto.domesticatedDogDtos.DomesticatedDogInputDto;
+import nl.novi.breedsoft.dto.domesticatedDogDtos.DomesticatedDogOutputDto;
+import nl.novi.breedsoft.dto.domesticatedDogDtos.DomesticatedDogPatchDto;
 import nl.novi.breedsoft.exception.EnumValueNotFoundException;
 import nl.novi.breedsoft.exception.RecordNotFoundException;
+import nl.novi.breedsoft.model.management.Appointment;
 import nl.novi.breedsoft.model.management.DomesticatedDog;
+import nl.novi.breedsoft.model.management.MedicalData;
 import nl.novi.breedsoft.model.management.Person;
 import nl.novi.breedsoft.model.animal.enumerations.Status;
 import nl.novi.breedsoft.repository.PersonRepository;
@@ -377,6 +379,19 @@ public class DomesticatedDogService {
                 throw new RecordNotFoundException("Parent ID not found");
             }
         }
+        List<DomesticatedDog> litters = domesticatedDog.getLitter();
+        if(!litters.isEmpty()){
+            domesticatedDogDto.setLitters(domesticatedDog.getLitter());
+        }
+        List<Appointment> appointments = domesticatedDog.getAppointments();
+        if(!appointments.isEmpty()) {
+            domesticatedDogDto.setAppointments(domesticatedDog.getAppointments());
+        }
+        List<MedicalData> medicalData = domesticatedDog.getMedicalData();
+        if(!medicalData.isEmpty()){
+            domesticatedDogDto.setMedicalData(domesticatedDog.getMedicalData());
+        }
+
         domesticatedDogDto.setDogStatus(domesticatedDog.getDogStatus());
         return domesticatedDogDto;
     }
@@ -433,7 +448,7 @@ public class DomesticatedDogService {
             }
             domesticatedDog.setBreedGroup(newBreedGroup);
         }
-        domesticatedDog.setLitter(dto.getLitter());
+        domesticatedDog.setLitter(dto.getLitters());
         domesticatedDog.setPerson(dto.getPerson());
         Long parentId = dto.getParentId();
         if(parentId != null) {
@@ -456,6 +471,20 @@ public class DomesticatedDogService {
                 throw new EnumValueNotFoundException("Status is not found");
             }
             domesticatedDog.setDogStatus(newStatus);
+
+            List<DomesticatedDog> litters = dto.getLitters();
+            if(!litters.isEmpty()){
+                domesticatedDog.setLitter(dto.getLitters());
+            }
+            List<Appointment> appointments = dto.getAppointments();
+            if(!appointments.isEmpty()){
+                domesticatedDog.setAppointments(dto.getAppointments());
+            }
+
+            List<MedicalData> medicalData = dto.getMedicalData();
+            if(!medicalData.isEmpty()){
+                domesticatedDog.setMedicalData(dto.getMedicalData());
+            }
         }
         return domesticatedDog;
     }

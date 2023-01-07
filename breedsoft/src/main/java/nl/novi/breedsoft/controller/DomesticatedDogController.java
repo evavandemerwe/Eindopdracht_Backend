@@ -1,8 +1,8 @@
 package nl.novi.breedsoft.controller;
 
-import nl.novi.breedsoft.dto.DomesticatedDogInputDto;
-import nl.novi.breedsoft.dto.DomesticatedDogOutputDto;
-import nl.novi.breedsoft.dto.DomesticatedDogPatchDto;
+import nl.novi.breedsoft.dto.domesticatedDogDtos.DomesticatedDogInputDto;
+import nl.novi.breedsoft.dto.domesticatedDogDtos.DomesticatedDogOutputDto;
+import nl.novi.breedsoft.dto.domesticatedDogDtos.DomesticatedDogPatchDto;
 import nl.novi.breedsoft.exception.BadFileException;
 import nl.novi.breedsoft.service.DomesticatedDogService;
 import static nl.novi.breedsoft.utility.BindingResultErrorUtility.bindingResultError;
@@ -31,7 +31,8 @@ public class DomesticatedDogController {
     //Get mapping to get all dogs from the database
     @GetMapping("")
     public ResponseEntity<Iterable<DomesticatedDogOutputDto>> getAllDomesticatedDogs() {
-        return ResponseEntity.ok(domesticatedDogService.getAllDomesticatedDogs());
+        List <DomesticatedDogOutputDto> domesticatedDogOutputDtoList = domesticatedDogService.getAllDomesticatedDogs();
+        return ResponseEntity.ok(domesticatedDogOutputDtoList);
     }
 
     //Get mapping to get one dog by id from the database

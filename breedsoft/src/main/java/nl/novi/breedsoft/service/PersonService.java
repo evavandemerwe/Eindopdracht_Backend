@@ -1,14 +1,12 @@
 package nl.novi.breedsoft.service;
 
-import nl.novi.breedsoft.dto.PersonInputDto;
-import nl.novi.breedsoft.dto.PersonOutputDto;
-import nl.novi.breedsoft.dto.PersonPatchDto;
+import nl.novi.breedsoft.dto.personDtos.PersonInputDto;
+import nl.novi.breedsoft.dto.personDtos.PersonOutputDto;
+import nl.novi.breedsoft.dto.personDtos.PersonPatchDto;
 import nl.novi.breedsoft.exception.EnumValueNotFoundException;
 import nl.novi.breedsoft.exception.RecordNotFoundException;
 import nl.novi.breedsoft.exception.ZipCodeFormatException;
-import nl.novi.breedsoft.model.animal.Dog;
-import nl.novi.breedsoft.model.management.DomesticatedDog;
-import nl.novi.breedsoft.model.management.Person;
+import nl.novi.breedsoft.model.management.*;
 import nl.novi.breedsoft.model.animal.enumerations.Sex;
 import nl.novi.breedsoft.repository.DomesticatedDogRepository;
 import nl.novi.breedsoft.repository.PersonRepository;
@@ -118,6 +116,14 @@ public class PersonService {
                     domesticatedDog.setPerson(null);
                 }
             }
+            if(personFound.getWaitingListItems() != null){
+                List<WaitingListItem> givenWaitingListItemsList = personFound.getWaitingListItems();
+                //for each given dog, check if dog exists.
+                //if dog exists, add to foundDogsList
+                for(WaitingListItem waitingListItem : givenWaitingListItemsList) {
+                    waitingListItem.setPerson(null);
+                }
+            }
             personRepository.deleteById(id);
         } else {
             throw new  RecordNotFoundException("No person with given ID found.");
@@ -127,9 +133,9 @@ public class PersonService {
     //PUT sends an enclosed entity of a resource to the server.
     //If the entity already exists, the server updates its data. Otherwise, the server creates a new entity
     public Object updatePerson(Long id, PersonInputDto personInputDto) {
-
-        if (personRepository.findById(id).isPresent()){
-            Person person = personRepository.findById(id).get();
+        Optional<Person> foundPerson = personRepository.findById(id);
+        if (foundPerson.isPresent()){
+            Person person = foundPerson.get();
             Person updatedPerson = transferToPerson(personInputDto);
             List<DomesticatedDog> domesticatedDogList = updatedPerson.getDogs();
             for(DomesticatedDog domesticatedDog : domesticatedDogList){

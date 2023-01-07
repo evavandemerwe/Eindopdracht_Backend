@@ -13,7 +13,19 @@ public class MedicalData {
     private LocalDate dateOfMedicalTreatment;
     private String medicine;
     private String diagnose;
-    private String treatMent;
+    private String treatment;
+
+    @ManyToOne
+    @JoinColumn(name = "domesticated_dog_id")
+    private DomesticatedDog domesticatedDog;
+
+    public DomesticatedDog getDomesticatedDog() {
+        return domesticatedDog;
+    }
+
+    public void setDomesticatedDog(DomesticatedDog domesticatedDog) {
+        this.domesticatedDog = domesticatedDog;
+    }
 
     public Long getId() {
         return id;

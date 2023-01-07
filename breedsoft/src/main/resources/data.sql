@@ -44,3 +44,23 @@ UPDATE domesticated_dogs
 SET person_id = 2001
     WHERE id = 1002;
 
+/* Set appointments for some of the dogs*/
+INSERT INTO appointments(
+	id, appointment_date_time, subject, domesticated_dog_id)
+	VALUES (1001, '2023-02-23', 'ultrasound examination', 1001);
+
+INSERT INTO appointments(
+	id, appointment_date_time, subject, domesticated_dog_id)
+	VALUES (1002, '2023-01-23', 'rabies vaccination', 1002);
+
+INSERT INTO appointments(
+	id, appointment_date_time, subject, domesticated_dog_id)
+	VALUES (1003, '2023-02-23', 'rabies vaccination', 1003);
+
+INSERT INTO appointments(
+	id, appointment_date_time, subject, domesticated_dog_id)
+	VALUES (1004, '2023-01-23', 'rabies vaccination', 1004);
+
+INSERT INTO appointments(
+   	id, appointment_date_time, subject, domesticated_dog_id)
+   	VALUES (1005, '2023-01-23', 'rabies vaccination', 1001);
