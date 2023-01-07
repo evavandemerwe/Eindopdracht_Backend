@@ -6,7 +6,6 @@ import nl.novi.breedsoft.dto.PersonPatchDto;
 import nl.novi.breedsoft.exception.EnumValueNotFoundException;
 import nl.novi.breedsoft.exception.RecordNotFoundException;
 import nl.novi.breedsoft.exception.ZipCodeFormatException;
-import nl.novi.breedsoft.model.animal.Dog;
 import nl.novi.breedsoft.model.management.DomesticatedDog;
 import nl.novi.breedsoft.model.management.Person;
 import nl.novi.breedsoft.model.animal.enumerations.Sex;

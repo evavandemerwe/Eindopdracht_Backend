@@ -21,6 +21,18 @@ public class Appointment {
     @JoinColumn(name = "appointee_id")
     private Person appointee;
 
+    @ManyToOne
+    @JoinColumn(name = "domesticated_dog_id")
+    private DomesticatedDog domesticatedDog;
+
+    public DomesticatedDog getDomesticatedDog() {
+        return domesticatedDog;
+    }
+
+    public void setDomesticatedDog(DomesticatedDog domesticatedDog) {
+        this.domesticatedDog = domesticatedDog;
+    }
+
     public Long getId() {
         return id;
     }

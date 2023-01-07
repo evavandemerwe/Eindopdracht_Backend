@@ -6,6 +6,8 @@ import nl.novi.breedsoft.model.animal.enumerations.Status;
 import nl.novi.breedsoft.model.management.enumerations.Breed;
 import nl.novi.breedsoft.model.management.enumerations.BreedGroup;
 
+import java.util.List;
+
 @Entity
 @Table(name = "domesticated_dogs")
 public class DomesticatedDog extends Dog {
@@ -42,6 +44,9 @@ public class DomesticatedDog extends Dog {
     @Enumerated(EnumType.STRING)
     @Column(name = "dog_status")
     Status dogStatus;
+
+    @OneToMany(mappedBy = "domesticatedDog", cascade=CascadeType.MERGE)
+    private List<Appointment> appointment;
 
     public DomesticatedDog() {
         super();
@@ -119,4 +124,11 @@ public class DomesticatedDog extends Dog {
         this.dogStatus = dogStatus;
     }
 
+    public List<Appointment> getAppointment() {
+        return appointment;
+    }
+
+    public void setAppointment(List<Appointment> appointment) {
+        this.appointment = appointment;
+    }
 }

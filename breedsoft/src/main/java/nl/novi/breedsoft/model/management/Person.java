@@ -35,7 +35,7 @@ public class Person extends Mammal {
     private boolean canSee = true;
 
     //A person can have 0 to * dogs
-    @OneToMany(mappedBy = "person", cascade=CascadeType.MERGE  )
+    @OneToMany(mappedBy = "person", cascade=CascadeType.MERGE)
     private List<DomesticatedDog> dogs;
 
     //constructor

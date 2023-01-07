@@ -35,6 +35,9 @@ INSERT INTO persons(id, animal_type, birth_method, blood_temperature, date_of_bi
 
 INSERT INTO persons(id, animal_type, birth_method, blood_temperature, date_of_birth, date_of_death, food, hair_color, sex, weight_in_grams, kind_of_hair, number_of_teeth, city, country, first_name, house_number, house_number_extension, last_name, street, zip_code) VALUES (2006, 'omnivore','livebirth', 'warmblooded', '2018-12-23', null, 'beef', 'blond', 'female', 2300.00, 'medium long hair', 32, 'Kaatsheuvel', 'the Netherlands', 'Janina', 31, null, 'van de Merwe', 'Maas', '5172 CN');
 
+/* Dierenarts */
+INSERT INTO persons(id, animal_type, birth_method, blood_temperature, date_of_birth, date_of_death, food, hair_color, sex, weight_in_grams, kind_of_hair, number_of_teeth, city, country, first_name, house_number, house_number_extension, last_name, street, zip_code) VALUES (3001, 'omnivore','livebirth', 'warmblooded', '2018-12-23', null, 'beef', 'blond', 'female', 6000.00, 'long hair', 32, 'Kaatsheuvel', 'the Netherlands', 'Dr.', 16, null, 'Veterinarian', 'Juliana van Stolbergstraat', '5171 EA');
+
 /* Update my two dogs, set myself as owner */
 UPDATE domesticated_dogs
 SET person_id = 2001
@@ -44,3 +47,19 @@ UPDATE domesticated_dogs
 SET person_id = 2001
     WHERE id = 1002;
 
+/* Set appointments for some of the dogs*/
+INSERT INTO appointments(
+	id, appointment_date_time, subject, appointee_id, appointer_id, domesticated_dog_id)
+	VALUES (1001, '2023-02-23', 'ultrasound examination', 2001, 3001, 1001);
+
+INSERT INTO appointments(
+	id, appointment_date_time, subject, appointee_id, appointer_id, domesticated_dog_id)
+	VALUES (1002, '2023-01-23', 'rabies vaccination', 2001, 3001, 1002);
+
+INSERT INTO appointments(
+	id, appointment_date_time, subject, appointee_id, appointer_id, domesticated_dog_id)
+	VALUES (1003, '2023-02-23', 'rabies vaccination', 2001, 3001, 1003);
+
+INSERT INTO appointments(
+	id, appointment_date_time, subject, appointee_id, appointer_id, domesticated_dog_id)
+	VALUES (1004, '2023-01-23', 'rabies vaccination', 2001, 3001, 1004);

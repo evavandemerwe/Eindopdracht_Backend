@@ -13,7 +13,7 @@ public class MedicalData {
     private LocalDate dateOfMedicalTreatment;
     private String medicine;
     private String diagnose;
-    private String treatMent;
+    private String treatment;
 
     public Long getId() {
         return id;
