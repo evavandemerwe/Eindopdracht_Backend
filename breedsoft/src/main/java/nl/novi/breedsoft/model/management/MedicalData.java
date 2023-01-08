@@ -50,4 +50,20 @@ public class MedicalData {
     public void setDateOfMedicalTreatment(LocalDate dateOfMedicalTreatment) {
         this.dateOfMedicalTreatment = dateOfMedicalTreatment;
     }
+
+    public String getDiagnose() {
+        return diagnose;
+    }
+
+    public void setDiagnose(String diagnose) {
+        this.diagnose = diagnose;
+    }
+
+    public String getTreatment() {
+        return treatment;
+    }
+
+    public void setTreatment(String treatment) {
+        this.treatment = treatment;
+    }
 }

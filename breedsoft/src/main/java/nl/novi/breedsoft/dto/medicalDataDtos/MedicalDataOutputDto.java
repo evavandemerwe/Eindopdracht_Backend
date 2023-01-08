@@ -1,14 +1,18 @@
-package nl.novi.breedsoft.dto.appointmentDtos;
+package nl.novi.breedsoft.dto.medicalDataDtos;
 
 import com.fasterxml.jackson.annotation.JsonIncludeProperties;
+
 import lombok.Data;
 import nl.novi.breedsoft.model.management.DomesticatedDog;
 import java.time.LocalDate;
 @Data
-public class AppointmentOutputDto {
+public class MedicalDataOutputDto {
     private Long id;
-    private LocalDate appointmentDate;
-    private String subject;
+    private LocalDate dateOfMedicalTreatment;
+    private String medicine;
+    private String diagnose;
+    private String treatment;
+
     @JsonIncludeProperties({"id", "name", "sex", "dateOfBirth", "breed", "kindOfHair"})
     private DomesticatedDog domesticatedDog;
 }

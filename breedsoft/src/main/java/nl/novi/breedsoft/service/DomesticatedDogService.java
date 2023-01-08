@@ -125,14 +125,14 @@ public class DomesticatedDogService {
         return transferDomesticatedDogListToDtoList(breedDogs);
     }
 
-    public DomesticatedDogOutputDto getMotherDog(Long id){
-        DomesticatedDog motherDog = new DomesticatedDog();
+    public DomesticatedDogOutputDto getParentDog(Long id){
+        DomesticatedDog parentDog = new DomesticatedDog();
         if(domesticatedDogRepository.existsById(id)) {
             DomesticatedDog domesticatedDog = domesticatedDogRepository.getReferenceById(id);
             Long parentId = domesticatedDog.getParentId();
             if(parentId != null) {
                 if (domesticatedDogRepository.existsById(parentId)) {
-                    motherDog = domesticatedDogRepository.getReferenceById(parentId);
+                    parentDog = domesticatedDogRepository.getReferenceById(parentId);
                 }
             }else{
                 throw new RecordNotFoundException("No information about parent found.");
@@ -141,7 +141,7 @@ public class DomesticatedDogService {
             throw new RecordNotFoundException("Dog with id " + id + " is not found.");
         }
 
-        return transferToOutputDto(motherDog);
+        return transferToOutputDto(parentDog);
     }
 
     //Create creates a new entity in the database
@@ -160,7 +160,7 @@ public class DomesticatedDogService {
     }
 
     public List<DomesticatedDogOutputDto> createLitterList(List<DomesticatedDogInputDto> domesticatedDogInputDtoList, Long id){
-       List<DomesticatedDogOutputDto> createdDogsFromLitterArray = new ArrayList<>();
+        List<DomesticatedDogOutputDto> createdDogsFromLitterArray = new ArrayList<>();
         if(domesticatedDogRepository.findById(id).isEmpty()){
             throw new RecordNotFoundException("No dog with this id found in database");
         } else {
@@ -391,6 +391,8 @@ public class DomesticatedDogService {
         domesticatedDogDto.setBreedGroup(domesticatedDog.getBreedGroup());
         domesticatedDogDto.setPerson(domesticatedDog.getPerson());
         domesticatedDogDto.setDogImage(domesticatedDog.getDogImage());
+        domesticatedDogDto.setCanSee(domesticatedDog.canSee());
+        domesticatedDogDto.setCanHear(domesticatedDog.canHear());
         Long parentId = domesticatedDog.getParentId();
         if(parentId != null) {
             Optional<DomesticatedDog> parentDog = domesticatedDogRepository.findById(parentId);
@@ -457,6 +459,8 @@ public class DomesticatedDogService {
         domesticatedDog.setDateOfDeath(dto.getDateOfDeath());
         domesticatedDog.setChipNumber(dto.getChipNumber());
         domesticatedDog.setDogYears(dto.getDogYears());
+        domesticatedDog.setCanSee(dto.isCanSee());
+        domesticatedDog.setCanHear(dto.isCanHear());
         if (dto.getBreed() != null) {
             String newBreedString = dto.getBreed();
             Breed newBreed;

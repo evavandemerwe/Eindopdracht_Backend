@@ -108,16 +108,6 @@ public class DomesticatedDog extends Dog {
         this.person = person;
     }
 
-    @Override
-    public boolean canHear() {
-        return canHear;
-    }
-
-    @Override
-    public boolean canSee() {
-        return canSee;
-    }
-
     public byte[] getDogImage() {
         return dogImage;
     }
@@ -162,5 +152,22 @@ public class DomesticatedDog extends Dog {
 
     public void setMedicalData(List<MedicalData> medicalData) {
         this.medicalData = medicalData;
+    }
+
+    public void setCanSee(boolean canSee) {
+        this.canSee = canSee;
+    }
+
+    public void setCanHear(boolean canHear){
+        this.canHear= canHear;
+    }
+    @Override
+    public boolean canHear() {
+        return this.canHear;
+    }
+
+    @Override
+    public boolean canSee() {
+        return this.canSee;
     }
 }

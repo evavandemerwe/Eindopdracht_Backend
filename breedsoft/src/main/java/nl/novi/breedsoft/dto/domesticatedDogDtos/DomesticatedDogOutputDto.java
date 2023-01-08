@@ -40,7 +40,7 @@ public class DomesticatedDogOutputDto {
     @JsonIncludeProperties({"id", "appointmentDateTime", "subject"})
     private List<Appointment> appointments;
 
-    @JsonIncludeProperties("id")
+    @JsonIncludeProperties({"id", "dateOfMedicalTreatment", "diagnose", "medicine", "treatment"})
     private List<MedicalData> medicalData;
 
     @JsonIncludeProperties({"id", "firstName", "lastName", "street", "houseNumber", "houseNumberExtension", "zipCode", "city", "country"})
