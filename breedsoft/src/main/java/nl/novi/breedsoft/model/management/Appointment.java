@@ -1,7 +1,7 @@
 package nl.novi.breedsoft.model.management;
 
 import jakarta.persistence.*;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "appointments")
@@ -11,7 +11,7 @@ public class Appointment {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    private LocalDateTime appointmentDateTime;
+    private LocalDate appointmentDate;
     private String subject;
 
     @ManyToOne
@@ -30,12 +30,12 @@ public class Appointment {
         return id;
     }
 
-    public LocalDateTime getAppointmentDateTime() {
-        return appointmentDateTime;
+    public LocalDate getAppointmentDate() {
+        return appointmentDate;
     }
 
-    public void setAppointmentDateTime(LocalDateTime appointmentDateTime) {
-        this.appointmentDateTime = appointmentDateTime;
+    public void setAppointmentDate(LocalDate appointmentDate) {
+        this.appointmentDate = appointmentDate;
     }
 
     public String getSubject() {

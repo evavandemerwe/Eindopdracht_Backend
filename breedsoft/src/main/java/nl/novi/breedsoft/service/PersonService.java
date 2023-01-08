@@ -40,7 +40,7 @@ public class PersonService {
 
     //Get one person by ID
     public PersonOutputDto getPersonById(Long id) {
-        if (personRepository.findById(id).isPresent()){
+        if(personRepository.findById(id).isPresent()){
             Person person = personRepository.findById(id).get();
             return transferToOutputDto(person);
         } else {

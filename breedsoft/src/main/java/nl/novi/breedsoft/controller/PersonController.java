@@ -32,8 +32,8 @@ public class PersonController {
     }
 
     //Get mapping to get one person by id from the database
-    @GetMapping("/findbyid")
-    public ResponseEntity<PersonOutputDto> getPersonById(@RequestParam("id") Long id) {
+    @GetMapping("/findbyid/{id}")
+    public ResponseEntity<PersonOutputDto> getPersonById(@PathVariable("id") Long id) {
 
         PersonOutputDto personOutputDto = personService.getPersonById(id);
 
@@ -41,8 +41,8 @@ public class PersonController {
     }
 
     //Get mapping to get one person by last name from the database
-    @GetMapping("/findbyname")
-    public ResponseEntity<Object> getPersonByName(@RequestParam("lastName") String lastName) {
+    @GetMapping("/findbyname/{lastName}")
+    public ResponseEntity<Object> getPersonByName(@PathVariable("lastName") String lastName) {
 
         List<PersonOutputDto> personOutputDtoList = personService.getPersonByName(lastName);
 
@@ -55,6 +55,7 @@ public class PersonController {
         List<PersonOutputDto> dogBreeders = personService.getDogBreeders();
         return ResponseEntity.ok().body(dogBreeders);
     }
+
     //Create a new person in the database
     @PostMapping("")
     public ResponseEntity<Object> createPerson(@Valid @RequestBody PersonInputDto personInputDto, BindingResult br) {
