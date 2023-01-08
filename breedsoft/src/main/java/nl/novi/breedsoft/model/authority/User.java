@@ -2,6 +2,8 @@ package nl.novi.breedsoft.model.authority;
 
 import jakarta.persistence.*;
 import lombok.*;
+import nl.novi.breedsoft.model.management.Person;
+
 import java.util.List;
 
 @Data
@@ -19,6 +21,9 @@ public class User {
     private String username;
     private String password;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    private Person person;
+
     // @Singular improves readability when assigning multiple authorities to a User in a builder pattern.
     @Singular
     @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
@@ -33,6 +38,7 @@ public class User {
         )
     private List<Authority> authorities;
 
+    //Getters and Setters
     public Long getId() {
         return (id != null) ? id : 0;
     }

@@ -22,6 +22,7 @@ public class Authority {
     @Column(unique = true)
     private String authority;
 
+    //Getters and Setters
     public Long getId() {
         return (id != null) ? id : 0;
     }

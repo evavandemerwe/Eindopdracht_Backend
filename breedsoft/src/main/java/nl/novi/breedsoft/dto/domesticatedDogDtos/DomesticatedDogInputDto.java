@@ -3,7 +3,7 @@ package nl.novi.breedsoft.dto.domesticatedDogDtos;
 import jakarta.validation.constraints.*;
 import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 import lombok.Data;
-import nl.novi.breedsoft.model.management.Appointment;
+import nl.novi.breedsoft.model.management.VeterinarianAppointment;
 import nl.novi.breedsoft.model.management.DomesticatedDog;
 import nl.novi.breedsoft.model.management.MedicalData;
 import nl.novi.breedsoft.model.management.Person;
@@ -75,7 +75,7 @@ public class DomesticatedDogInputDto {
     //Can be empty
     private List<DomesticatedDog> litters;
 
-    private List<Appointment> appointments;
+    private List<VeterinarianAppointment> veterinarianAppointments;
 
     private List<MedicalData> medicalData;
 }

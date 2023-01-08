@@ -5,7 +5,7 @@ import nl.novi.breedsoft.dto.domesticatedDogDtos.DomesticatedDogOutputDto;
 import nl.novi.breedsoft.dto.domesticatedDogDtos.DomesticatedDogPatchDto;
 import nl.novi.breedsoft.exception.EnumValueNotFoundException;
 import nl.novi.breedsoft.exception.RecordNotFoundException;
-import nl.novi.breedsoft.model.management.Appointment;
+import nl.novi.breedsoft.model.management.VeterinarianAppointment;
 import nl.novi.breedsoft.model.management.DomesticatedDog;
 import nl.novi.breedsoft.model.management.MedicalData;
 import nl.novi.breedsoft.model.management.Person;
@@ -347,9 +347,9 @@ public class DomesticatedDogService {
         if (domesticatedDogRepository.findById(id).isPresent()){
             DomesticatedDog dogToDelete = domesticatedDogRepository.getReferenceById(id);
             //Delete appointments for dog
-            List<Appointment> dogAppointments = dogToDelete.getAppointments();
-            for(Appointment appointment : dogAppointments){
-                appointmentRepository.delete(appointment);
+            List<VeterinarianAppointment> dogVeterinarianAppointments = dogToDelete.getVeterinarianAppointments();
+            for(VeterinarianAppointment veterinarianAppointment : dogVeterinarianAppointments){
+                appointmentRepository.delete(veterinarianAppointment);
             }
             //delete medical data for dog
             List<MedicalData> dogMedicalData = dogToDelete.getMedicalData();
@@ -420,9 +420,9 @@ public class DomesticatedDogService {
                 }
         }
         domesticatedDogDto.setLitters(newLitters);
-        List<Appointment> appointments = domesticatedDog.getAppointments();
-        if(appointments != null) {
-            domesticatedDogDto.setAppointments(domesticatedDog.getAppointments());
+        List<VeterinarianAppointment> veterinarianAppointments = domesticatedDog.getVeterinarianAppointments();
+        if(veterinarianAppointments != null) {
+            domesticatedDogDto.setVeterinarianAppointments(domesticatedDog.getVeterinarianAppointments());
         }
         List<MedicalData> medicalData = domesticatedDog.getMedicalData();
         if(medicalData != null){
@@ -515,9 +515,9 @@ public class DomesticatedDogService {
             if(litters != null){
                 domesticatedDog.setLitter(dto.getLitters());
             }
-            List<Appointment> appointments = dto.getAppointments();
-            if(appointments != null){
-                domesticatedDog.setAppointments(dto.getAppointments());
+            List<VeterinarianAppointment> veterinarianAppointments = dto.getVeterinarianAppointments();
+            if(veterinarianAppointments != null){
+                domesticatedDog.setVeterinarianAppointments(dto.getVeterinarianAppointments());
             }
 
             List<MedicalData> medicalData = dto.getMedicalData();

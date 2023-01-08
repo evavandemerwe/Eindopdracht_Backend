@@ -1,11 +1,11 @@
-package nl.novi.breedsoft.dto.appointmentDtos;
+package nl.novi.breedsoft.dto.veterinarianAppointmentDtos;
 
 import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 import lombok.Data;
 import nl.novi.breedsoft.model.management.DomesticatedDog;
 import java.time.LocalDate;
 @Data
-public class AppointmentOutputDto {
+public class VeterinarianAppointmentOutputDto {
     private Long id;
     private LocalDate appointmentDate;
     private String subject;
