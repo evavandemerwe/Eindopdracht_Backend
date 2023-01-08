@@ -9,7 +9,9 @@ import nl.novi.breedsoft.model.management.Appointment;
 import nl.novi.breedsoft.model.management.DomesticatedDog;
 import nl.novi.breedsoft.model.management.MedicalData;
 import nl.novi.breedsoft.model.management.Person;
-import nl.novi.breedsoft.model.animal.enumerations.Status;
+import nl.novi.breedsoft.model.management.enumerations.Status;
+import nl.novi.breedsoft.repository.AppointmentRepository;
+import nl.novi.breedsoft.repository.MedicalDataRepository;
 import nl.novi.breedsoft.repository.PersonRepository;
 import nl.novi.breedsoft.model.management.enumerations.Breed;
 import nl.novi.breedsoft.model.management.enumerations.BreedGroup;
@@ -29,14 +31,19 @@ import java.util.Optional;
 public class DomesticatedDogService {
     private final DomesticatedDogRepository domesticatedDogRepository;
     private final PersonRepository personRepository;
+    private final AppointmentRepository appointmentRepository;
+    private final MedicalDataRepository medicalDataRepository;
 
     //Constructor injection
     public DomesticatedDogService(
             DomesticatedDogRepository domesticatedDogRepository,
-            PersonRepository personRepository
-    ){
+            PersonRepository personRepository,
+            AppointmentRepository appointmentRepository,
+            MedicalDataRepository medicalDataRepository){
         this.domesticatedDogRepository = domesticatedDogRepository;
         this.personRepository = personRepository;
+        this.appointmentRepository = appointmentRepository;
+        this.medicalDataRepository = medicalDataRepository;
     }
 
     //Output Dto is used for representing data from the database to the user
@@ -173,16 +180,6 @@ public class DomesticatedDogService {
             throw new RecordNotFoundException("No dogs are created");
         }
         return createdDogsFromLitterArray;
-    }
-
-    //DELETE deletes an entity from the database if found
-    public void deleteDomesticatedDog(Long id) {
-
-        if (domesticatedDogRepository.findById(id).isPresent()){
-               domesticatedDogRepository.deleteById(id);
-        } else {
-            throw new  RecordNotFoundException("No dogs with given ID found.");
-        }
     }
 
     //PUT sends an enclosed entity of a resource to the server.
@@ -334,8 +331,32 @@ public class DomesticatedDogService {
         Optional<DomesticatedDog> optionalDog = domesticatedDogRepository.findById(id);
         if(optionalDog.isPresent()) {
             DomesticatedDog domesticatedDog = optionalDog.get();
-            domesticatedDog.setDogImage(null);
-            domesticatedDogRepository.save(domesticatedDog);
+            if(domesticatedDog.getDogImage() != null) {
+                domesticatedDog.setDogImage(null);
+                domesticatedDogRepository.save(domesticatedDog);
+            }else{
+                throw new  RecordNotFoundException("This dog does not have a picture.");
+            }
+        } else {
+            throw new  RecordNotFoundException("No dog with given ID found.");
+        }
+    }
+    //DELETE deletes an entity from the database if found
+    public void deleteDomesticatedDog(Long id) {
+
+        if (domesticatedDogRepository.findById(id).isPresent()){
+            DomesticatedDog dogToDelete = domesticatedDogRepository.getReferenceById(id);
+            //Delete appointments for dog
+            List<Appointment> dogAppointments = dogToDelete.getAppointments();
+            for(Appointment appointment : dogAppointments){
+                appointmentRepository.delete(appointment);
+            }
+            //delete medical data for dog
+            List<MedicalData> dogMedicalData = dogToDelete.getMedicalData();
+            for(MedicalData medicalData : dogMedicalData){
+                medicalDataRepository.delete(medicalData);
+            }
+            domesticatedDogRepository.deleteById(id);
         } else {
             throw new  RecordNotFoundException("No dogs with given ID found.");
         }
@@ -379,16 +400,30 @@ public class DomesticatedDogService {
                 throw new RecordNotFoundException("Parent ID not found");
             }
         }
+
+        //Because of recursion when getting a list of domesticated dogs from entity DomesticatedDog,
+        //we limit the litter to fields that are of interest for a dog owner
         List<DomesticatedDog> litters = domesticatedDog.getLitter();
-        if(!litters.isEmpty()){
-            domesticatedDogDto.setLitters(domesticatedDog.getLitter());
+        List<DomesticatedDog> newLitters = new ArrayList<>();
+        if(litters != null){
+                for (DomesticatedDog dog : litters) {
+                    DomesticatedDog newDog = new DomesticatedDog();
+                    newDog.setId(dog.getId());
+                    newDog.setName(dog.getName());
+                    newDog.setKindOfHair(dog.getKindOfHair());
+                    newDog.setBreed(dog.getBreed());
+                    newDog.setSex(dog.getSex());
+                    newDog.setDateOfBirth(dog.getDateOfBirth());
+                    newLitters.add(newDog);
+                }
         }
+        domesticatedDogDto.setLitters(newLitters);
         List<Appointment> appointments = domesticatedDog.getAppointments();
-        if(!appointments.isEmpty()) {
+        if(appointments != null) {
             domesticatedDogDto.setAppointments(domesticatedDog.getAppointments());
         }
         List<MedicalData> medicalData = domesticatedDog.getMedicalData();
-        if(!medicalData.isEmpty()){
+        if(medicalData != null){
             domesticatedDogDto.setMedicalData(domesticatedDog.getMedicalData());
         }
 
@@ -448,8 +483,8 @@ public class DomesticatedDogService {
             }
             domesticatedDog.setBreedGroup(newBreedGroup);
         }
-        domesticatedDog.setLitter(dto.getLitters());
         domesticatedDog.setPerson(dto.getPerson());
+
         Long parentId = dto.getParentId();
         if(parentId != null) {
             Optional<DomesticatedDog> parentDog = domesticatedDogRepository.findById(parentId);
@@ -473,16 +508,16 @@ public class DomesticatedDogService {
             domesticatedDog.setDogStatus(newStatus);
 
             List<DomesticatedDog> litters = dto.getLitters();
-            if(!litters.isEmpty()){
+            if(litters != null){
                 domesticatedDog.setLitter(dto.getLitters());
             }
             List<Appointment> appointments = dto.getAppointments();
-            if(!appointments.isEmpty()){
+            if(appointments != null){
                 domesticatedDog.setAppointments(dto.getAppointments());
             }
 
             List<MedicalData> medicalData = dto.getMedicalData();
-            if(!medicalData.isEmpty()){
+            if(medicalData != null){
                 domesticatedDog.setMedicalData(dto.getMedicalData());
             }
         }

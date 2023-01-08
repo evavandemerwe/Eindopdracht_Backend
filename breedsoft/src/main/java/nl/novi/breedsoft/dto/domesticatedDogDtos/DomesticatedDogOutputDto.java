@@ -9,10 +9,9 @@ import nl.novi.breedsoft.model.management.Person;
 import nl.novi.breedsoft.model.management.enumerations.Breed;
 import nl.novi.breedsoft.model.management.enumerations.BreedGroup;
 import nl.novi.breedsoft.model.animal.enumerations.Sex;
-import nl.novi.breedsoft.model.animal.enumerations.Status;
+import nl.novi.breedsoft.model.management.enumerations.Status;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -49,23 +48,7 @@ public class DomesticatedDogOutputDto {
 
     private byte[] dogImage;
 
-    //Because of recursion when getting a list of domesticated dogs from entity DomesticatedDog,
-    //we limit the litter to fields that are of interest for a dog owner
     public void setLitters(List<DomesticatedDog> litters) {
-        if(litters != null) {
-            this.litters = new ArrayList<>();
-            for (DomesticatedDog dog : litters) {
-                DomesticatedDog newDog = new DomesticatedDog();
-                newDog.setId(dog.getId());
-                newDog.setName(dog.getName());
-                newDog.setKindOfHair(dog.getKindOfHair());
-                newDog.setBreed(dog.getBreed());
-                newDog.setSex(dog.getSex());
-                newDog.setDateOfBirth(dog.getDateOfBirth());
-                this.litters.add(newDog);
-            }
-        } else {
-            this.litters = null;
-        }
+        this.litters = litters;
     }
 }

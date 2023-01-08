@@ -10,6 +10,7 @@ import nl.novi.breedsoft.model.management.*;
 import nl.novi.breedsoft.model.animal.enumerations.Sex;
 import nl.novi.breedsoft.repository.DomesticatedDogRepository;
 import nl.novi.breedsoft.repository.PersonRepository;
+import nl.novi.breedsoft.repository.WaitingListItemRepository;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,13 +20,15 @@ import java.util.Optional;
 public class PersonService {
     private final PersonRepository personRepository;
     private final DomesticatedDogRepository domesticatedDogRepository;
+    private final WaitingListItemRepository waitingListItemRepository;
 
     public PersonService(
             PersonRepository personRepository,
-            DomesticatedDogRepository domesticatedDogRepository
-    ) {
+            DomesticatedDogRepository domesticatedDogRepository,
+            WaitingListItemRepository waitingListItemRepository) {
         this.personRepository = personRepository;
         this.domesticatedDogRepository = domesticatedDogRepository;
+        this.waitingListItemRepository = waitingListItemRepository;
     }
 
     //Output Dto is used for representing data from the database to the user
@@ -110,18 +113,17 @@ public class PersonService {
 
             if(personFound.getDogs() != null){
                 List<DomesticatedDog> givenDogsList = personFound.getDogs();
-                //for each given dog, check if dog exists.
-                //if dog exists, add to foundDogsList
+                //For each given dog, check if dog exists.
+                //if dog exists, delete person from dog
                 for(DomesticatedDog domesticatedDog : givenDogsList) {
                     domesticatedDog.setPerson(null);
                 }
             }
+            //delete person from waiting list
             if(personFound.getWaitingListItems() != null){
                 List<WaitingListItem> givenWaitingListItemsList = personFound.getWaitingListItems();
-                //for each given dog, check if dog exists.
-                //if dog exists, add to foundDogsList
                 for(WaitingListItem waitingListItem : givenWaitingListItemsList) {
-                    waitingListItem.setPerson(null);
+                    waitingListItemRepository.delete(waitingListItem);
                 }
             }
             personRepository.deleteById(id);
