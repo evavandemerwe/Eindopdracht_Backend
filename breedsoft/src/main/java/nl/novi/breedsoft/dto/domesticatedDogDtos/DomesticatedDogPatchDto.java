@@ -2,7 +2,6 @@ package nl.novi.breedsoft.dto.domesticatedDogDtos;
 
 import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 import lombok.Data;
-import nl.novi.breedsoft.model.animal.Dog;
 import nl.novi.breedsoft.model.management.DomesticatedDog;
 import nl.novi.breedsoft.model.management.Person;
 import java.time.LocalDate;
