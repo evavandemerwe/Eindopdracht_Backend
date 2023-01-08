@@ -2,7 +2,7 @@ package nl.novi.breedsoft.model.management;
 
 import jakarta.persistence.*;
 import nl.novi.breedsoft.model.animal.Dog;
-import nl.novi.breedsoft.model.animal.enumerations.Status;
+import nl.novi.breedsoft.model.management.enumerations.Status;
 import nl.novi.breedsoft.model.management.enumerations.Breed;
 import nl.novi.breedsoft.model.management.enumerations.BreedGroup;
 
@@ -137,7 +137,7 @@ public class DomesticatedDog extends Dog {
         return this.litter;
     }
     public void setLitter(List<DomesticatedDog> litter) {
-        litter = litter;
+        this.litter = litter;
     }
 
     public Status getDogStatus() {
