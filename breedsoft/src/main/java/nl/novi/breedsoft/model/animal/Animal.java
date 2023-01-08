@@ -14,20 +14,18 @@ import java.time.Period;
 public abstract class Animal implements Hearable, Seeable {
     private String food;
     private String hairColor;
-
-   private double weightInGrams;
+    private double weightInGrams;
+    private LocalDate dateOfBirth;
+    private LocalDate dateOfDeath;
     @Enumerated(EnumType.STRING)
     @Column(name = "sex")
     private Sex sex;
-    private LocalDate dateOfBirth;
-    private LocalDate dateOfDeath;
     @Enumerated(EnumType.STRING)
     @Column(name = "blood_temperature")
     private Bloodtemperature bloodTemperature;
     @Enumerated(EnumType.STRING)
     @Column(name = "birth_method")
     private Birthmethod birthMethod;
-
     @Enumerated(EnumType.STRING)
     @Column(name = "animal_type")
     private AnimalType animalType;
@@ -91,24 +89,12 @@ public abstract class Animal implements Hearable, Seeable {
         this.dateOfDeath = dateOfDeath;
     }
 
-    public Bloodtemperature getBloodTemperature() {
-        return bloodTemperature;
-    }
-
     public void setBloodTemperature(Bloodtemperature bloodTemperature) {
         this.bloodTemperature = bloodTemperature;
     }
 
-    public Birthmethod getBirthMethod() {
-        return birthMethod;
-    }
-
     public void setBirthMethod(Birthmethod birthMethod) {
         this.birthMethod = birthMethod;
-    }
-
-    public AnimalType getAnimalType() {
-        return animalType;
     }
 
     public void setAnimalType(AnimalType animalType) {

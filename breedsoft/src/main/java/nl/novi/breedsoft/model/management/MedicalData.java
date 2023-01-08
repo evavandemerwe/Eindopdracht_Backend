@@ -9,7 +9,6 @@ public class MedicalData {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private LocalDate dateOfMedicalTreatment;
     private String medicine;
     private String diagnose;

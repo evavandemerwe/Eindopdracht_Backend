@@ -8,7 +8,7 @@ import jakarta.persistence.*;
 //Not used as an entity.
 @MappedSuperclass
 public abstract class Mammal extends Animal {
-    //All mammals give live brith
+    //All mammals give live birth
     private static final Birthmethod birthmethod = Birthmethod.livebirth;
     //All mammals are warmblooded
     private static final Bloodtemperature bloodtemperature = Bloodtemperature.warmblooded;
