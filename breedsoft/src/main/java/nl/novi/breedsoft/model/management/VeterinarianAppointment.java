@@ -17,16 +17,21 @@ public class VeterinarianAppointment {
     private DomesticatedDog domesticatedDog;
 
     //Getters and Setters
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public DomesticatedDog getDomesticatedDog() {
         return domesticatedDog;
     }
 
     public void setDomesticatedDog(DomesticatedDog domesticatedDog) {
         this.domesticatedDog = domesticatedDog;
-    }
-
-    public Long getId() {
-        return id;
     }
 
     public LocalDate getAppointmentDate() {
@@ -44,4 +49,5 @@ public class VeterinarianAppointment {
     public void setSubject(String subject) {
         this.subject = subject;
     }
+
 }

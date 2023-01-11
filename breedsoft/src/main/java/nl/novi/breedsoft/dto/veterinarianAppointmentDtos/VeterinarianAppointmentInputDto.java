@@ -2,6 +2,7 @@ package nl.novi.breedsoft.dto.veterinarianAppointmentDtos;
 
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Null;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 import nl.novi.breedsoft.model.management.DomesticatedDog;
@@ -9,6 +10,8 @@ import java.time.LocalDate;
 
 @Data
 public class VeterinarianAppointmentInputDto {
+    @Null
+    private Long id;
     @NotNull(message = "Date may not be empty")
     private LocalDate appointmentDate;
     @NotEmpty(message = "Reason of the appointment may not be empty")

@@ -39,9 +39,12 @@ public class ExceptionController {
         return new ResponseEntity<>(exception.getMessage(), HttpStatus.PRECONDITION_FAILED);
     }
 
-
     @ExceptionHandler(value = BadFileException.class)
     public ResponseEntity<Object> exception(BadFileException exception) {
+        return new ResponseEntity<>(exception.getMessage(), HttpStatus.PRECONDITION_FAILED);
+    }
+    @ExceptionHandler(value = InputStringToShortException.class)
+    public ResponseEntity<Object> exception(InputStringToShortException exception) {
         return new ResponseEntity<>(exception.getMessage(), HttpStatus.PRECONDITION_FAILED);
     }
 

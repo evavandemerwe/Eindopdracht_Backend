@@ -57,14 +57,12 @@ public class DomesticatedDogController {
     //Get all children from a dog by id
     @GetMapping("/{id}/children")
     public List<DomesticatedDogOutputDto> getChildrenById(@PathVariable("id") Long id) {
-        List<DomesticatedDogOutputDto> children = domesticatedDogService.getAllChildren(id);
-        return children;
+        return domesticatedDogService.getAllChildren(id);
     }
 
     @GetMapping("/{id}/parent")
     public DomesticatedDogOutputDto getParentById(@PathVariable("id") Long id) {
-        DomesticatedDogOutputDto parent = domesticatedDogService.getParentDog(id);
-        return parent;
+        return domesticatedDogService.getParentDog(id);
     }
     @GetMapping("/available")
     public ResponseEntity<List<DomesticatedDogOutputDto>> getAvailableDogs() {
@@ -102,8 +100,7 @@ public class DomesticatedDogController {
         if (br.hasErrors()) {
             return bindingResultError(br);
         } else {
-            List<DomesticatedDogOutputDto> createdDogsList = domesticatedDogService.createLitterList(domesticatedDogInputDtoList, id);
-            return createdDogsList;
+            return domesticatedDogService.createLitterList(domesticatedDogInputDtoList, id);
         }
     }
 
@@ -132,13 +129,6 @@ public class DomesticatedDogController {
         return ResponseEntity.noContent().build();
     }
 
-    //Delete a dog from the database by id
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Object> deleteDog(@PathVariable("id") Long id) {
-        domesticatedDogService.deleteDomesticatedDog(id);
-        return ResponseEntity.noContent().build();
-    }
-
     @PutMapping("/{id}")
     public ResponseEntity<Object> updateDog(@PathVariable("id") Long id, @Valid @RequestBody DomesticatedDogInputDto domesticatedDogInputDto, BindingResult br) {
         //If there is an error in the binding
@@ -160,5 +150,13 @@ public class DomesticatedDogController {
             return ResponseEntity.ok().body(response);
         }
     }
+
+    //Delete a dog from the database by id
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Object> deleteDog(@PathVariable("id") Long id) {
+        domesticatedDogService.deleteDomesticatedDog(id);
+        return ResponseEntity.noContent().build();
+    }
+
 }
 

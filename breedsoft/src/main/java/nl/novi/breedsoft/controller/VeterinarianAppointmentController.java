@@ -3,6 +3,7 @@ package nl.novi.breedsoft.controller;
 import jakarta.validation.Valid;
 import nl.novi.breedsoft.dto.veterinarianAppointmentDtos.VeterinarianAppointmentInputDto;
 import nl.novi.breedsoft.dto.veterinarianAppointmentDtos.VeterinarianAppointmentOutputDto;
+import nl.novi.breedsoft.dto.veterinarianAppointmentDtos.VeterinarianAppointmentPatchDto;
 import nl.novi.breedsoft.service.VeterinarianAppointmentService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -39,13 +40,34 @@ public class VeterinarianAppointmentController {
             return bindingResultError(br);
         } else {
             //VeterinarianAppointment is created, return new appointment id
-            Long createdId = veterinarianAppointmentService.createAppointment(veterinarianAppointmentInputDto);
+            Long createdId = veterinarianAppointmentService.createVeterinarianAppointment(veterinarianAppointmentInputDto);
 
             URI uri = URI.create(
                     ServletUriComponentsBuilder
                             .fromCurrentContextPath()
                             .path("/appointments/" + createdId).toUriString());
             return ResponseEntity.created(uri).body("VeterinarianAppointment is successfully created!");
+        }
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Object> updateVeterinarianAppointment(@PathVariable("id") Long id, @Valid @RequestBody VeterinarianAppointmentInputDto veterinarianAppointmentInputDto, BindingResult br){
+        //If there is an error in the binding
+        if(br.hasErrors()){
+            return bindingResultError(br);
+        } else {
+            return ResponseEntity.ok().body(veterinarianAppointmentService.updateVeterinarianAppointment(id, veterinarianAppointmentInputDto));
+        }
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<Object> patchVeterinarianAppointment(@PathVariable("id") Long id, VeterinarianAppointmentPatchDto veterinarianAppointmentPatchDto, BindingResult br){
+        //If there is an error in the binding
+        if (br.hasErrors()) {
+            return bindingResultError(br);
+        } else {
+            VeterinarianAppointmentOutputDto veterinarianAppointmentOutputDto = veterinarianAppointmentService.patchVeterinarianAppointment(id, veterinarianAppointmentPatchDto);
+            return ResponseEntity.ok().body(veterinarianAppointmentOutputDto);
         }
     }
 
