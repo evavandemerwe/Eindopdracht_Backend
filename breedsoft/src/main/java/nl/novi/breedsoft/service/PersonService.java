@@ -135,9 +135,8 @@ public class PersonService {
     //PUT sends an enclosed entity of a resource to the server.
     //If the entity already exists, the server updates its data. Otherwise, the server creates a new entity
     public Object updatePerson(Long id, PersonInputDto personInputDto) {
-        Optional<Person> foundPerson = personRepository.findById(id);
-        if (foundPerson.isPresent()){
-            Person person = foundPerson.get();
+        if (personRepository.findById(id).isPresent()){
+            Person person = personRepository.findById(id).get();
             Person updatedPerson = transferToPerson(personInputDto);
             List<DomesticatedDog> domesticatedDogList = updatedPerson.getDogs();
             for(DomesticatedDog domesticatedDog : domesticatedDogList){
@@ -154,17 +153,17 @@ public class PersonService {
             return transferToOutputDto(updatedPerson);
 
         } else {
-            createPerson(personInputDto);
-            return personInputDto;
+            Long newPersonId = createPerson(personInputDto);
+            Person newPerson = personRepository.getReferenceById(newPersonId);
+            return transferToOutputDto(newPerson);
         }
     }
     //PATCH will only update an existing object,
     //with the properties mapped in the request body (that are not null).
     public PersonOutputDto patchPerson(long id, PersonPatchDto personPatchDto) {
-        Optional<Person> personFound = personRepository.findById(id);
+        Optional<Person> personOptional = personRepository.findById(id);
 
-        if (personFound.isPresent()) {
-
+        if (personOptional.isPresent()) {
             Person updatedPerson = personRepository.getReferenceById(id);
             if (personPatchDto.getFirstName() != null) {
                 updatedPerson.setFirstName(personPatchDto.getFirstName());

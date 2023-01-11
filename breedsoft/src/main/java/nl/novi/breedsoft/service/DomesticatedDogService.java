@@ -10,7 +10,7 @@ import nl.novi.breedsoft.model.management.DomesticatedDog;
 import nl.novi.breedsoft.model.management.MedicalData;
 import nl.novi.breedsoft.model.management.Person;
 import nl.novi.breedsoft.model.management.enumerations.Status;
-import nl.novi.breedsoft.repository.AppointmentRepository;
+import nl.novi.breedsoft.repository.VeterinarianAppointmentRepository;
 import nl.novi.breedsoft.repository.MedicalDataRepository;
 import nl.novi.breedsoft.repository.PersonRepository;
 import nl.novi.breedsoft.model.management.enumerations.Breed;
@@ -31,18 +31,18 @@ import java.util.Optional;
 public class DomesticatedDogService {
     private final DomesticatedDogRepository domesticatedDogRepository;
     private final PersonRepository personRepository;
-    private final AppointmentRepository appointmentRepository;
+    private final VeterinarianAppointmentRepository veterinarianAppointmentRepository;
     private final MedicalDataRepository medicalDataRepository;
 
     //Constructor injection
     public DomesticatedDogService(
             DomesticatedDogRepository domesticatedDogRepository,
             PersonRepository personRepository,
-            AppointmentRepository appointmentRepository,
+            VeterinarianAppointmentRepository veterinarianAppointmentRepository,
             MedicalDataRepository medicalDataRepository){
         this.domesticatedDogRepository = domesticatedDogRepository;
         this.personRepository = personRepository;
-        this.appointmentRepository = appointmentRepository;
+        this.veterinarianAppointmentRepository = veterinarianAppointmentRepository;
         this.medicalDataRepository = medicalDataRepository;
     }
 
@@ -183,7 +183,8 @@ public class DomesticatedDogService {
     }
 
     //PUT sends an enclosed entity of a resource to the server.
-    //If the entity already exists, the server updates its data. Otherwise, the server creates a new entity
+    //If the entity already exists, the server overrides the existing object.
+    //Otherwise, the server creates a new entity
     public Object updateDomesticatedDog(Long id, DomesticatedDogInputDto domesticatedDogInputDto) {
         if (domesticatedDogRepository.findById(id).isPresent()){
             DomesticatedDog domesticatedDog = domesticatedDogRepository.findById(id).get();
@@ -200,18 +201,19 @@ public class DomesticatedDogService {
             domesticatedDogRepository.save(updatedDog);
             return transferToOutputDto(updatedDog);
         } else {
-            createDomesticatedDog(domesticatedDogInputDto);
-            return domesticatedDogInputDto;
+            Long newDogId = createDomesticatedDog(domesticatedDogInputDto);
+            DomesticatedDog newDomesticatedDog = domesticatedDogRepository.getReferenceById(newDogId);
+            return transferToOutputDto(newDomesticatedDog);
         }
     }
 
     //PATCH will only update an existing object,
     //with the properties mapped in the request body (that are not null).
-    public String patchDomesticatedDog(long id, DomesticatedDogPatchDto domesticatedDogPatchDto) {
-        Optional<DomesticatedDog> dogFound = domesticatedDogRepository.findById(id);
+    public String patchDomesticatedDog(Long id, DomesticatedDogPatchDto domesticatedDogPatchDto) {
+        Optional<DomesticatedDog> domesticatedDogOptional = domesticatedDogRepository.findById(id);
 
-        if (dogFound.isPresent()) {
-            DomesticatedDog foundDog = dogFound.get();
+        if (domesticatedDogOptional.isPresent()) {
+            DomesticatedDog foundDog = domesticatedDogOptional.get();
             DomesticatedDog updatedDog = domesticatedDogRepository.getReferenceById(id);
             if (domesticatedDogPatchDto.getName() != null) {
                 updatedDog.setName(domesticatedDogPatchDto.getName());
@@ -349,7 +351,7 @@ public class DomesticatedDogService {
             //Delete appointments for dog
             List<VeterinarianAppointment> dogVeterinarianAppointments = dogToDelete.getVeterinarianAppointments();
             for(VeterinarianAppointment veterinarianAppointment : dogVeterinarianAppointments){
-                appointmentRepository.delete(veterinarianAppointment);
+                veterinarianAppointmentRepository.delete(veterinarianAppointment);
             }
             //delete medical data for dog
             List<MedicalData> dogMedicalData = dogToDelete.getMedicalData();
@@ -402,7 +404,6 @@ public class DomesticatedDogService {
                 throw new RecordNotFoundException("Parent ID not found");
             }
         }
-
         //Because of recursion when getting a list of domesticated dogs from entity DomesticatedDog,
         //we limit the litter to fields that are of interest for a dog owner
         List<DomesticatedDog> litters = domesticatedDog.getLitter();
@@ -498,7 +499,7 @@ public class DomesticatedDogService {
                 throw new RecordNotFoundException("Parent ID not found");
             }
         }
-        if (dto.getDogStatus() != null) {
+        if(dto.getDogStatus() != null) {
             String newStatusString = String.valueOf(dto.getDogStatus());
             Status newStatus;
             //Check if given value exists in enumeration
@@ -538,7 +539,7 @@ public class DomesticatedDogService {
             throw new RecordNotFoundException("Missing Person ID");
         }
         Optional<Person> person = personRepository.findById(personId);
-        return (person.isPresent()) ? person.get() : null;
+        return person.orElse(null);
     }
 
 }
