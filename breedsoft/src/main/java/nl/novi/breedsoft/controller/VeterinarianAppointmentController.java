@@ -61,7 +61,7 @@ public class VeterinarianAppointmentController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<Object> patchVeterinarianAppointment(@PathVariable("id") Long id, VeterinarianAppointmentPatchDto veterinarianAppointmentPatchDto, BindingResult br){
+    public ResponseEntity<Object> patchVeterinarianAppointment(@PathVariable("id") Long id, @Valid @RequestBody VeterinarianAppointmentPatchDto veterinarianAppointmentPatchDto, BindingResult br){
         //If there is an error in the binding
         if (br.hasErrors()) {
             return bindingResultError(br);

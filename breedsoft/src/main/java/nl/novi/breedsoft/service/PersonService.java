@@ -145,10 +145,8 @@ public class PersonService {
     }
     //PATCH will only update an existing object,
     //with the properties mapped in the request body (that are not null).
-    public PersonOutputDto patchPerson(long id, PersonPatchDto personPatchDto) {
-        Optional<Person> personOptional = personRepository.findById(id);
-
-        if (personOptional.isPresent()) {
+    public PersonOutputDto patchPerson(Long id, PersonPatchDto personPatchDto) {
+         if (personRepository.findById(id).isPresent()) {
             Person updatedPerson = personRepository.getReferenceById(id);
             if (personPatchDto.getFirstName() != null) {
                 updatedPerson.setFirstName(personPatchDto.getFirstName());
