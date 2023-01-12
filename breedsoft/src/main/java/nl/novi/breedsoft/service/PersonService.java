@@ -104,34 +104,6 @@ public class PersonService {
         return person.getId();
     }
 
-    //DELETE deletes an entity from the database if found
-    public void deletePerson(Long id) {
-
-        if (personRepository.findById(id).isPresent()){
-        // If a person is deleted from the database, this person is detached from owned dogs.
-            Person personFound = personRepository.getReferenceById(id);
-
-            if(personFound.getDogs() != null){
-                List<DomesticatedDog> givenDogsList = personFound.getDogs();
-                //For each given dog, check if dog exists.
-                //if dog exists, delete person from dog
-                for(DomesticatedDog domesticatedDog : givenDogsList) {
-                    domesticatedDog.setPerson(null);
-                }
-            }
-            //delete person from waiting list
-            if(personFound.getWaitingListItems() != null){
-                List<WaitingListItem> givenWaitingListItemsList = personFound.getWaitingListItems();
-                for(WaitingListItem waitingListItem : givenWaitingListItemsList) {
-                    waitingListItemRepository.delete(waitingListItem);
-                }
-            }
-            personRepository.deleteById(id);
-        } else {
-            throw new  RecordNotFoundException("No person with given ID found.");
-        }
-    }
-
     //PUT sends an enclosed entity of a resource to the server.
     //If the entity already exists, the server overrides the entity. Otherwise, the server creates a new entity
     public Object updatePerson(Long id, PersonInputDto personInputDto) {
@@ -233,6 +205,34 @@ public class PersonService {
 
             throw new RecordNotFoundException("Person is not found.");
 
+        }
+    }
+
+    //DELETE deletes an entity from the database if found
+    public void deletePerson(Long id) {
+
+        if (personRepository.findById(id).isPresent()){
+            // If a person is deleted from the database, this person is detached from owned dogs.
+            Person personFound = personRepository.getReferenceById(id);
+
+            if(personFound.getDogs() != null){
+                List<DomesticatedDog> givenDogsList = personFound.getDogs();
+                //For each given dog, check if dog exists.
+                //if dog exists, delete person from dog
+                for(DomesticatedDog domesticatedDog : givenDogsList) {
+                    domesticatedDog.setPerson(null);
+                }
+            }
+            //delete person from waiting list
+            if(personFound.getWaitingListItems() != null){
+                List<WaitingListItem> givenWaitingListItemsList = personFound.getWaitingListItems();
+                for(WaitingListItem waitingListItem : givenWaitingListItemsList) {
+                    waitingListItemRepository.delete(waitingListItem);
+                }
+            }
+            personRepository.deleteById(id);
+        } else {
+            throw new  RecordNotFoundException("No person with given ID found.");
         }
     }
 
