@@ -11,11 +11,11 @@ public class WaitingListItem {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private int numberOnList;
     @ManyToOne
     @JoinColumn(name = "person_id")
     private Person person;
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private int numberOnList;
     private String KindOfHair;
     @Enumerated(EnumType.STRING)
     @Column(name = "breed")
