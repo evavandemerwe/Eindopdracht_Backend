@@ -3,7 +3,7 @@ package nl.novi.breedsoft.service;
 import nl.novi.breedsoft.dto.veterinarianAppointmentDtos.VeterinarianAppointmentInputDto;
 import nl.novi.breedsoft.dto.veterinarianAppointmentDtos.VeterinarianAppointmentOutputDto;
 import nl.novi.breedsoft.dto.veterinarianAppointmentDtos.VeterinarianAppointmentPatchDto;
-import nl.novi.breedsoft.exception.InputStringToShortException;
+import nl.novi.breedsoft.exception.IncorrectInputException;
 import nl.novi.breedsoft.exception.RecordNotFoundException;
 import nl.novi.breedsoft.model.management.DomesticatedDog;
 import nl.novi.breedsoft.model.management.VeterinarianAppointment;
@@ -95,9 +95,7 @@ public class VeterinarianAppointmentService {
     //PATCH will only update an existing object,
     //with the properties mapped in the request body (that are not null).
     public VeterinarianAppointmentOutputDto patchVeterinarianAppointment(Long id, VeterinarianAppointmentPatchDto veterinarianAppointmentPatchDto){
-        Optional<VeterinarianAppointment> veterinarianAppointmentOptional = veterinarianAppointmentRepository.findById(id);
-
-        if(veterinarianAppointmentOptional.isPresent()){
+        if(veterinarianAppointmentRepository.findById(id).isPresent()){
             VeterinarianAppointment updatedVeterinarianAppointment = veterinarianAppointmentRepository.getReferenceById(id);
             if(veterinarianAppointmentPatchDto.getAppointmentDate() != null){
                 updatedVeterinarianAppointment.setAppointmentDate(veterinarianAppointmentPatchDto.getAppointmentDate());
@@ -106,16 +104,18 @@ public class VeterinarianAppointmentService {
                 String subject = veterinarianAppointmentPatchDto.getSubject();
 
                 if(subject.length() <= 2){
-                    throw new InputStringToShortException("Subject must at be least 3 characters long.");
+                    throw new IncorrectInputException("Subject must at be least 3 characters long.");
                 }
                 updatedVeterinarianAppointment.setSubject(subject);
             }
-            if(veterinarianAppointmentPatchDto.getDomesticatedDog() != null){
-                DomesticatedDog dog = getCompleteDogById(veterinarianAppointmentPatchDto.getDomesticatedDog().getId());
-                if(dog == null){
-                    throw new RecordNotFoundException("Provided dog owner does not exist");
-                }
-                updatedVeterinarianAppointment.setDomesticatedDog(dog);
+            if(veterinarianAppointmentPatchDto.getDomesticatedDog().getId() != null && veterinarianAppointmentPatchDto.getDomesticatedDog().getId() != 0){
+
+                    DomesticatedDog dog = getCompleteDogById(veterinarianAppointmentPatchDto.getDomesticatedDog().getId());
+                    if (dog == null) {
+                        throw new RecordNotFoundException("Provided dog does not exist.");
+                    }
+                    updatedVeterinarianAppointment.setDomesticatedDog(dog);
+
             }
             veterinarianAppointmentRepository.save(updatedVeterinarianAppointment);
             return transferToOutputDto(updatedVeterinarianAppointment);
@@ -173,7 +173,7 @@ public class VeterinarianAppointmentService {
 
     private DomesticatedDog getCompleteDogById(Long dogId){
         if(dogId == 0){
-            throw new RecordNotFoundException("Missing Person ID");
+            throw new RecordNotFoundException("Missing dog ID");
         }
         Optional<DomesticatedDog> domesticatedDogOptional = domesticatedDogRepository.findById(dogId);
         return domesticatedDogOptional.orElse(null);

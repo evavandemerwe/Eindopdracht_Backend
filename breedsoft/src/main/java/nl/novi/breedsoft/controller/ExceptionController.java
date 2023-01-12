@@ -2,7 +2,6 @@ package nl.novi.breedsoft.controller;
 
 import nl.novi.breedsoft.exception.*;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -43,8 +42,8 @@ public class ExceptionController {
     public ResponseEntity<Object> exception(BadFileException exception) {
         return new ResponseEntity<>(exception.getMessage(), HttpStatus.PRECONDITION_FAILED);
     }
-    @ExceptionHandler(value = InputStringToShortException.class)
-    public ResponseEntity<Object> exception(InputStringToShortException exception) {
+    @ExceptionHandler(value = IncorrectInputException.class)
+    public ResponseEntity<Object> exception(IncorrectInputException exception) {
         return new ResponseEntity<>(exception.getMessage(), HttpStatus.PRECONDITION_FAILED);
     }
 
