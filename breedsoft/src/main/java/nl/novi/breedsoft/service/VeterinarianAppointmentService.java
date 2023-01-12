@@ -52,7 +52,7 @@ public class VeterinarianAppointmentService {
 
     //Create a new appointment
     public Long createVeterinarianAppointment(VeterinarianAppointmentInputDto veterinarianAppointmentInputDto){
-        //Check if a dog owner is given
+        //Check if a dog is given
         if(veterinarianAppointmentInputDto.getDomesticatedDog() != null) {
             DomesticatedDog dog = getCompleteDogById(veterinarianAppointmentInputDto.getDomesticatedDog().getId());
             if (dog == null) {
@@ -83,12 +83,12 @@ public class VeterinarianAppointmentService {
             //Keeping the former id, as we will update the existing appointment
             updateVeterinarianAppointment.setId(veterinarianAppointment.getId());
             veterinarianAppointmentRepository.save(updateVeterinarianAppointment);
-            return transferToOutputDto(veterinarianAppointment);
-        }else{
+            return transferVeterinarianAppointmentToOutputDto(veterinarianAppointment);
+        } else {
             Long newAppointmentId = createVeterinarianAppointment(veterinarianAppointmentInputDto);
             VeterinarianAppointment newVeterinarianAppointment = veterinarianAppointmentRepository.getReferenceById(newAppointmentId);
 
-            return transferToOutputDto(newVeterinarianAppointment);
+            return transferVeterinarianAppointmentToOutputDto(newVeterinarianAppointment);
         }
     }
 
@@ -108,17 +108,18 @@ public class VeterinarianAppointmentService {
                 }
                 updatedVeterinarianAppointment.setSubject(subject);
             }
-            if(veterinarianAppointmentPatchDto.getDomesticatedDog().getId() != null && veterinarianAppointmentPatchDto.getDomesticatedDog().getId() != 0){
-
+            if(
+                    veterinarianAppointmentPatchDto.getDomesticatedDog().getId() != null &&
+                    veterinarianAppointmentPatchDto.getDomesticatedDog().getId() != 0
+            ){
                     DomesticatedDog dog = getCompleteDogById(veterinarianAppointmentPatchDto.getDomesticatedDog().getId());
                     if (dog == null) {
                         throw new RecordNotFoundException("Provided dog does not exist.");
                     }
                     updatedVeterinarianAppointment.setDomesticatedDog(dog);
-
             }
             veterinarianAppointmentRepository.save(updatedVeterinarianAppointment);
-            return transferToOutputDto(updatedVeterinarianAppointment);
+            return transferVeterinarianAppointmentToOutputDto(updatedVeterinarianAppointment);
         }
         else {
             throw new RecordNotFoundException("Appointment is not found.");
@@ -154,13 +155,13 @@ public class VeterinarianAppointmentService {
         List<VeterinarianAppointmentOutputDto> appointmentDtoList = new ArrayList<>();
 
         for(VeterinarianAppointment veterinarianAppointment : veterinarianAppointments) {
-            VeterinarianAppointmentOutputDto dto = transferToOutputDto(veterinarianAppointment);
+            VeterinarianAppointmentOutputDto dto = transferVeterinarianAppointmentToOutputDto(veterinarianAppointment);
             appointmentDtoList.add(dto);
         }
         return appointmentDtoList;
     }
 
-    public VeterinarianAppointmentOutputDto transferToOutputDto(VeterinarianAppointment veterinarianAppointment){
+    public VeterinarianAppointmentOutputDto transferVeterinarianAppointmentToOutputDto(VeterinarianAppointment veterinarianAppointment){
 
         VeterinarianAppointmentOutputDto VeterinarianAppointmentOutputDto = new VeterinarianAppointmentOutputDto();
         VeterinarianAppointmentOutputDto.setId(veterinarianAppointment.getId());

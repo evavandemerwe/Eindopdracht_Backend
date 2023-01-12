@@ -2,21 +2,26 @@ package nl.novi.breedsoft.service;
 
 import nl.novi.breedsoft.dto.medicalDataDtos.MedicalDataInputDto;
 import nl.novi.breedsoft.dto.medicalDataDtos.MedicalDataOutputDto;
+import nl.novi.breedsoft.dto.medicalDataDtos.MedicalDataPatchDto;
 import nl.novi.breedsoft.exception.RecordNotFoundException;
+import nl.novi.breedsoft.model.management.DomesticatedDog;
 import nl.novi.breedsoft.model.management.MedicalData;
+import nl.novi.breedsoft.repository.DomesticatedDogRepository;
 import nl.novi.breedsoft.repository.MedicalDataRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class MedicalDataService {
 
     private final MedicalDataRepository medicalDataRepository;
-
-    public MedicalDataService(MedicalDataRepository medicalDataRepository) {
+    private final DomesticatedDogRepository domesticatedDogRepository;
+    public MedicalDataService(MedicalDataRepository medicalDataRepository, DomesticatedDogRepository domesticatedDogRepository) {
         this.medicalDataRepository = medicalDataRepository;
+        this.domesticatedDogRepository = domesticatedDogRepository;
     }
 
     public List<MedicalDataOutputDto> getAllMedicalData(){
@@ -42,10 +47,78 @@ public class MedicalDataService {
     }
 
     public Long createMedicalData(MedicalDataInputDto medicalDataInputDto){
+        //Check if a dog is given
+        if(medicalDataInputDto.getDomesticatedDog() != null){
+            DomesticatedDog dog = getCompleteDogById(medicalDataInputDto.getDomesticatedDog().getId());
+            if(dog == null){
+                throw new RecordNotFoundException("Provided dog does not exist");
+            }
+            medicalDataInputDto.setDomesticatedDog(dog);
+        }
         MedicalData medicalData = transferToMedicalData(medicalDataInputDto);
         medicalDataRepository.save(medicalData);
 
         return medicalData.getId();
+    }
+
+    //PUT sends an enclosed entity of a resource to the server.
+    //If the entity already exists, the server overrides the existing object.
+    //Otherwise, the server creates a new entity
+    public Object updateMedicalData(Long id, MedicalDataInputDto medicalDataInputDto){
+        if(medicalDataRepository.findById(id).isPresent()){
+            MedicalData medicalData = medicalDataRepository.findById(id).get();
+            MedicalData updateMedicalData = transferToMedicalData(medicalDataInputDto);
+            if(medicalDataInputDto.getDomesticatedDog() != null) {
+                DomesticatedDog dog = getCompleteDogById(medicalDataInputDto.getDomesticatedDog().getId());
+                if(dog == null){
+                    throw new RecordNotFoundException("Provided dog does not exist");
+                }
+                updateMedicalData.setDomesticatedDog(dog);
+            }
+            //Keeping the former id, as we will update the existing appointment
+            updateMedicalData.setId(medicalData.getId());
+            medicalDataRepository.save(updateMedicalData);
+            return transferMedicalDataToOutputDto(medicalData);
+        } else {
+            Long newMedicalDataId = createMedicalData(medicalDataInputDto);
+            MedicalData newMedicalData = medicalDataRepository.getReferenceById(newMedicalDataId);
+
+            return transferMedicalDataToOutputDto(newMedicalData);
+        }
+    }
+
+    //PATCH will only update an existing object,
+    //with the properties mapped in the request body (that are not null).
+    public MedicalDataOutputDto patchMedicalData(Long id, MedicalDataPatchDto medicalDataPatchDto){
+        if(medicalDataRepository.findById(id).isPresent()){
+            MedicalData updateMedicalData = medicalDataRepository.getReferenceById(id);
+            if(medicalDataPatchDto.getDateOfMedicalTreatment() != null){
+                updateMedicalData.setDateOfMedicalTreatment(medicalDataPatchDto.getDateOfMedicalTreatment());
+            }
+            if(medicalDataPatchDto.getDiagnose() != null){
+                updateMedicalData.setDiagnose(medicalDataPatchDto.getDiagnose());
+            }
+            if(medicalDataPatchDto.getTreatment() != null){
+                updateMedicalData.setTreatment(medicalDataPatchDto.getTreatment());
+            }
+            if(medicalDataPatchDto.getMedicine() != null){
+                updateMedicalData.setMedicine(medicalDataPatchDto.getMedicine());
+            }
+            if(
+                    medicalDataPatchDto.getDomesticatedDog().getId() != null &&
+                    medicalDataPatchDto.getDomesticatedDog().getId() != 0
+            ){
+                DomesticatedDog dog = getCompleteDogById(medicalDataPatchDto.getDomesticatedDog().getId());
+                if (dog == null) {
+                    throw new RecordNotFoundException("Provided dog does not exist.");
+                }
+                updateMedicalData.setDomesticatedDog(dog);
+            }
+            medicalDataRepository.save(updateMedicalData);
+            return transferMedicalDataToOutputDto(updateMedicalData);
+        } else {
+            throw new RecordNotFoundException("Medical data not found");
+        }
     }
 
     public void deleteMedicalData(Long id){
@@ -97,5 +170,13 @@ public class MedicalDataService {
         medicalDataOutputDto.setDomesticatedDog(medicalData.getDomesticatedDog());
 
         return medicalDataOutputDto;
+    }
+
+    private DomesticatedDog getCompleteDogById(Long dogId){
+        if(dogId == 0){
+            throw new RecordNotFoundException("Missing dog ID");
+        }
+        Optional<DomesticatedDog> domesticatedDogOptional = domesticatedDogRepository.findById(dogId);
+        return domesticatedDogOptional.orElse(null);
     }
 }
