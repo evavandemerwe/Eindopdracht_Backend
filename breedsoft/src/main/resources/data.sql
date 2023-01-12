@@ -100,3 +100,16 @@ INSERT INTO public.medical_data(
 INSERT INTO public.medical_data(
 	id, date_of_medical_treatment, diagnose, medicine, treatment, domesticated_dog_id)
 	VALUES (1011, '2022-11-10', 'Healty', 'None', 'Chip', 1002 );
+
+
+/* Set some people on the waiting-list */
+
+INSERT INTO waiting_list_items(
+	id, kind_of_hair, breed, number_on_list, sex, person_id)
+	VALUES (1001, 'Long haired', 'Dachschund', 1, 'female', 2002);
+INSERT INTO waiting_list_items(
+	id, kind_of_hair, breed, number_on_list, sex, person_id)
+	VALUES (1002, 'Short haired', 'Dachschund', 2, 'female', 2003);
+INSERT INTO waiting_list_items(
+	id, kind_of_hair, breed, number_on_list, sex, person_id)
+	VALUES (1003, 'Long haired', 'Dachschund', 3, 'male', 2004);

@@ -152,24 +152,24 @@ public class VeterinarianAppointmentService {
     }
     private List<VeterinarianAppointmentOutputDto>transferAppointmentListToDtoList(List<VeterinarianAppointment> veterinarianAppointments){
 
-        List<VeterinarianAppointmentOutputDto> appointmentDtoList = new ArrayList<>();
+        List<VeterinarianAppointmentOutputDto> appointmentOutputDtoList = new ArrayList<>();
 
         for(VeterinarianAppointment veterinarianAppointment : veterinarianAppointments) {
             VeterinarianAppointmentOutputDto dto = transferVeterinarianAppointmentToOutputDto(veterinarianAppointment);
-            appointmentDtoList.add(dto);
+            appointmentOutputDtoList.add(dto);
         }
-        return appointmentDtoList;
+        return appointmentOutputDtoList;
     }
 
     public VeterinarianAppointmentOutputDto transferVeterinarianAppointmentToOutputDto(VeterinarianAppointment veterinarianAppointment){
 
-        VeterinarianAppointmentOutputDto VeterinarianAppointmentOutputDto = new VeterinarianAppointmentOutputDto();
-        VeterinarianAppointmentOutputDto.setId(veterinarianAppointment.getId());
-        VeterinarianAppointmentOutputDto.setSubject(veterinarianAppointment.getSubject());
-        VeterinarianAppointmentOutputDto.setAppointmentDate(veterinarianAppointment.getAppointmentDate());
-        VeterinarianAppointmentOutputDto.setDomesticatedDog(veterinarianAppointment.getDomesticatedDog());
+        VeterinarianAppointmentOutputDto veterinarianAppointmentOutputDto = new VeterinarianAppointmentOutputDto();
+        veterinarianAppointmentOutputDto.setId(veterinarianAppointment.getId());
+        veterinarianAppointmentOutputDto.setSubject(veterinarianAppointment.getSubject());
+        veterinarianAppointmentOutputDto.setAppointmentDate(veterinarianAppointment.getAppointmentDate());
+        veterinarianAppointmentOutputDto.setDomesticatedDog(veterinarianAppointment.getDomesticatedDog());
 
-        return VeterinarianAppointmentOutputDto;
+        return veterinarianAppointmentOutputDto;
     }
 
     private DomesticatedDog getCompleteDogById(Long dogId){
