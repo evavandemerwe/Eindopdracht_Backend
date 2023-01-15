@@ -28,7 +28,7 @@ public class VeterinarianAppointmentController {
         return ResponseEntity.ok(veterinarianAppointmentService.getAllAppointments());
     }
 
-    @GetMapping("/findbydogid/{id}")
+    @GetMapping("/dogid/{id}")
     public ResponseEntity<Iterable<VeterinarianAppointmentOutputDto>> getAllAppointmentsForDogId(@PathVariable("id") Long id){
         return ResponseEntity.ok(veterinarianAppointmentService.getAllAppointmentsByDogId(id));
     }
