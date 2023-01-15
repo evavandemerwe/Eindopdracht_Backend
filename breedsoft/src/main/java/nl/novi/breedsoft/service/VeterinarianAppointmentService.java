@@ -166,11 +166,11 @@ public class VeterinarianAppointmentService {
     }
 
     public VeterinarianAppointmentOutputDto transferVeterinarianAppointmentToOutputDto(VeterinarianAppointment veterinarianAppointment){
-      VeterinarianAppointmentOutputDto VeterinarianAppointmentOutputDto = new VeterinarianAppointmentOutputDto();
-      VeterinarianAppointmentOutputDto.setId(veterinarianAppointment.getId());
-      VeterinarianAppointmentOutputDto.setSubject(veterinarianAppointment.getSubject());
-      VeterinarianAppointmentOutputDto.setAppointmentDate(veterinarianAppointment.getAppointmentDate());
-      VeterinarianAppointmentOutputDto.setDomesticatedDog(transferToDomesticatedDogOutputDto(veterinarianAppointment.getDomesticatedDog()));
+      VeterinarianAppointmentOutputDto veterinarianAppointmentOutputDto = new VeterinarianAppointmentOutputDto();
+      veterinarianAppointmentOutputDto.setId(veterinarianAppointment.getId());
+      veterinarianAppointmentOutputDto.setSubject(veterinarianAppointment.getSubject());
+      veterinarianAppointmentOutputDto.setAppointmentDate(veterinarianAppointment.getAppointmentDate());
+      veterinarianAppointmentOutputDto.setDomesticatedDog(transferToDomesticatedDogOutputDto(veterinarianAppointment.getDomesticatedDog()));
       return veterinarianAppointmentOutputDto;
     }
 
