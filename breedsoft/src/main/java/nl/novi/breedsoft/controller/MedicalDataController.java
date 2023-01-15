@@ -34,7 +34,7 @@ public class MedicalDataController {
     }
 
     //Get mapping to get all medical data for one dog by dog id from the database
-    @GetMapping("/findbyid/{id}")
+    @GetMapping("/id/{id}")
     public ResponseEntity<Iterable<MedicalDataOutputDto>> getMedicalDataById(@PathVariable("id") Long id) {
         return ResponseEntity.ok(medicalDataService.getMedicaLDataByDogId(id));
     }

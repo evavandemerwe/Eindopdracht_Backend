@@ -29,11 +29,13 @@ public class VeterinarianAppointmentService {
         this.domesticatedDogRepository = domesticatedDogRepository;
     }
 
+    //GET a list of all appointments from the database
     public List<VeterinarianAppointmentOutputDto> getAllAppointments(){
         List<VeterinarianAppointment> allAppointmentsList = veterinarianAppointmentRepository.findAll();
         return transferAppointmentListToDtoList(allAppointmentsList);
     }
 
+    //GET a list of all appointments by dog id
     public List <VeterinarianAppointmentOutputDto> getAllAppointmentsByDogId(Long id){
         List<VeterinarianAppointment> allAppointmentsList = veterinarianAppointmentRepository.findAll();
         List<VeterinarianAppointment> dogVeterinarianAppointmentList = new ArrayList<>();
@@ -56,7 +58,7 @@ public class VeterinarianAppointmentService {
         if(veterinarianAppointmentInputDto.getDomesticatedDog() != null) {
             DomesticatedDog dog = getCompleteDogById(veterinarianAppointmentInputDto.getDomesticatedDog().getId());
             if (dog == null) {
-                throw new RecordNotFoundException("Provided dog does not exist");
+                throw new RecordNotFoundException("Provided dog does not exist in the database");
             }
             veterinarianAppointmentInputDto.setDomesticatedDog(dog);
         }
@@ -172,6 +174,10 @@ public class VeterinarianAppointmentService {
         return veterinarianAppointmentOutputDto;
     }
 
+
+    //Look for dog by ID in dogrespository.
+    //When nu dog ID is given, the get dog method returns 0 and an error is thrown.
+    //When dog ID is found, dog is returned. If there is no dog found in the repository, null is returned.
     private DomesticatedDog getCompleteDogById(Long dogId){
         if(dogId == 0){
             throw new RecordNotFoundException("Missing dog ID");

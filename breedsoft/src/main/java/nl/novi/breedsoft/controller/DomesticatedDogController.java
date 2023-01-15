@@ -36,7 +36,7 @@ public class DomesticatedDogController {
     }
 
     //Get mapping to get one dog by id from the database
-    @GetMapping("/findbyid/{id}")
+    @GetMapping("/id/{id}")
     public ResponseEntity<DomesticatedDogOutputDto> getDomesticatedDogById(@PathVariable("id") Long id) {
 
         DomesticatedDogOutputDto domesticatedDogOutputDto = domesticatedDogService.getDomesticatedDogById(id);
@@ -46,7 +46,7 @@ public class DomesticatedDogController {
     }
 
     //Get mapping to get one dog by name from the database
-    @GetMapping("/findbyname/{name}")
+    @GetMapping("/name/{name}")
     public ResponseEntity<Object> getDomesticatedDogByName(@PathVariable("name") String name) {
 
         List<DomesticatedDogOutputDto> domesticatedDogOutputDtoList = domesticatedDogService.getDomesticatedDogByName(name);

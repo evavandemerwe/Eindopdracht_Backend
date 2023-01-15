@@ -14,9 +14,6 @@ public class WaitingListItemInputDto {
     @Null
     private Long id;
 
-    @Null
-    private int numberOnList;
-
     @JsonIncludeProperties({"id", "firstName", "lastName", "street", "houseNumber", "houseNumberExtension", "zipCode", "city", "country"})
     private Person person;
 
