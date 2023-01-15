@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import nl.novi.breedsoft.dto.waitingListItemDtos.WaitingListItemInputDto;
 import nl.novi.breedsoft.dto.waitingListItemDtos.WaitingListItemOutputDto;
 import nl.novi.breedsoft.model.animal.enumerations.Sex;
+import nl.novi.breedsoft.model.management.enumerations.Breed;
 import nl.novi.breedsoft.service.WaitingListItemService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -41,10 +42,20 @@ public class WaitingListItemController {
     public ResponseEntity<Iterable<WaitingListItemOutputDto>> getAllWaitingListItemsForBreed(@PathVariable("breed") String breed){
         return ResponseEntity.ok(waitingListItemService.getWaitingListItemByBreed(breed));
     }
+
     @GetMapping("/kindofhair/{kindofhair}")
     public ResponseEntity<Iterable<WaitingListItemOutputDto>> getAllWaitingListItemsForKindOfHair(@PathVariable("kindofhair") String kindOfHair){
         return ResponseEntity.ok(waitingListItemService.getWaitingListItemByKindOfHair(kindOfHair));
     }
+
+    @GetMapping("/criteria")
+    public ResponseEntity<Iterable<WaitingListItemOutputDto>> getAllWaitingListItemsForKindOfHair(
+            @RequestParam("sex") String sex,
+            @RequestParam("kindofhair") String kindOfHair,
+            @RequestParam("breed") String breed){
+        return ResponseEntity.ok(waitingListItemService.getWaitingListItemByCriteria(sex, kindOfHair, breed));
+    }
+
     @PostMapping("")
     public ResponseEntity<Object> createWaitingListItem(@Valid @RequestBody WaitingListItemInputDto waitingListItemInputDto, BindingResult br) {
         //If there is an error in the binding
