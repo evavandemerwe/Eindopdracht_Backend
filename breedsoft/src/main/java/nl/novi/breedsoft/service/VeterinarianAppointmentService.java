@@ -1,11 +1,13 @@
 package nl.novi.breedsoft.service;
 
+import nl.novi.breedsoft.dto.domesticatedDogDtos.DomesticatedDogOutputDto;
 import nl.novi.breedsoft.dto.veterinarianAppointmentDtos.VeterinarianAppointmentInputDto;
 import nl.novi.breedsoft.dto.veterinarianAppointmentDtos.VeterinarianAppointmentOutputDto;
 import nl.novi.breedsoft.dto.veterinarianAppointmentDtos.VeterinarianAppointmentPatchDto;
 import nl.novi.breedsoft.exception.IncorrectInputException;
 import nl.novi.breedsoft.exception.RecordNotFoundException;
 import nl.novi.breedsoft.model.management.DomesticatedDog;
+import nl.novi.breedsoft.model.management.MedicalData;
 import nl.novi.breedsoft.model.management.VeterinarianAppointment;
 import nl.novi.breedsoft.repository.VeterinarianAppointmentRepository;
 import nl.novi.breedsoft.repository.DomesticatedDogRepository;
@@ -164,16 +166,24 @@ public class VeterinarianAppointmentService {
     }
 
     public VeterinarianAppointmentOutputDto transferVeterinarianAppointmentToOutputDto(VeterinarianAppointment veterinarianAppointment){
-
-        VeterinarianAppointmentOutputDto veterinarianAppointmentOutputDto = new VeterinarianAppointmentOutputDto();
-        veterinarianAppointmentOutputDto.setId(veterinarianAppointment.getId());
-        veterinarianAppointmentOutputDto.setSubject(veterinarianAppointment.getSubject());
-        veterinarianAppointmentOutputDto.setAppointmentDate(veterinarianAppointment.getAppointmentDate());
-        veterinarianAppointmentOutputDto.setDomesticatedDog(veterinarianAppointment.getDomesticatedDog());
-
-        return veterinarianAppointmentOutputDto;
+      VeterinarianAppointmentOutputDto VeterinarianAppointmentOutputDto = new VeterinarianAppointmentOutputDto();
+      VeterinarianAppointmentOutputDto.setId(veterinarianAppointment.getId());
+      VeterinarianAppointmentOutputDto.setSubject(veterinarianAppointment.getSubject());
+      VeterinarianAppointmentOutputDto.setAppointmentDate(veterinarianAppointment.getAppointmentDate());
+      VeterinarianAppointmentOutputDto.setDomesticatedDog(transferToDomesticatedDogOutputDto(veterinarianAppointment.getDomesticatedDog()));
+      return veterinarianAppointmentOutputDto;
     }
 
+    private DomesticatedDogOutputDto transferToDomesticatedDogOutputDto(DomesticatedDog dog) {
+        DomesticatedDogOutputDto result = new DomesticatedDogOutputDto();
+        result.setId(dog.getId());
+        result.setName(dog.getName());
+        result.setSex(dog.getSex());
+        result.setDateOfBirth(dog.getDateOfBirth());
+        result.setKindOfHair(dog.getKindOfHair());
+        result.setBreed(dog.getBreed());
+        return result;
+    }
 
     //Look for dog by ID in dogrespository.
     //When nu dog ID is given, the get dog method returns 0 and an error is thrown.
