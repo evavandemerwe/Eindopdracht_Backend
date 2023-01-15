@@ -1,11 +1,13 @@
 package nl.novi.breedsoft.service;
 
+import nl.novi.breedsoft.dto.domesticatedDogDtos.DomesticatedDogOutputDto;
 import nl.novi.breedsoft.dto.veterinarianAppointmentDtos.VeterinarianAppointmentInputDto;
 import nl.novi.breedsoft.dto.veterinarianAppointmentDtos.VeterinarianAppointmentOutputDto;
 import nl.novi.breedsoft.dto.veterinarianAppointmentDtos.VeterinarianAppointmentPatchDto;
 import nl.novi.breedsoft.exception.IncorrectInputException;
 import nl.novi.breedsoft.exception.RecordNotFoundException;
 import nl.novi.breedsoft.model.management.DomesticatedDog;
+import nl.novi.breedsoft.model.management.MedicalData;
 import nl.novi.breedsoft.model.management.VeterinarianAppointment;
 import nl.novi.breedsoft.repository.VeterinarianAppointmentRepository;
 import nl.novi.breedsoft.repository.DomesticatedDogRepository;
@@ -167,9 +169,20 @@ public class VeterinarianAppointmentService {
         VeterinarianAppointmentOutputDto.setId(veterinarianAppointment.getId());
         VeterinarianAppointmentOutputDto.setSubject(veterinarianAppointment.getSubject());
         VeterinarianAppointmentOutputDto.setAppointmentDate(veterinarianAppointment.getAppointmentDate());
-        VeterinarianAppointmentOutputDto.setDomesticatedDog(veterinarianAppointment.getDomesticatedDog());
+        VeterinarianAppointmentOutputDto.setDomesticatedDog(transferToDomesticatedDogOutputDto(veterinarianAppointment.getDomesticatedDog()));
 
         return VeterinarianAppointmentOutputDto;
+    }
+
+    private DomesticatedDogOutputDto transferToDomesticatedDogOutputDto(DomesticatedDog dog) {
+        DomesticatedDogOutputDto result = new DomesticatedDogOutputDto();
+        result.setId(dog.getId());
+        result.setName(dog.getName());
+        result.setSex(dog.getSex());
+        result.setDateOfBirth(dog.getDateOfBirth());
+        result.setKindOfHair(dog.getKindOfHair());
+        result.setBreed(dog.getBreed());
+        return result;
     }
 
     private DomesticatedDog getCompleteDogById(Long dogId){
