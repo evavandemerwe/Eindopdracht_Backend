@@ -529,7 +529,12 @@ public class DomesticatedDogService {
         return domesticatedDog;
     }
 
-    /**
+
+     /**
+     *
+     Look for person by id in personrespository.
+     When nu person ID is given, the get person method returns 0 and an error is thrown.
+     When person id is found, person is returned. If there is no person found in the repository, null is returned.
      * Get all person information recorded by give ID.
      * @param personId ID of the person information requested
      * @return Person or null if not present.

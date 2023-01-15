@@ -125,6 +125,10 @@ public class UserService {
         return  userOutputDto;
     }
 
+
+    //Look for authority by id in authorityrespository.
+    //When nu authority ID is given, the get authority method returns 0 and an error is thrown.
+    //When authority id is found, authority is returned. If there is no authority found in the repository, null is returned.
     private Authority getCompleteAuthorityID(Long authorityId){
         if(authorityId == 0){
             throw new RecordNotFoundException("Missing authority ID.");

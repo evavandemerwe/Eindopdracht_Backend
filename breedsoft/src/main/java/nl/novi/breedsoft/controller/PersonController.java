@@ -32,7 +32,7 @@ public class PersonController {
     }
 
     //Get mapping to get one person by id from the database
-    @GetMapping("/findbyid/{id}")
+    @GetMapping("/id/{id}")
     public ResponseEntity<PersonOutputDto> getPersonById(@PathVariable("id") Long id) {
 
         PersonOutputDto personOutputDto = personService.getPersonById(id);
@@ -41,7 +41,7 @@ public class PersonController {
     }
 
     //Get mapping to get one person by last name from the database
-    @GetMapping("/findbyname/{lastName}")
+    @GetMapping("/name/{lastName}")
     public ResponseEntity<Object> getPersonByName(@PathVariable("lastName") String lastName) {
 
         List<PersonOutputDto> personOutputDtoList = personService.getPersonByName(lastName);

@@ -11,12 +11,11 @@ public class WaitingListItem {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private int numberOnList;
     @ManyToOne
     @JoinColumn(name = "person_id")
     private Person person;
-    private String KindOfHair;
+    private String kindOfHair;
     @Enumerated(EnumType.STRING)
     @Column(name = "breed")
     private Breed breed;
@@ -51,11 +50,11 @@ public class WaitingListItem {
     }
 
     public String getKindOfHair() {
-        return KindOfHair;
+        return kindOfHair;
     }
 
     public void setKindOfHair(String kindOfHair) {
-        KindOfHair = kindOfHair;
+        kindOfHair = kindOfHair;
     }
 
     public Breed getBreed() {

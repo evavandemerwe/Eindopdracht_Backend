@@ -172,6 +172,11 @@ public class MedicalDataService {
         return medicalDataOutputDto;
     }
 
+
+    //Look for dog by ID in dogrespository.
+    //When nu dog ID is given, the get dog method returns 0 and an error is thrown.
+    //When dog ID is found, dog is returned. If there is no dog found in the repository, null is returned.
+
     private DomesticatedDog getCompleteDogById(Long dogId){
         if(dogId == 0){
             throw new RecordNotFoundException("Missing dog ID");
