@@ -41,7 +41,9 @@ public class DomesticatedDogController {
      * @return ResponseEntity with OK http status code and the requested domesticated Dog
      */
     @GetMapping("/id/{id}")
-    public ResponseEntity<DomesticatedDogOutputDto> getDomesticatedDogById(@PathVariable("id") Long domesticatedDogId) {
+    public ResponseEntity<DomesticatedDogOutputDto> getDomesticatedDogById(
+            @PathVariable("id") Long domesticatedDogId
+    ){
         DomesticatedDogOutputDto domesticatedDogOutputDto = domesticatedDogService.getDomesticatedDogById(domesticatedDogId);
         return ResponseEntity.ok().body(domesticatedDogOutputDto);
     }
@@ -63,7 +65,9 @@ public class DomesticatedDogController {
      * @return ResponseEntity with OK http status code and a list with all children of the dog
      */
     @GetMapping("/{id}/children")
-    public ResponseEntity<List<DomesticatedDogOutputDto>> getChildrenById(@PathVariable("id") Long domesticatedDogId) {
+    public ResponseEntity<List<DomesticatedDogOutputDto>> getChildrenById(
+            @PathVariable("id") Long domesticatedDogId
+    ){
         List<DomesticatedDogOutputDto> domesticatedDogOutputDtoList = domesticatedDogService.getAllChildren(domesticatedDogId);
         return ResponseEntity.ok().body(domesticatedDogOutputDtoList);
     }
@@ -74,7 +78,9 @@ public class DomesticatedDogController {
      * @return ResponseEntity with OK http status code and the requested domesticated Dog
      */
     @GetMapping("/{id}/parent")
-    public ResponseEntity<DomesticatedDogOutputDto> getParentById(@PathVariable("id") Long domesticatedDogId) {
+    public ResponseEntity<DomesticatedDogOutputDto> getParentById(
+            @PathVariable("id") Long domesticatedDogId
+    ){
         DomesticatedDogOutputDto domesticatedDogOutputDto = domesticatedDogService.getParentDog(domesticatedDogId);
         return ResponseEntity.ok().body(domesticatedDogOutputDto);
     }
@@ -107,7 +113,10 @@ public class DomesticatedDogController {
      * or bindingResultError if there is an error in the binding
      */
     @PostMapping("")
-    public ResponseEntity<Object> createDomesticatedDog(@Valid @RequestBody DomesticatedDogInputDto domesticatedDogInputDto, BindingResult bindingResult) {
+    public ResponseEntity<Object> createDomesticatedDog(
+            @Valid @RequestBody DomesticatedDogInputDto domesticatedDogInputDto,
+            BindingResult bindingResult
+    ){
         //If there is an error in the binding
         if (bindingResult.hasErrors()) {
            return bindingResultError(bindingResult);
@@ -127,7 +136,11 @@ public class DomesticatedDogController {
      * @return ResponseEntity with OK http status code and a list with all created dogs
      */
     @PostMapping("/{id}/children")
-    public ResponseEntity<Object> uploadLitter(@PathVariable("id") Long domesticatedDogId, @Valid @RequestBody List<DomesticatedDogInputDto> domesticatedDogInputDtoList, BindingResult bindingResult){
+    public ResponseEntity<Object> uploadLitter(
+            @PathVariable("id") Long domesticatedDogId,
+            @Valid @RequestBody List<DomesticatedDogInputDto> domesticatedDogInputDtoList,
+            BindingResult bindingResult
+    ){
         //If there is an error in the binding
         if (bindingResult.hasErrors()) {
             return bindingResultError(bindingResult);
@@ -145,7 +158,10 @@ public class DomesticatedDogController {
      * or BadFileException if there is an error with the file
      */
     @PostMapping("/{id}/image")
-    public ResponseEntity<Object> uploadDogImage(@PathVariable("id") Long domesticatedDogId, @RequestParam("image") MultipartFile image) {
+    public ResponseEntity<Object> uploadDogImage(
+            @PathVariable("id") Long domesticatedDogId,
+            @RequestParam("image") MultipartFile image
+    ){
         if(image.isEmpty()) {
             throw new BadFileException("The provided file is empty");
         }
@@ -167,7 +183,11 @@ public class DomesticatedDogController {
      * or bindingResultError if there is an error in the binding
      */
     @PutMapping("/{id}")
-    public ResponseEntity<Object> updateDog(@PathVariable("id") Long domesticatedDogId, @Valid @RequestBody DomesticatedDogInputDto domesticatedDogInputDto, BindingResult bindingResult) {
+    public ResponseEntity<Object> updateDog(
+            @PathVariable("id") Long domesticatedDogId,
+            @Valid @RequestBody DomesticatedDogInputDto domesticatedDogInputDto,
+            BindingResult bindingResult
+    ) {
         //If there is an error in the binding
         if (bindingResult.hasErrors()) {
             return bindingResultError(bindingResult);
@@ -186,7 +206,11 @@ public class DomesticatedDogController {
      * or bindingResultError if there is an error in the binding
      */
     @PatchMapping("/{id}")
-    public ResponseEntity<Object> patchDomesticatedDog(@PathVariable("id") Long domesticatedDogId, @Valid @RequestBody DomesticatedDogPatchDto domesticatedDogPatchDto, BindingResult bindingResult){
+    public ResponseEntity<Object> patchDomesticatedDog(
+            @PathVariable("id") Long domesticatedDogId,
+            @Valid @RequestBody DomesticatedDogPatchDto domesticatedDogPatchDto,
+            BindingResult bindingResult
+    ){
         //If there is an error in the binding
         if (bindingResult.hasErrors()) {
             return bindingResultError(bindingResult);

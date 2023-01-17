@@ -36,7 +36,9 @@ public class VeterinarianAppointmentController {
      * @return ResponseEntity with OK http status code and a list with the requested appointment(s)
      */
     @GetMapping("/dogid/{id}")
-    public ResponseEntity<Iterable<VeterinarianAppointmentOutputDto>> getAllAppointmentsForDogId(@PathVariable("id") Long dogId){
+    public ResponseEntity<Iterable<VeterinarianAppointmentOutputDto>> getAllAppointmentsForDogId(
+            @PathVariable("id") Long dogId
+    ){
         return ResponseEntity.ok(veterinarianAppointmentService.getAllAppointmentsByDogId(dogId));
     }
 
@@ -48,7 +50,10 @@ public class VeterinarianAppointmentController {
      * or bindingResultError if there is an error in the binding
      */
     @PostMapping("")
-    public ResponseEntity<Object> createAppointment(@Valid @RequestBody VeterinarianAppointmentInputDto veterinarianAppointmentInputDto, BindingResult bindingResult){
+    public ResponseEntity<Object> createAppointment(
+            @Valid @RequestBody VeterinarianAppointmentInputDto veterinarianAppointmentInputDto,
+            BindingResult bindingResult
+    ){
         //If there is an error in the binding
         if (bindingResult.hasErrors()) {
             return bindingResultError(bindingResult);
@@ -69,7 +74,11 @@ public class VeterinarianAppointmentController {
      * or bindingResultError if there is an error in the binding
      */
     @PutMapping("/{id}")
-    public ResponseEntity<Object> updateVeterinarianAppointment(@PathVariable("id") Long appointmentId, @Valid @RequestBody VeterinarianAppointmentInputDto veterinarianAppointmentInputDto, BindingResult bindingResult){
+    public ResponseEntity<Object> updateVeterinarianAppointment(
+            @PathVariable("id") Long appointmentId,
+            @Valid @RequestBody VeterinarianAppointmentInputDto veterinarianAppointmentInputDto,
+            BindingResult bindingResult
+    ){
         //If there is an error in the binding
         if(bindingResult.hasErrors()){
             return bindingResultError(bindingResult);
@@ -87,7 +96,11 @@ public class VeterinarianAppointmentController {
      * or bindingResultError if there is an error in the binding
      */
     @PatchMapping("/{id}")
-    public ResponseEntity<Object> patchVeterinarianAppointment(@PathVariable("id") Long appointmentId, @Valid @RequestBody VeterinarianAppointmentPatchDto veterinarianAppointmentPatchDto, BindingResult bindingResult){
+    public ResponseEntity<Object> patchVeterinarianAppointment(
+            @PathVariable("id") Long appointmentId,
+            @Valid @RequestBody VeterinarianAppointmentPatchDto veterinarianAppointmentPatchDto,
+            BindingResult bindingResult
+    ){
         //If there is an error in the binding
         if (bindingResult.hasErrors()) {
             return bindingResultError(bindingResult);

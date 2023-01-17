@@ -40,7 +40,10 @@ public class AuthorityController {
      * or bindingResultError if there is an error in the binding
      */
     @PostMapping("")
-    public ResponseEntity<Object> createAuthority(@Valid @RequestBody AuthorityInputDto authorityInputDtoDto, BindingResult bindingResult){
+    public ResponseEntity<Object> createAuthority(
+            @Valid @RequestBody AuthorityInputDto authorityInputDtoDto,
+            BindingResult bindingResult
+    ){
         if(bindingResult.hasErrors()){
             return bindingResultError(bindingResult);
         }else{

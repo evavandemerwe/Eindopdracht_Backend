@@ -72,7 +72,10 @@ public class PersonController {
      * or bindingResultError if there is an error in the binding
      */
     @PostMapping("")
-    public ResponseEntity<Object> createPerson(@Valid @RequestBody PersonInputDto personInputDto, BindingResult bindingResult) {
+    public ResponseEntity<Object> createPerson(
+            @Valid @RequestBody PersonInputDto personInputDto,
+            BindingResult bindingResult
+    ){
         //If there is an error in the binding
         if (bindingResult.hasErrors()) {
             return bindingResultError(bindingResult);
@@ -93,7 +96,11 @@ public class PersonController {
      * or bindingResultError if there is an error in the binding
      */
     @PutMapping("/{id}")
-    public ResponseEntity<Object> updatePerson(@PathVariable("id") Long personId, @Valid @RequestBody PersonInputDto personInputDto, BindingResult bindingResult) {
+    public ResponseEntity<Object> updatePerson(
+            @PathVariable("id") Long personId,
+            @Valid @RequestBody PersonInputDto personInputDto,
+            BindingResult bindingResult
+    ){
         //If there is an error in the binding
         if (bindingResult.hasErrors()) {
             return bindingResultError(bindingResult);
