@@ -159,17 +159,6 @@ public class DomesticatedDogController {
     }
 
     /**
-     * DELETE method to delete an image from the database by id
-     * @param domesticatedDogId ID of the person for which information is requested
-     * @return ResponseEntity with no content http status code
-     */
-    @DeleteMapping("/{id}/image")
-    public ResponseEntity<Object> deleteDogImage(@PathVariable("id") Long domesticatedDogId) {
-        domesticatedDogService.deleteDogImage(domesticatedDogId);
-        return ResponseEntity.noContent().build();
-    }
-
-    /**
      * PUT method to update (if dog exists) or create (if dog does not exist) a dog
      * @param domesticatedDogId ID of the person for which information is put
      * @param domesticatedDogInputDto Data Transfer Objects that carries data between processes in order to reduce the number of methods calls
@@ -205,6 +194,17 @@ public class DomesticatedDogController {
             String response = domesticatedDogService.patchDomesticatedDog(domesticatedDogId, domesticatedDogPatchDto);
             return ResponseEntity.ok().body(response);
         }
+    }
+
+    /**
+     * DELETE method to delete an image from the database by id
+     * @param domesticatedDogId ID of the person for which information is requested
+     * @return ResponseEntity with no content http status code
+     */
+    @DeleteMapping("/{id}/image")
+    public ResponseEntity<Object> deleteDogImage(@PathVariable("id") Long domesticatedDogId) {
+        domesticatedDogService.deleteDogImage(domesticatedDogId);
+        return ResponseEntity.noContent().build();
     }
 
     /**
