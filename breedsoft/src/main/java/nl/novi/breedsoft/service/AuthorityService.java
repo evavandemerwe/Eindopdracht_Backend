@@ -65,6 +65,7 @@ public class AuthorityService {
         return authorityOutputDtoList;
     }
 
+
     private AuthorityOutputDto transferToAuthorityOutputDto(Authority authority){
         AuthorityOutputDto authorityOutputDto = new AuthorityOutputDto();
         authorityOutputDto.setId(authority.getId());
