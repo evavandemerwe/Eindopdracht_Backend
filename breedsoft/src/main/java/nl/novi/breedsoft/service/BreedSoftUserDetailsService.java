@@ -18,29 +18,32 @@ public class BreedSoftUserDetailsService implements UserDetailsService {
     @Autowired
     private UserRepository userRepository;
 
+    /**
+     * A method for finding a user based on username
+     * @param username of the user for which information is requested
+     * @return User information found based on the username
+     * @throws UsernameNotFoundException throws exception when username is not found
+     */
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Optional<User> foundUser = userRepository.findByUsername(username);
 
-        if(!foundUser.isPresent()) {
+        if(foundUser.isEmpty()) {
             throw new UsernameNotFoundException("Invalid credentials");
         }
 
         User user = foundUser.get();
-        if(user == null || !user.getUsername().equals(username)) {
+        if(!user.getUsername().equals(username)) {
             throw new UsernameNotFoundException("Invalid credentials");
         }
         Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
-        user.getAuthorities().stream().forEach(
-                authority -> {
-                    grantedAuthorities.add(new SimpleGrantedAuthority(authority.getAuthority()));
-                }
+        user.getAuthorities().forEach(
+                authority -> grantedAuthorities.add(new SimpleGrantedAuthority(authority.getAuthority()))
         );
-        BreedSoftUser breedSoftUser = new BreedSoftUser(
+        return new BreedSoftUser(
                 user.getUsername(),
                 user.getPassword(),
                 grantedAuthorities
         );
-        return breedSoftUser;
     }
 }
