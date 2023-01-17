@@ -54,47 +54,13 @@ public class WaitingListItemService {
     public List<WaitingListItemOutputDto> getWaitingListItemBySex(String sex){
         Sex newSex;
         try {
-            newSex = Sex.valueOf(sex.toLowerCase());
+            newSex = Sex.valueOf(sex);
         } catch (IllegalArgumentException ex) {
             throw new EnumValueNotFoundException("Sex is not found for dog");
         }
-        List<WaitingListItem> allWaitingListItems = waitingListItemRepository.findAll();
-        List<WaitingListItem> foundWaitingListItems = new ArrayList<>();
-
-        for(WaitingListItem waitingListItem : allWaitingListItems){
-            Sex foundSex = waitingListItem.getSex();
-            if(foundSex.equals(newSex)){
-                foundWaitingListItems.add(waitingListItem);
-            }
-        }
-
+        List<WaitingListItem> foundWaitingListItems = waitingListItemRepository.findBySex(newSex);
         if(foundWaitingListItems.isEmpty()){
             throw new RecordNotFoundException("No waiting list items for this sex.");
-        }
-        return transferWaitingListItemListToDtoList(foundWaitingListItems);
-    }
-
-    //GET a list of all waiting list items by breed
-    public List<WaitingListItemOutputDto> getWaitingListItemByBreed(String breed){
-        Breed newBreed;
-        String capitalFirstLetter = breed.substring(0, 1).toUpperCase();
-        String breedCapitalized = capitalFirstLetter + breed.substring(1);
-        try {
-            newBreed = Breed.valueOf(breedCapitalized);
-        } catch (IllegalArgumentException ex) {
-            throw new EnumValueNotFoundException("Breed is not found for dog");
-        }
-        List<WaitingListItem> allWaitingListItems = waitingListItemRepository.findAll();
-        List<WaitingListItem> foundWaitingListItems = new ArrayList<>();
-
-        for(WaitingListItem waitingListItem : allWaitingListItems){
-            Breed foundBreed = waitingListItem.getBreed();
-            if(foundBreed.equals(newBreed)){
-                foundWaitingListItems.add(waitingListItem);
-            }
-        }
-        if(foundWaitingListItems.isEmpty()){
-            throw new RecordNotFoundException("No waiting list items for this breed.");
         }
         return transferWaitingListItemListToDtoList(foundWaitingListItems);
     }
@@ -104,6 +70,40 @@ public class WaitingListItemService {
         List<WaitingListItem> foundWaitingListItems = waitingListItemRepository.findByKindOfHairContaining(kindOfHair);
         if(foundWaitingListItems.isEmpty()){
             throw new RecordNotFoundException("No waiting list items for this kind of hair.");
+        }
+        return transferWaitingListItemListToDtoList(foundWaitingListItems);
+    }
+
+    //GET all waiting list items by breed
+    public List<WaitingListItemOutputDto> getWaitingListItemByBreed(String breed){
+       Breed newBreed;
+        try {
+            newBreed = Breed.valueOf(breed);
+        } catch (IllegalArgumentException ex) {
+            throw new EnumValueNotFoundException("Breed is not found for dog");
+        }
+        List<WaitingListItem> foundWaitingListItems = waitingListItemRepository.findByBreed(newBreed);
+        if(foundWaitingListItems.isEmpty()){
+            throw new RecordNotFoundException("No waiting list items for this breed.");
+        }
+        return transferWaitingListItemListToDtoList(foundWaitingListItems);
+    }
+
+
+    //GET all waiting list items by criteria
+    public List<WaitingListItemOutputDto> getWaitingListItemByCriteria(String sex, String kindOfHair, String breed){
+        Breed newBreed;
+        Sex newSex;
+        try {
+            newBreed = Breed.valueOf(breed);
+            newSex = Sex.valueOf(sex);
+        } catch (IllegalArgumentException ex) {
+            throw new EnumValueNotFoundException("Breed or Sex is invalid.");
+        }
+
+        List<WaitingListItem> foundWaitingListItems = waitingListItemRepository.findByCriteria(sex, kindOfHair, breed);
+        if(foundWaitingListItems.isEmpty()){
+            throw new RecordNotFoundException("No waiting list items for these criteria.");
         }
         return transferWaitingListItemListToDtoList(foundWaitingListItems);
     }
