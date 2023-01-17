@@ -7,13 +7,11 @@ import nl.novi.breedsoft.service.PersonService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
 import jakarta.validation.Valid;
 import java.net.URI;
 import java.util.List;
-
 import static nl.novi.breedsoft.utility.BindingResultErrorUtility.bindingResultError;
+import static nl.novi.breedsoft.utility.createUriResponse.createUri;
 
 @RestController
 @RequestMapping("persons")
@@ -25,81 +23,113 @@ public class PersonController {
         this.personService = service;
     }
 
-    //Get mapping to get all persons from the database
+    /**
+     * GET request to get all persons from the database
+     * @return ResponseEntity with OK http status code and a list with all persons
+     */
     @GetMapping("")
     public ResponseEntity<Iterable<PersonOutputDto>> getAllPersons() {
         return ResponseEntity.ok(personService.getAllPersons());
     }
 
-    //Get mapping to get one person by id from the database
+    /**
+     * GET method to get one person by id from the database
+     * @param personId ID of the person for which information is requested
+     * @return ResponseEntity with OK http status code and the requested person
+     */
     @GetMapping("/id/{id}")
-    public ResponseEntity<PersonOutputDto> getPersonById(@PathVariable("id") Long id) {
-
-        PersonOutputDto personOutputDto = personService.getPersonById(id);
-
+    public ResponseEntity<PersonOutputDto> getPersonById(@PathVariable("id") Long personId) {
+        PersonOutputDto personOutputDto = personService.getPersonById(personId);
         return ResponseEntity.ok().body(personOutputDto);
     }
 
-    //Get mapping to get one person by last name from the database
+    /**
+     * GET method to get one person by last name from the database
+     * @param lastName the lastname for which person information is requested
+     * @return ResponseEntity with OK http status code and a list with all persons with given lastname
+     */
     @GetMapping("/name/{lastName}")
     public ResponseEntity<Object> getPersonByName(@PathVariable("lastName") String lastName) {
-
         List<PersonOutputDto> personOutputDtoList = personService.getPersonByName(lastName);
-
         return ResponseEntity.ok().body(personOutputDtoList);
-
     }
 
+    /**
+     * GET method to get a list of all persons with one or more breed dogs
+     * @return ResponseEntity with OK http status code and a list with all persons with a breed dog
+     */
     @GetMapping("/dogbreeders")
     public ResponseEntity<List<PersonOutputDto>> getDogBreeders(){
         List<PersonOutputDto> dogBreeders = personService.getDogBreeders();
         return ResponseEntity.ok().body(dogBreeders);
     }
 
-    //Create a new person in the database
+    /**
+     * POST method to create a new person in the database
+     * @param personInputDto Data Transfer Objects that carries data between processes in order to reduce the number of methods calls
+     * @param bindingResult a Spring object that holds the result of the validation and binding and contains errors that may have occurred
+     * @return ResponseEntity with created http status code and URI pointing to the newly created entity,
+     * or bindingResultError if there is an error in the binding
+     */
     @PostMapping("")
-    public ResponseEntity<Object> createPerson(@Valid @RequestBody PersonInputDto personInputDto, BindingResult br) {
+    public ResponseEntity<Object> createPerson(@Valid @RequestBody PersonInputDto personInputDto, BindingResult bindingResult) {
         //If there is an error in the binding
-        if (br.hasErrors()) {
-            return bindingResultError(br);
+        if (bindingResult.hasErrors()) {
+            return bindingResultError(bindingResult);
         } else {
             //Person is created, return new person URI
             Long createdId = personService.createPerson(personInputDto);
-
-            URI uri = URI.create(
-                    ServletUriComponentsBuilder
-                            .fromCurrentContextPath()
-                            .path("/persons/" + createdId).toUriString());
+            URI uri = createUri(createdId, "/persons/");
             return ResponseEntity.created(uri).body("Person is successfully created!");
         }
     }
 
-    //Delete a person from the database by id
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Object> deletePerson(@PathVariable("id") Long id) {
-        personService.deletePerson(id);
-        return ResponseEntity.noContent().build();
-    }
-
+    /**
+     * PUT method to update (if person exists) or create (if person does not exist) a person
+     * @param personId ID of the person for which information is requested
+     * @param personInputDto Data Transfer Objects that carries data between processes in order to reduce the number of methods calls
+     * @param bindingResult a Spring object that holds the result of the validation and binding and contains errors that may have occurred
+     * @return ResponseEntity with ok http status code and updated or created person,
+     * or bindingResultError if there is an error in the binding
+     */
     @PutMapping("/{id}")
-    public ResponseEntity<Object> updatePerson(@PathVariable("id") Long id, @Valid @RequestBody PersonInputDto personInputDto, BindingResult br) {
+    public ResponseEntity<Object> updatePerson(@PathVariable("id") Long personId, @Valid @RequestBody PersonInputDto personInputDto, BindingResult bindingResult) {
         //If there is an error in the binding
-        if (br.hasErrors()) {
-            return bindingResultError(br);
+        if (bindingResult.hasErrors()) {
+            return bindingResultError(bindingResult);
         } else {
-            Object personOutputDto = personService.updatePerson(id, personInputDto);
+            Object personOutputDto = personService.updatePerson(personId, personInputDto);
             return ResponseEntity.ok().body(personOutputDto);
         }
     }
 
+    /**
+     * PATCH method that updates a person only when the person exists in the database
+     * @param personId ID of the person for which information is requested
+     * @param personPatchDto Data Transfer Objects that carries data between processes in order to reduce the number of methods calls
+     * @param bindingResult a Spring object that holds the result of the validation and binding and contains errors that may have occurred
+     * @return ResponseEntity with OK http status code and the updated person,
+     * or bindingResultError if there is an error in the binding
+     */
     @PatchMapping("/{id}")
-    public ResponseEntity<Object> patchPerson(@PathVariable("id") Long id, @Valid @RequestBody PersonPatchDto personPatchDto, BindingResult br) {
+    public ResponseEntity<Object> patchPerson(@PathVariable("id") Long personId, @Valid @RequestBody PersonPatchDto personPatchDto, BindingResult bindingResult) {
         //If there is an error in the binding
-        if (br.hasErrors()) {
-            return bindingResultError(br);
+        if (bindingResult.hasErrors()) {
+            return bindingResultError(bindingResult);
         } else {
-            PersonOutputDto personOutputDto = personService.patchPerson(id, personPatchDto);
+            PersonOutputDto personOutputDto = personService.patchPerson(personId, personPatchDto);
             return ResponseEntity.ok().body(personOutputDto);
         }
+    }
+
+    /**
+     * DELETE method to delete a person from the database by id
+     * @param personId ID of the person for which information is requested
+     * @return ResponseEntity with no content http status code
+     */
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Object> deletePerson(@PathVariable("id") Long personId) {
+        personService.deletePerson(personId);
+        return ResponseEntity.noContent().build();
     }
 }
