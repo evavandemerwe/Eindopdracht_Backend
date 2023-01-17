@@ -9,14 +9,18 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class JwtTokenController {
-    private static final Logger LOG = (Logger) LoggerFactory.getLogger(JwtTokenController.class);
+    private static final Logger LOG = LoggerFactory.getLogger(JwtTokenController.class);
     private final TokenService tokenService;
 
     public JwtTokenController(TokenService tokenService) {
         this.tokenService = tokenService;
     }
 
-    // Post request to get a token if the correct username password combination is provided
+    /**
+     * POST method to get a token if the correct username password combination is provided
+     * @param authentication to validate the request
+     * @return jwt token and log statements for check
+     */
     @PostMapping("/token")
     public String token(Authentication authentication) {
         LOG.debug("Token request for user: '{}'", authentication.getName());
