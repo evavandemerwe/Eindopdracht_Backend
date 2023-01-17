@@ -39,7 +39,10 @@ public class UserController {
      * or bindingResultError if there is an error in the binding
      */
     @PostMapping("")
-    public ResponseEntity<Object> createUser(@Valid @RequestBody UserInputDto userInputDto, BindingResult bindingResult){
+    public ResponseEntity<Object> createUser(
+            @Valid @RequestBody UserInputDto userInputDto,
+            BindingResult bindingResult
+    ){
         //If there is an error in the binding
         if(bindingResult.hasErrors()){
             return bindingResultError(bindingResult);
@@ -59,7 +62,11 @@ public class UserController {
      * or bindingResultError if there is an error in the binding
      */
     @PatchMapping("/{id}")
-    public ResponseEntity<Object> patchUser(@PathVariable("id") Long userId, @Valid @RequestBody UserPatchDto userPatchDto, BindingResult bindingResult){
+    public ResponseEntity<Object> patchUser(
+            @PathVariable("id") Long userId,
+            @Valid @RequestBody UserPatchDto userPatchDto,
+            BindingResult bindingResult
+    ){
         //If there is an error in the binding
         if (bindingResult.hasErrors()) {
             return bindingResultError(bindingResult);

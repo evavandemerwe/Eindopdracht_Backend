@@ -36,7 +36,9 @@ public class MedicalDataController {
      * @return ResponseEntity with OK http status code and the requested medical data
      */
     @GetMapping("/id/{id}")
-    public ResponseEntity<Iterable<MedicalDataOutputDto>> getMedicalDataById(@PathVariable("id") Long medicalDataId) {
+    public ResponseEntity<Iterable<MedicalDataOutputDto>> getMedicalDataById(
+            @PathVariable("id") Long medicalDataId
+    ){
         return ResponseEntity.ok(medicalDataService.getMedicaLDataByDogId(medicalDataId));
     }
 
@@ -48,7 +50,10 @@ public class MedicalDataController {
      * or bindingResultError if there is an error in the binding
      */
     @PostMapping("")
-    public ResponseEntity<Object> createMedicalData(@Valid @RequestBody MedicalDataInputDto medicalDataInputDto, BindingResult bindingResult){
+    public ResponseEntity<Object> createMedicalData(
+            @Valid @RequestBody MedicalDataInputDto medicalDataInputDto,
+            BindingResult bindingResult
+    ){
         //If there is an error in the binding
         if(bindingResult.hasErrors()){
             return bindingResultError(bindingResult);
@@ -69,7 +74,11 @@ public class MedicalDataController {
      * or bindingResultError if there is an error in the binding
      */
     @PutMapping("/{id}")
-    public ResponseEntity<Object> updateMedicalData(@PathVariable("id") Long medicalDataId, @Valid @RequestBody MedicalDataInputDto medicalDataInputDto, BindingResult bindingResult){
+    public ResponseEntity<Object> updateMedicalData(
+            @PathVariable("id") Long medicalDataId,
+            @Valid @RequestBody MedicalDataInputDto medicalDataInputDto,
+            BindingResult bindingResult
+    ){
         //If there is an error in the binding
         if(bindingResult.hasErrors()){
             return bindingResultError(bindingResult);
@@ -87,7 +96,11 @@ public class MedicalDataController {
      * or bindingResultError if there is an error in the binding
      */
     @PatchMapping("/{id}")
-    public ResponseEntity<Object> patchMedicalData(@PathVariable("id") Long medicalDataId, @Valid @RequestBody MedicalDataPatchDto medicalDataPatchDto, BindingResult bindingResult){
+    public ResponseEntity<Object> patchMedicalData(
+            @PathVariable("id") Long medicalDataId,
+            @Valid @RequestBody MedicalDataPatchDto medicalDataPatchDto,
+            BindingResult bindingResult
+    ){
         //If there is an error in the binding
         if (bindingResult.hasErrors()) {
             return bindingResultError(bindingResult);
