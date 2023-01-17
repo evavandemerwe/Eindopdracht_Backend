@@ -35,7 +35,8 @@ public class UserController {
      * POST method to create a new user in the database
      * @param userInputDto Data Transfer Objects that carries data between processes in order to reduce the number of methods calls
      * @param bindingResult a Spring object that holds the result of the validation and binding and contains errors that may have occurred
-     * @return
+     * @return ResponseEntity with created http status code and URI pointing to the newly created entity,
+     * or bindingResultError if there is an error in the binding
      */
     @PostMapping("")
     public ResponseEntity<Object> createUser(@Valid @RequestBody UserInputDto userInputDto, BindingResult bindingResult){
