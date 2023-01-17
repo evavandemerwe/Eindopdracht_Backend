@@ -434,14 +434,19 @@ public class DomesticatedDogService {
         return domesticatedDogDto;
     }
 
-    private DomesticatedDog transferToDomesticatedDog(DomesticatedDogInputDto dto){
+    /**
+     * Transform a DomesticatedDogInputDto to a DomesticatedDog format
+     * @param domesticatedDogInputDto Data Transfer Objects that carries data between processes in order to reduce the number of methods calls
+     * @return domesticatedDog
+     */
+    private DomesticatedDog transferToDomesticatedDog(DomesticatedDogInputDto domesticatedDogInputDto){
         DomesticatedDog domesticatedDog = new DomesticatedDog();
 
-        domesticatedDog.setName(dto.getName());
-        domesticatedDog.setHairColor(dto.getHairColor());
-        domesticatedDog.setFood(dto.getFood());
-        if (dto.getSex() != null) {
-            String newSexString = dto.getSex();
+        domesticatedDog.setName(domesticatedDogInputDto.getName());
+        domesticatedDog.setHairColor(domesticatedDogInputDto.getHairColor());
+        domesticatedDog.setFood(domesticatedDogInputDto.getFood());
+        if (domesticatedDogInputDto.getSex() != null) {
+            String newSexString = domesticatedDogInputDto.getSex();
             Sex newSex;
             //Check if given value exists in enumeration
             //Because patchDTO has no checks on enumerations,
@@ -453,17 +458,17 @@ public class DomesticatedDogService {
             }
             domesticatedDog.setSex(newSex);
         }
-        domesticatedDog.setWeightInGrams(dto.getWeightInGrams());
-        domesticatedDog.setKindOfHair(dto.getKindOfHair());
-        domesticatedDog.setDogYears(dto.getDogYears());
-        domesticatedDog.setDateOfBirth(dto.getDateOfBirth());
-        domesticatedDog.setDateOfDeath(dto.getDateOfDeath());
-        domesticatedDog.setChipNumber(dto.getChipNumber());
-        domesticatedDog.setDogYears(dto.getDogYears());
-        domesticatedDog.setCanSee(dto.isCanSee());
-        domesticatedDog.setCanHear(dto.isCanHear());
-        if (dto.getBreed() != null) {
-            String newBreedString = dto.getBreed();
+        domesticatedDog.setWeightInGrams(domesticatedDogInputDto.getWeightInGrams());
+        domesticatedDog.setKindOfHair(domesticatedDogInputDto.getKindOfHair());
+        domesticatedDog.setDogYears(domesticatedDogInputDto.getDogYears());
+        domesticatedDog.setDateOfBirth(domesticatedDogInputDto.getDateOfBirth());
+        domesticatedDog.setDateOfDeath(domesticatedDogInputDto.getDateOfDeath());
+        domesticatedDog.setChipNumber(domesticatedDogInputDto.getChipNumber());
+        domesticatedDog.setDogYears(domesticatedDogInputDto.getDogYears());
+        domesticatedDog.setCanSee(domesticatedDogInputDto.isCanSee());
+        domesticatedDog.setCanHear(domesticatedDogInputDto.isCanHear());
+        if (domesticatedDogInputDto.getBreed() != null) {
+            String newBreedString = domesticatedDogInputDto.getBreed();
             Breed newBreed;
             //Check if given value exists in enumeration
             //Because patchDTO has no checks on enumerations,
@@ -475,8 +480,8 @@ public class DomesticatedDogService {
             }
             domesticatedDog.setBreed(newBreed);
         }
-        if (dto.getBreedGroup() != null) {
-            String newBreedGroupString = dto.getBreedGroup();
+        if (domesticatedDogInputDto.getBreedGroup() != null) {
+            String newBreedGroupString = domesticatedDogInputDto.getBreedGroup();
             BreedGroup newBreedGroup;
             //Check if given value exists in enumeration
             //Because patchDTO has no checks on enumerations,
@@ -488,19 +493,19 @@ public class DomesticatedDogService {
             }
             domesticatedDog.setBreedGroup(newBreedGroup);
         }
-        domesticatedDog.setPerson(dto.getPerson());
+        domesticatedDog.setPerson(domesticatedDogInputDto.getPerson());
 
-        Long parentId = dto.getParentId();
+        Long parentId = domesticatedDogInputDto.getParentId();
         if(parentId != null) {
             Optional<DomesticatedDog> parentDog = domesticatedDogRepository.findById(parentId);
             if (parentDog.isPresent()) {
-                domesticatedDog.setParentId(dto.getParentId());
+                domesticatedDog.setParentId(domesticatedDogInputDto.getParentId());
             } else {
                 throw new RecordNotFoundException("Parent ID not found");
             }
         }
-        if(dto.getDogStatus() != null) {
-            String newStatusString = String.valueOf(dto.getDogStatus());
+        if(domesticatedDogInputDto.getDogStatus() != null) {
+            String newStatusString = String.valueOf(domesticatedDogInputDto.getDogStatus());
             Status newStatus;
             //Check if given value exists in enumeration
             //Because patchDTO has no checks on enumerations,
@@ -512,18 +517,18 @@ public class DomesticatedDogService {
             }
             domesticatedDog.setDogStatus(newStatus);
 
-            List<DomesticatedDog> litters = dto.getLitters();
+            List<DomesticatedDog> litters = domesticatedDogInputDto.getLitters();
             if(litters != null){
-                domesticatedDog.setLitter(dto.getLitters());
+                domesticatedDog.setLitter(domesticatedDogInputDto.getLitters());
             }
-            List<VeterinarianAppointment> veterinarianAppointments = dto.getVeterinarianAppointments();
+            List<VeterinarianAppointment> veterinarianAppointments = domesticatedDogInputDto.getVeterinarianAppointments();
             if(veterinarianAppointments != null){
-                domesticatedDog.setVeterinarianAppointments(dto.getVeterinarianAppointments());
+                domesticatedDog.setVeterinarianAppointments(domesticatedDogInputDto.getVeterinarianAppointments());
             }
 
-            List<MedicalData> medicalData = dto.getMedicalData();
+            List<MedicalData> medicalData = domesticatedDogInputDto.getMedicalData();
             if(medicalData != null){
-                domesticatedDog.setMedicalData(dto.getMedicalData());
+                domesticatedDog.setMedicalData(domesticatedDogInputDto.getMedicalData());
             }
         }
         return domesticatedDog;
@@ -531,12 +536,10 @@ public class DomesticatedDogService {
 
 
      /**
-     *
-     Look for person by id in personrespository.
-     When nu person ID is given, the get person method returns 0 and an error is thrown.
-     When person id is found, person is returned. If there is no person found in the repository, null is returned.
-     * Get all person information recorded by give ID.
-     * @param personId ID of the person information requested
+     * Look for person by id in personrespository.
+     * When no person ID is given, the get person method returns 0 and an error is thrown.
+     * When person id is found, person is returned. If there is no person found in the repository, null is returned.
+     * @param personId ID of the person for which information is requested
      * @return Person or null if not present.
      */
     private Person getCompletePersonById(Long personId) {
