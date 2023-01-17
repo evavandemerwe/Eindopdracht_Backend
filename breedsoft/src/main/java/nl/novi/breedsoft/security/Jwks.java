@@ -7,9 +7,16 @@ import java.security.interfaces.RSAPublicKey;
 import java.util.UUID;
 
 public final class Jwks {
-    private Jwks(){
+    /**
+     * this class cannot be instantiated, only static methods.
+     */
+    private Jwks() {
     }
 
+    /**
+     * Generate an RSA key with a public/private key pair
+     * @return Public/Private RSA Key pair
+     */
     public static RSAKey generateRsa() {
         KeyPair keyPair = KeyGeneratorUtils.generateRsaKey();
         RSAPublicKey publicKey = (RSAPublicKey) keyPair.getPublic();
