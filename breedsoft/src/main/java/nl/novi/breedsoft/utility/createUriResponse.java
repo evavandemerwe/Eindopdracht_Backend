@@ -12,11 +12,10 @@ public class createUriResponse {
      * @return uri to the newly created entity
      */
     public static URI createUri(Long createdId, String pathName) {
-       URI uri = URI.create(
-                ServletUriComponentsBuilder
-                        .fromCurrentContextPath()
-                        .path(pathName + createdId).toUriString());
-       return uri;
+        return URI.create(
+                 ServletUriComponentsBuilder
+                         .fromCurrentContextPath()
+                         .path(pathName + createdId).toUriString());
     }
 
 }

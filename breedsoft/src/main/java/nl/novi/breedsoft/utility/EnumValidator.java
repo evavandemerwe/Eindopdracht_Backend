@@ -27,7 +27,7 @@ public class EnumValidator implements ConstraintValidator<ValueOfEnum, CharSeque
 
     /**
      * @param value String to be checked if exists in initialized Enumeration
-     * @param context
+     * @param context could be used to override default error message generation (not used)
      * @return true if given String exists in initialized Enumeration else false
      */
     @Override
