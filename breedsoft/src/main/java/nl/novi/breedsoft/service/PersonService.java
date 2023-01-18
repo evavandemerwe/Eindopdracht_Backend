@@ -31,27 +31,39 @@ public class PersonService {
         this.waitingListItemRepository = waitingListItemRepository;
     }
 
-    //Output Dto is used for representing data from the database to the user
-    //Get all persons
+    /**
+     * A method for retrieval of all persons from the database
+     * @return a list of all persons in output dto format
+     */
     public List<PersonOutputDto> getAllPersons() {
         List<Person> personList = personRepository.findAll();
-        return transferPersonListToDtoList(personList);
+        return transferPersonListToOutputDtoList(personList);
     }
 
-    //Get one person by ID
-    public PersonOutputDto getPersonById(Long id) {
-        if(personRepository.findById(id).isPresent()){
-            Person person = personRepository.findById(id).get();
+    /**
+     * A method for retrieval of one person from the database by id
+     * @param personId ID of the person for which information is requested
+     * @return a person in output dto format
+     * @throws RecordNotFoundException throws an exception when no person is found by given id
+     */
+    public PersonOutputDto getPersonById(Long personId) {
+        if(personRepository.findById(personId).isPresent()){
+            Person person = personRepository.findById(personId).get();
             return transferToOutputDto(person);
         } else {
             throw new RecordNotFoundException("Person not found in database");
         }
     }
 
-    //Get person list by Name
+    /**
+     * A method for retrieval of a list of person(s) from the database by id
+     * @param lastName lastname of the person for which information is requested
+     * @return a list of person(s) in output dto format
+     * @throws RecordNotFoundException throws an exception when no person is found by given lastname
+     */
     public List<PersonOutputDto> getPersonByName(String lastName) {
         if (personRepository.findByLastNameContaining(lastName).isEmpty()){
-            throw new RecordNotFoundException("No person with this name found in database");
+            throw new RecordNotFoundException("No person with this lastname found in database");
         } else {
             List<Person> personList = personRepository.findByLastNameContaining(lastName);
             List<PersonOutputDto> personOutputDtoList = new ArrayList<>();
@@ -62,7 +74,11 @@ public class PersonService {
         }
     }
 
-    //GET a list of dog breeders (persons who own a breeddog)
+    /**
+     * A method to retrieve a list of persons who are dog breeders (persons who own a breed dog)
+     * @return a list of person(s) in output dto format
+     * @throws RecordNotFoundException throws an exception when no person is found that owns a breed dog
+     */
     public List<PersonOutputDto> getDogBreeders(){
         List<Person> persons = personRepository.findAll();
         List<Person> dogBreeders = new ArrayList<>();
@@ -78,10 +94,15 @@ public class PersonService {
         if(dogBreeders.isEmpty()){
             throw new RecordNotFoundException("There are no dog breeders found");
         }
-        return transferPersonListToDtoList(dogBreeders);
+        return transferPersonListToOutputDtoList(dogBreeders);
     }
 
-    //Create creates a new person entity in the database
+    /**
+     * A method to create a new person in the database
+     * @param personInputDto Data Transfer Objects that carries data between processes in order to reduce the number of methods calls
+     * @return the ID of the person created in the database
+     * @throws RecordNotFoundException throws an exception when there is no domesticated dog found by given id
+     */
     public Long createPerson(PersonInputDto personInputDto){
     //Check if a dog is given
         if(personInputDto.getDogs() != null){
@@ -91,9 +112,13 @@ public class PersonService {
             //if dog exists, add to foundDogsList
             for(DomesticatedDog domesticatedDog : givenDogsList){
                 Long dogId = domesticatedDog.getId();
-                DomesticatedDog foundDog = getCompleteDogId(dogId);
-                if(foundDog != null){
-                    foundDogsList.add(foundDog);
+                if(domesticatedDogRepository.findById(dogId).isPresent()) {
+                    DomesticatedDog foundDog = getCompleteDogId(dogId);
+                    if (foundDog != null) {
+                        foundDogsList.add(foundDog);
+                    }
+                }else{
+                    throw new RecordNotFoundException("No dog with this id found in database");
                 }
             }
             personInputDto.setDogs(foundDogsList);
@@ -105,18 +130,24 @@ public class PersonService {
         return person.getId();
     }
 
-    //PUT sends an enclosed entity of a resource to the server.
-    //If the entity already exists, the server overrides the entity. Otherwise, the server creates a new entity.
-    public Object updatePerson(Long id, PersonInputDto personInputDto) {
-        if (personRepository.findById(id).isPresent()){
-            Person person = personRepository.findById(id).get();
+    /**
+     * A method (PUT) sends an enclosed entity of a resource to the server.
+     * If the entity already exists, the server overrides the existing object,
+     * otherwise the server creates a new entity.
+     * @param personId ID of the person for which information is requested
+     * @param personInputDto Data Transfer Objects that carries data between processes in order to reduce the number of methods calls
+     * @return a new or updated person in output dto format
+     * @throws RecordNotFoundException throws an exception when given domesticated dog is not found by id
+     */
+       public Object updatePerson(Long personId, PersonInputDto personInputDto) {
+        if (personRepository.findById(personId).isPresent()){
+            Person person = personRepository.findById(personId).get();
             Person updatedPerson = transferToPerson(personInputDto);
             List<DomesticatedDog> domesticatedDogList = updatedPerson.getDogs();
             List<DomesticatedDog> newDomesticatedDogList = new ArrayList<>();
             if(domesticatedDogList != null) {
                 for (DomesticatedDog domesticatedDog : domesticatedDogList) {
                     long foundDogId = domesticatedDog.getId();
-                    Optional<DomesticatedDog> dogFound = domesticatedDogRepository.findById(foundDogId);
                     if(domesticatedDogRepository.findById(foundDogId).isPresent()) {
                         DomesticatedDog dog = domesticatedDogRepository.findById(foundDogId).get();
                         newDomesticatedDogList.add(dog);
@@ -145,11 +176,20 @@ public class PersonService {
         }
     }
 
-    //PATCH will only update an existing object,
-    //with the properties mapped in the request body (that are not null).
-    public PersonOutputDto patchPerson(Long id, PersonPatchDto personPatchDto) {
-         if (personRepository.findById(id).isPresent()) {
-            Person updatedPerson = personRepository.getReferenceById(id);
+    /**
+     * A method (PATCH) will only update an existing object,
+     * with the properties mapped in the request body (that are not null).
+     * We do NOT update veterinarian appointment and medical data here.
+     * @param personId ID of the person for which an update is requested
+     * @param personPatchDto Data Transfer Objects that carries data between processes in order to reduce the number of methods calls
+     * @return an updated person in output dto format
+     * @throws EnumValueNotFoundException throws an exception when the provided enum value is not found in enum
+     * @throws ZipCodeFormatException throws an exception when zipcode is not correctly formatted
+     * @throws RecordNotFoundException throws an exception when person is not found by id
+     */
+    public PersonOutputDto patchPerson(Long personId, PersonPatchDto personPatchDto) {
+         if (personRepository.findById(personId).isPresent()) {
+            Person updatedPerson = personRepository.getReferenceById(personId);
             if (personPatchDto.getFirstName() != null) {
                 updatedPerson.setFirstName(personPatchDto.getFirstName());
             }
@@ -218,12 +258,16 @@ public class PersonService {
         }
     }
 
-    //DELETE deletes an entity from the database if found
-    public void deletePerson(Long id) {
+    /**
+     * A method for deleting a person from the database by id
+     * @param personId ID of the person for which deletion is requested
+     * @throws RecordNotFoundException throws an exception when the person is not found
+     */
+    public void deletePerson(Long personId) {
 
-        if (personRepository.findById(id).isPresent()){
+        if (personRepository.findById(personId).isPresent()){
             // If a person is deleted from the database, this person is detached from owned dogs.
-            Person personFound = personRepository.getReferenceById(id);
+            Person personFound = personRepository.getReferenceById(personId);
 
             if(personFound.getDogs() != null){
                 List<DomesticatedDog> givenDogsList = personFound.getDogs();
@@ -240,23 +284,33 @@ public class PersonService {
                     waitingListItemRepository.delete(waitingListItem);
                 }
             }
-            personRepository.deleteById(id);
+            personRepository.deleteById(personId);
         } else {
             throw new  RecordNotFoundException("No person with given ID found.");
         }
     }
 
     //DTO helper classes
-    public List<PersonOutputDto> transferPersonListToDtoList(List<Person> persons){
+    /**
+     * A method to transform a list with persons to a list of persons in output dto format
+     * @param personList list of persons to be transformed
+     * @return a list of persons in output dto format
+     */
+    public List<PersonOutputDto> transferPersonListToOutputDtoList(List<Person> personList){
         List<PersonOutputDto> personDtoList = new ArrayList<>();
 
-        for(Person person : persons) {
+        for(Person person : personList) {
             PersonOutputDto dto = transferToOutputDto(person);
             personDtoList.add(dto);
         }
         return personDtoList;
     }
 
+    /**
+     * A method to transform a person to a person in output dto format
+     * @param person person to be transformed
+     * @return a person in output dto format
+     */
     public PersonOutputDto transferToOutputDto(Person person){
 
         PersonOutputDto personOutputDto = new PersonOutputDto();
@@ -277,36 +331,44 @@ public class PersonService {
         return personOutputDto;
     }
 
-    public Person transferToPerson(PersonInputDto dto){
+    /**
+     * A method to transform a person in input dto format to a person format
+     * @param personInputDto Data Transfer Objects that carries data between processes in order to reduce the number of methods calls
+     * @return person in person format
+     */
+    public Person transferToPerson(PersonInputDto personInputDto){
         Person person = new Person();
 
-        person.setFirstName(dto.getFirstName());
-        person.setLastName(dto.getLastName());
-        person.setSex(Sex.valueOf(dto.getSex()));
-        person.setDateOfBirth(dto.getDateOfBirth());
-        person.setStreet(dto.getStreet());
-        person.setHouseNumber(dto.getHouseNumber());
-        person.setHouseNumberExtension(dto.getHouseNumberExtension());
-        person.setZipCode(dto.getZipCode());
-        person.setCity(dto.getCity());
-        person.setCountry(dto.getCountry());
-        if(dto.getDogs() != null){
-            person.setDogs(dto.getDogs());
+        person.setFirstName(personInputDto.getFirstName());
+        person.setLastName(personInputDto.getLastName());
+        person.setSex(Sex.valueOf(personInputDto.getSex()));
+        person.setDateOfBirth(personInputDto.getDateOfBirth());
+        person.setStreet(personInputDto.getStreet());
+        person.setHouseNumber(personInputDto.getHouseNumber());
+        person.setHouseNumberExtension(personInputDto.getHouseNumberExtension());
+        person.setZipCode(personInputDto.getZipCode());
+        person.setCity(personInputDto.getCity());
+        person.setCountry(personInputDto.getCountry());
+        if(personInputDto.getDogs() != null){
+            person.setDogs(personInputDto.getDogs());
         }
 
         return person;
     }
 
-
-
-    //Look for dog by ID in dogrespository.
-    //When nu dog ID is given, the get dog method returns 0 and an error is thrown.
-    //When dog ID is found, dog is returned. If there is no dog found in the repository, null is returned.
-    private DomesticatedDog getCompleteDogId(Long dogId){
+    /**
+     * Look for domesticated dog by id in domesticated dog repository.
+     * When no domesticated dog ID is given, the get domesticated dog method returns 0 and an error is thrown.
+     * When domesticated dog ID is found, domesticated dog is returned.
+     * If there is no domesticated dog found in the repository, null is returned.
+     * @param dogId ID of the domesticated dog for which information is requested
+     * @return domesticated dog or null if not present.
+     */
+   private DomesticatedDog getCompleteDogId(Long dogId){
         if(dogId == 0){
             throw new RecordNotFoundException("Missing Dog ID");
         }
         Optional<DomesticatedDog> domesticatedDog = domesticatedDogRepository.findById(dogId);
-        return (domesticatedDog.isPresent()) ? domesticatedDog.get() : null;
+        return domesticatedDog.orElse(null);
     }
 }
