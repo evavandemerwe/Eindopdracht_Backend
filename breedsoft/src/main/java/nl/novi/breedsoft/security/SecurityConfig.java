@@ -48,14 +48,12 @@ public class SecurityConfig {
         return new BreedSoftUserDetailsService();
     }
 
-    // We have 2 security filters, this one has the highest precedence
-
     /**
      * Security filter chain configuration to be applied on URL path regarding token requests.
      * Highest order security filter chain, first to be applied
      * @param http HttpSecurity chain to which this chain will be added
      * @return SecurityFilterChain
-     * @throws Exception
+     * @throws Exception can be thrown on configuring the filter chain
      */
     @Order(Ordered.HIGHEST_PRECEDENCE)
     @Bean
@@ -77,7 +75,7 @@ public class SecurityConfig {
      * Security filter chain configuration to be applied on all URL paths order than token
      * @param http HttpSecurity chain to which this chain will be added
      * @return SecurityFilterChain
-     * @throws Exception
+     * @throws Exception can be thrown on configuring the filter chain
      */
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -94,8 +92,6 @@ public class SecurityConfig {
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .build();
     }
-
-    // Beans to secure the JWT Token
 
     /**
      * JSON Web Key source used to sign a token on the Authorization server
@@ -115,9 +111,8 @@ public class SecurityConfig {
      */
     @Bean
     JwtEncoder jwtEncoder(JWKSource<SecurityContext> jwks){
-
         return new NimbusJwtEncoder(jwks);
-        }
+    }
 
     /**
      * Returns a JwtDecoder used of decoding a JSON Web token

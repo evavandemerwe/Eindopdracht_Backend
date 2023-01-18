@@ -23,7 +23,7 @@ public class TokenService {
     /**
      * Generate a JWT Token that is valid for 1 hour after the user has been authenticated. This token contains
      * username, issued time, expiration date, and authorization based on the roles of the authenticated user.
-     * @param authentication @{@link Authentication} input to generate a token for
+     * @param authentication {@link Authentication} input to generate a token for
      * @return JWT Token
      */
     public String generateToken(Authentication authentication) {
