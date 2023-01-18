@@ -14,7 +14,7 @@ public final class Jwks {
     }
 
     /**
-     * Generate an RSA key with a public/private key pair
+     * A method that generates an RSA key with a public/private key pair
      * @return Public/Private RSA Key pair
      */
     public static RSAKey generateRsa() {

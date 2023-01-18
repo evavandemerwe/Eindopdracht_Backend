@@ -119,7 +119,7 @@ public class WaitingListItemController {
      */
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> deleteWaitingListItem(@PathVariable("id") Long waitingListItemId){
-        waitingListItemService.deleteAppointment(waitingListItemId);
+        waitingListItemService.deleteWaitingListItem(waitingListItemId);
         return ResponseEntity.noContent().build();
     }
 }

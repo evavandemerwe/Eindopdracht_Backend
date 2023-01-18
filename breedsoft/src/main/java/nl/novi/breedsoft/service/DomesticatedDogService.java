@@ -182,7 +182,7 @@ public class DomesticatedDogService {
     /**
      * A method to create a new domesticated dog in the database
      * @param domesticatedDogInputDto Data Transfer Objects that carries data between processes in order to reduce the number of methods calls
-     * @return the ID of the domesticated dog found in the database
+     * @return the ID of the domesticated dog created in the database
      * @throws RecordNotFoundException throws an exception when the provided dog owner does not exist
      */
     public Long createDomesticatedDog(DomesticatedDogInputDto domesticatedDogInputDto){
@@ -266,7 +266,7 @@ public class DomesticatedDogService {
      * A method (PATCH) will only update an existing object,
      * with the properties mapped in the request body (that are not null).
      * We do NOT update veterinarian appointment and medical data here.
-     * @param domesticatedDogId ID of the domesticated for which an update is requested
+     * @param domesticatedDogId ID of the domesticated dog for which an update is requested
      * @param domesticatedDogPatchDto Data Transfer Objects that carries data between processes in order to reduce the number of methods calls
      * @return a message stating that the domesticated dog is successfully updated,
      * plus an optional String warning based on the weight of the domesticated dog
@@ -450,16 +450,15 @@ public class DomesticatedDogService {
     }
 
     //DTO helper classes
-
     /**
      * A method to transform a list with domesticated dog to a list of domesticated dogs in output dto format
-     * @param domesticatedDogs list of domesticated dogs to be transformed
+     * @param domesticatedDogList list of domesticated dogs to be transformed
      * @return a list of domesticated dogs in output dto format
      */
-    private List<DomesticatedDogOutputDto> transferDomesticatedDogListToOutputDtoList(List<DomesticatedDog> domesticatedDogs){
+    private List<DomesticatedDogOutputDto> transferDomesticatedDogListToOutputDtoList(List<DomesticatedDog> domesticatedDogList){
         List<DomesticatedDogOutputDto> domesticatedDogDtoList = new ArrayList<>();
 
-        for(DomesticatedDog domesticatedDog : domesticatedDogs) {
+        for(DomesticatedDog domesticatedDog : domesticatedDogList) {
             DomesticatedDogOutputDto dto = transferToOutputDto(domesticatedDog);
             domesticatedDogDtoList.add(dto);
         }
@@ -537,7 +536,7 @@ public class DomesticatedDogService {
     /**
      * A method to transform a domesticated dog in input dto format to a domesticated dog format
      * @param domesticatedDogInputDto Data Transfer Objects that carries data between processes in order to reduce the number of methods calls
-     * @return domesticatedDog
+     * @return domesticatedDog in domesticated dog format
      */
     private DomesticatedDog transferToDomesticatedDog(DomesticatedDogInputDto domesticatedDogInputDto){
         DomesticatedDog domesticatedDog = new DomesticatedDog();
@@ -641,6 +640,7 @@ public class DomesticatedDogService {
      * If there is no person found in the repository, null is returned.
      * @param personId ID of the person for which information is requested
      * @return person or null if not present.
+     * @throws RecordNotFoundException throws an exception when person ID is missing
      */
     private Person getCompletePersonById(Long personId) {
         if (personId == 0) {

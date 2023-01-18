@@ -1,5 +1,7 @@
 package nl.novi.breedsoft.model.management;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import nl.novi.breedsoft.model.animal.Mammal;
 import nl.novi.breedsoft.model.animal.enumerations.AnimalType;
 import nl.novi.breedsoft.model.animal.enumerations.Birthmethod;
@@ -48,13 +50,14 @@ public class Person extends Mammal {
     private User user;
 
     //constructor
-    public Person() {
+    public Person( ) {
         super();
         super.setNumberOfTeeth(32);
         super.setBirthMethod(Birthmethod.livebirth);
         super.setBloodTemperature(Bloodtemperature.warmblooded);
         super.setAnimalType(AnimalType.omnivore);
     }
+
 
     //getters and setters
     public Long getId() {
