@@ -46,29 +46,41 @@ public class DomesticatedDogService {
         this.medicalDataRepository = medicalDataRepository;
     }
 
-    //Output Dto is used for representing data from the database to the user
-    //Get all dogs
+    /**
+     * A method for retrieval of all domesticated dogs from the database
+     * @return a list of all domesticated dogs in output dto format
+     */
     public List<DomesticatedDogOutputDto> getAllDomesticatedDogs() {
         List<DomesticatedDog> domesticatedDogList = domesticatedDogRepository.findAll();
-        return transferDomesticatedDogListToDtoList(domesticatedDogList);
+        return transferDomesticatedDogListToOutputDtoList(domesticatedDogList);
     }
 
-    //Get one dog by ID
-    public DomesticatedDogOutputDto getDomesticatedDogById(Long id) {
-        if (domesticatedDogRepository.findById(id).isPresent()){
-            DomesticatedDog domesticatedDog = domesticatedDogRepository.findById(id).get();
+    /**
+     * A method for retrieval of one domesticated dog from the database by id
+     * @param domesticatedDogId ID of the domesticated dog for which information is requested
+     * @return a domesticated dog in output dto format
+     * @throws RecordNotFoundException throws an exception when no domesticated dog is found by given id
+     */
+    public DomesticatedDogOutputDto getDomesticatedDogById(Long domesticatedDogId) {
+        if (domesticatedDogRepository.findById(domesticatedDogId).isPresent()){
+            DomesticatedDog domesticatedDog = domesticatedDogRepository.findById(domesticatedDogId).get();
             return transferToOutputDto(domesticatedDog);
         } else {
             throw new RecordNotFoundException("Dog not found in database");
         }
     }
 
-    //Get dog list by Name
-    public List<DomesticatedDogOutputDto> getDomesticatedDogByName(String name) {
-        if (domesticatedDogRepository.findByNameContaining(name).isEmpty()){
+    /**
+     * A method to retrieve a list of domesticated dogs based on name
+     * @param domesticatedDogName name of the person for which information is requested
+     * @return a list of all domesticated dogs in output dto format
+     * @throws RecordNotFoundException throws an exception when no domesticated dog is found by name
+     */
+    public List<DomesticatedDogOutputDto> getDomesticatedDogByName(String domesticatedDogName) {
+        if (domesticatedDogRepository.findByNameContaining(domesticatedDogName).isEmpty()){
             throw new RecordNotFoundException("No dog with this name found in database");
         } else {
-            List<DomesticatedDog> domesticatedDogList = domesticatedDogRepository.findByNameContaining(name);
+            List<DomesticatedDog> domesticatedDogList = domesticatedDogRepository.findByNameContaining(domesticatedDogName);
             List<DomesticatedDogOutputDto> domesticatedDogOutputDtoList = new ArrayList<>();
             for(DomesticatedDog domesticatedDog : domesticatedDogList){
                 domesticatedDogOutputDtoList.add(transferToOutputDto(domesticatedDog));
@@ -77,15 +89,22 @@ public class DomesticatedDogService {
         }
     }
 
-    public List<DomesticatedDogOutputDto> getAllChildren(Long id){
+    /**
+     * A method to retrieve al children from a domesticated dog by domesticated dog ID
+     * @param domesticatedDogId ID of the domesticated dog for which information is requested
+     * @return a list of domesticated dogs in output dto format
+     * @throws RecordNotFoundException throws an exception when no domesticated dog is found by ID,
+     * or no children are found for domesticated dog
+     */
+    public List<DomesticatedDogOutputDto> getAllChildren(Long domesticatedDogId){
         List<DomesticatedDog> children = new ArrayList<>();
 
-        if(domesticatedDogRepository.findById(id).isEmpty()){
+        if(domesticatedDogRepository.findById(domesticatedDogId).isEmpty()){
             throw new RecordNotFoundException("No dog with this id found in database");
         } else {
             List<DomesticatedDog> allDomesticatedDogs = domesticatedDogRepository.findAll();
             for(DomesticatedDog domesticatedDog : allDomesticatedDogs){
-                if(Objects.equals(domesticatedDog.getParentId(), id)){
+                if(Objects.equals(domesticatedDog.getParentId(), domesticatedDogId)){
                     children.add(domesticatedDog);
                 }
             }
@@ -94,9 +113,14 @@ public class DomesticatedDogService {
             }
         }
 
-        return transferDomesticatedDogListToDtoList(children);
+        return transferDomesticatedDogListToOutputDtoList(children);
     }
 
+    /**
+     * A method that retrieves a list of available domesticated dogs from the database
+     * @return a list of available domesticated dogs (based on status) in output dto format
+     * @throws RecordNotFoundException throws an exception when no available domesticated dogs are found
+     */
     public List<DomesticatedDogOutputDto> getAvailableDomesticatedDogs(){
         List<DomesticatedDog> domesticatedDogList = domesticatedDogRepository.findAll();
         List<DomesticatedDog> availableDogs = new ArrayList<>();
@@ -108,9 +132,13 @@ public class DomesticatedDogService {
         if(availableDogs.isEmpty()){
             throw new RecordNotFoundException("There are no available dogs found");
         }
-        return transferDomesticatedDogListToDtoList(availableDogs);
+        return transferDomesticatedDogListToOutputDtoList(availableDogs);
     }
 
+    /**
+     * A method to retrieve a list of domesticated breed dogs from the database
+     * @return a list of domesticated breed dogs in output dto format
+     */
     public List<DomesticatedDogOutputDto> getDomesticatedBreedDogs(){
         List<DomesticatedDog> domesticatedDogList = domesticatedDogRepository.findAll();
         List<DomesticatedDog> breedDogs = new ArrayList<>();
@@ -122,13 +150,20 @@ public class DomesticatedDogService {
         if(breedDogs.isEmpty()){
             throw new RecordNotFoundException("There are no breed dogs found");
         }
-        return transferDomesticatedDogListToDtoList(breedDogs);
+        return transferDomesticatedDogListToOutputDtoList(breedDogs);
     }
 
-    public DomesticatedDogOutputDto getParentDog(Long id){
+    /**
+     * A method that retrieves the parent of a domesticated dog based on ID
+     * @param domesticatedDogId ID of the domesticated dog for which information is requested
+     * @return a domesticated dog in output dto format
+     * @throws RecordNotFoundException throws an exception when no parent information is found,
+     * or when there is no domesticated dog found based on given domesticated dog ID
+     */
+    public DomesticatedDogOutputDto getParentDog(Long domesticatedDogId){
         DomesticatedDog parentDog = new DomesticatedDog();
-        if(domesticatedDogRepository.existsById(id)) {
-            DomesticatedDog domesticatedDog = domesticatedDogRepository.getReferenceById(id);
+        if(domesticatedDogRepository.existsById(domesticatedDogId)) {
+            DomesticatedDog domesticatedDog = domesticatedDogRepository.getReferenceById(domesticatedDogId);
             Long parentId = domesticatedDog.getParentId();
             if(parentId != null) {
                 if (domesticatedDogRepository.existsById(parentId)) {
@@ -138,13 +173,18 @@ public class DomesticatedDogService {
                 throw new RecordNotFoundException("No information about parent found.");
             }
         }else{
-            throw new RecordNotFoundException("Dog with id " + id + " is not found.");
+            throw new RecordNotFoundException("Dog with id " + domesticatedDogId + " is not found.");
         }
 
         return transferToOutputDto(parentDog);
     }
 
-    //Create creates a new entity in the database
+    /**
+     * A method to create a new domesticated dog in the database
+     * @param domesticatedDogInputDto Data Transfer Objects that carries data between processes in order to reduce the number of methods calls
+     * @return the ID of the domesticated dog found in the database
+     * @throws RecordNotFoundException throws an exception when the provided dog owner does not exist
+     */
     public Long createDomesticatedDog(DomesticatedDogInputDto domesticatedDogInputDto){
         //Check if a dog owner is given
         if(domesticatedDogInputDto.getPerson() != null) {
@@ -159,35 +199,50 @@ public class DomesticatedDogService {
         return domesticatedDog.getId();
     }
 
-    public List<DomesticatedDogOutputDto> createLitterList(List<DomesticatedDogInputDto> domesticatedDogInputDtoList, Long id){
+    /**
+     * A method that creates a litter of domesticated dogs,
+     * creates multiple domesticated dogs in the database from a list of domesticated dogs
+     * @param domesticatedDogInputDtoList Data Transfer Objects that carries data between processes in order to reduce the number of methods calls
+     * @param domesticatedDogId ID of the domesticated dog for which information is requested
+     * @return a list of domesticated dogs in output dto format
+     * @throws RecordNotFoundException throws an exception when no domesticated dog is found based on id,
+     * @throws IllegalStateException throws an exception when list is empty
+     */
+    public List<DomesticatedDogOutputDto> createLitterList(
+            List<DomesticatedDogInputDto> domesticatedDogInputDtoList,
+            Long domesticatedDogId
+    ){
         List<DomesticatedDogOutputDto> createdDogsFromLitterArray = new ArrayList<>();
-        if(domesticatedDogRepository.findById(id).isEmpty()){
+        if(domesticatedDogRepository.findById(domesticatedDogId).isEmpty()){
             throw new RecordNotFoundException("No dog with this id found in database");
         } else {
             for(DomesticatedDogInputDto child : domesticatedDogInputDtoList){
                     DomesticatedDog transferredDog = transferToDomesticatedDog(child);
-                    transferredDog.setParentId(id);
-                try {
+                    transferredDog.setParentId(domesticatedDogId);
+
                     domesticatedDogRepository.save(transferredDog);
-                }catch(Exception ex){
-                    throw new RecordNotFoundException("Adding dog to database failed");
-                }
                     DomesticatedDogOutputDto createdDog = transferToOutputDto(transferredDog);
                     createdDogsFromLitterArray.add(createdDog);
             }
         }
         if (createdDogsFromLitterArray.isEmpty()) {
-            throw new RecordNotFoundException("No dogs are created");
+            throw new IllegalStateException("No dogs are created");
         }
         return createdDogsFromLitterArray;
     }
 
-    //PUT sends an enclosed entity of a resource to the server.
-    //If the entity already exists, the server overrides the existing object.
-    //Otherwise, the server creates a new entity
-    public Object updateDomesticatedDog(Long id, DomesticatedDogInputDto domesticatedDogInputDto) {
-        if (domesticatedDogRepository.findById(id).isPresent()){
-            DomesticatedDog domesticatedDog = domesticatedDogRepository.findById(id).get();
+    /**
+     * A method (PUT) sends an enclosed entity of a resource to the server.
+     * If the entity already exists, the server overrides the existing object,
+     * otherwise the server creates a new entity.
+     * @param domesticatedDogId ID of the domesticated for which an update or creation is requested
+     * @param domesticatedDogInputDto Data Transfer Objects that carries data between processes in order to reduce the number of methods calls
+     * @return a new or updated domesticated dog in output dto format
+     * @throws RecordNotFoundException throws an exception when dog owner is not found based on ID
+     */
+    public DomesticatedDogOutputDto updateDomesticatedDog(Long domesticatedDogId, DomesticatedDogInputDto domesticatedDogInputDto) {
+        if (domesticatedDogRepository.findById(domesticatedDogId).isPresent()){
+            DomesticatedDog domesticatedDog = domesticatedDogRepository.findById(domesticatedDogId).get();
             DomesticatedDog updatedDog = transferToDomesticatedDog(domesticatedDogInputDto);
             if (domesticatedDogInputDto.getPerson() != null) {
                 Person dogOwner = getCompletePersonById(domesticatedDogInputDto.getPerson().getId());
@@ -207,14 +262,23 @@ public class DomesticatedDogService {
         }
     }
 
-    //PATCH will only update an existing object,
-    //with the properties mapped in the request body (that are not null).
-    public String patchDomesticatedDog(Long id, DomesticatedDogPatchDto domesticatedDogPatchDto) {
-        Optional<DomesticatedDog> domesticatedDogOptional = domesticatedDogRepository.findById(id);
+    /**
+     * A method (PATCH) will only update an existing object,
+     * with the properties mapped in the request body (that are not null).
+     * We do NOT update veterinarian appointment and medical data here.
+     * @param domesticatedDogId ID of the domesticated for which an update is requested
+     * @param domesticatedDogPatchDto Data Transfer Objects that carries data between processes in order to reduce the number of methods calls
+     * @return a message stating that the domesticated dog is successfully updated,
+     * plus an optional String warning based on the weight of the domesticated dog
+     * @throws EnumValueNotFoundException throws an exception when the provided enum value is not found in enum
+     * @throws RecordNotFoundException throws an exception when domesticated dog / dog owner is not found based on ID
+     */
+    public String patchDomesticatedDog(Long domesticatedDogId, DomesticatedDogPatchDto domesticatedDogPatchDto) {
+        Optional<DomesticatedDog> domesticatedDogOptional = domesticatedDogRepository.findById(domesticatedDogId);
 
         if (domesticatedDogOptional.isPresent()) {
             DomesticatedDog foundDog = domesticatedDogOptional.get();
-            DomesticatedDog updatedDog = domesticatedDogRepository.getReferenceById(id);
+            DomesticatedDog updatedDog = domesticatedDogRepository.getReferenceById(domesticatedDogId);
             if (domesticatedDogPatchDto.getName() != null) {
                 updatedDog.setName(domesticatedDogPatchDto.getName());
             }
@@ -307,6 +371,7 @@ public class DomesticatedDogService {
                 updatedDog.setDogStatus(newStatus);
             }
             domesticatedDogRepository.save(updatedDog);
+
             return "Your dog has been updated. " + message;
 
         } else {
@@ -314,14 +379,22 @@ public class DomesticatedDogService {
         }
     }
 
-    public Long storeDogImage(Long id, MultipartFile file) throws IOException {
-        if(file.isEmpty()) {
+    /**
+     * A method that stores an image in the database
+     * @param domesticatedDogId ID of the domesticated dog for which the image is stored
+     * @param multipartFile the image of the domesticated dog
+     * @return the ID of the domesticated dog for which an image was stored
+     * @throws IOException throws an exception when the I/O operation failed or is interrupted
+     * @throws RecordNotFoundException throws an exception when domesticated dog is not found by id
+     */
+    public Long storeDogImage(Long domesticatedDogId, MultipartFile multipartFile) throws IOException {
+        if(multipartFile.isEmpty()) {
             throw new IOException();
         }
-        Optional<DomesticatedDog> optionalDog = domesticatedDogRepository.findById(id);
+        Optional<DomesticatedDog> optionalDog = domesticatedDogRepository.findById(domesticatedDogId);
         if(optionalDog.isPresent()) {
             DomesticatedDog domesticatedDog = optionalDog.get();
-            domesticatedDog.setDogImage(file.getBytes());
+            domesticatedDog.setDogImage(multipartFile.getBytes());
             domesticatedDogRepository.save(domesticatedDog);
             return domesticatedDog.getId();
         } else {
@@ -329,8 +402,14 @@ public class DomesticatedDogService {
         }
     }
 
-    public void deleteDogImage(Long id) {
-        Optional<DomesticatedDog> optionalDog = domesticatedDogRepository.findById(id);
+    /**
+     * A method for deleting an image of a domesticated dog from the database by id
+     * @param domesticatedDogId ID of the domesticated dog for which deletion is requested
+     * @throws RecordNotFoundException throws an exception when the domesticated dog is not found,
+     * or when the domesticated dog does not have a picture
+     */
+    public void deleteDogImage(Long domesticatedDogId) {
+        Optional<DomesticatedDog> optionalDog = domesticatedDogRepository.findById(domesticatedDogId);
         if(optionalDog.isPresent()) {
             DomesticatedDog domesticatedDog = optionalDog.get();
             if(domesticatedDog.getDogImage() != null) {
@@ -343,29 +422,41 @@ public class DomesticatedDogService {
             throw new  RecordNotFoundException("No dog with given ID found.");
         }
     }
-    //DELETE deletes an entity from the database if found
-    public void deleteDomesticatedDog(Long id) {
 
-        if (domesticatedDogRepository.findById(id).isPresent()){
-            DomesticatedDog dogToDelete = domesticatedDogRepository.getReferenceById(id);
-            //Delete appointments for dog
+    /**
+     * A method for deleting a domesticated dog from the database by id
+     * @param domesticatedDogId ID of the domesticated dog for which deletion is requested
+     * @throws RecordNotFoundException throws an exception when the domesticated dog is not found
+     */
+    public void deleteDomesticatedDog(Long domesticatedDogId) {
+
+        if (domesticatedDogRepository.findById(domesticatedDogId).isPresent()){
+            DomesticatedDog dogToDelete = domesticatedDogRepository.getReferenceById(domesticatedDogId);
+            //Delete appointments for domesticated dog
             List<VeterinarianAppointment> dogVeterinarianAppointments = dogToDelete.getVeterinarianAppointments();
             for(VeterinarianAppointment veterinarianAppointment : dogVeterinarianAppointments){
-                veterinarianAppointmentRepository.delete(veterinarianAppointment);
+                    veterinarianAppointmentRepository.delete(veterinarianAppointment);
             }
-            //delete medical data for dog
+            //delete medical data for domesticated dog
             List<MedicalData> dogMedicalData = dogToDelete.getMedicalData();
             for(MedicalData medicalData : dogMedicalData){
                 medicalDataRepository.delete(medicalData);
             }
-            domesticatedDogRepository.deleteById(id);
+            //delete domesticated dog
+            domesticatedDogRepository.deleteById(domesticatedDogId);
         } else {
             throw new  RecordNotFoundException("No dogs with given ID found.");
         }
     }
 
     //DTO helper classes
-    private List<DomesticatedDogOutputDto> transferDomesticatedDogListToDtoList(List<DomesticatedDog> domesticatedDogs){
+
+    /**
+     * A method to transform a list with domesticated dog to a list of domesticated dogs in output dto format
+     * @param domesticatedDogs list of domesticated dogs to be transformed
+     * @return a list of domesticated dogs in output dto format
+     */
+    private List<DomesticatedDogOutputDto> transferDomesticatedDogListToOutputDtoList(List<DomesticatedDog> domesticatedDogs){
         List<DomesticatedDogOutputDto> domesticatedDogDtoList = new ArrayList<>();
 
         for(DomesticatedDog domesticatedDog : domesticatedDogs) {
@@ -375,6 +466,12 @@ public class DomesticatedDogService {
         return domesticatedDogDtoList;
     }
 
+    /**
+     * A method to transform a domesticated dog to a domesticated dog in output dto format
+     * @param domesticatedDog domesticated dog to be transformed
+     * @return a domesticated dogs in output dto format
+     * @throws RecordNotFoundException throws an exception when parent id is not found
+     */
     private DomesticatedDogOutputDto transferToOutputDto(DomesticatedDog domesticatedDog){
 
         DomesticatedDogOutputDto domesticatedDogDto = new DomesticatedDogOutputDto();
@@ -421,27 +518,35 @@ public class DomesticatedDogService {
                 }
         }
         domesticatedDogDto.setLitters(newLitters);
+
         List<VeterinarianAppointment> veterinarianAppointments = domesticatedDog.getVeterinarianAppointments();
         if(veterinarianAppointments != null) {
             domesticatedDogDto.setVeterinarianAppointments(domesticatedDog.getVeterinarianAppointments());
         }
+
         List<MedicalData> medicalData = domesticatedDog.getMedicalData();
         if(medicalData != null){
             domesticatedDogDto.setMedicalData(domesticatedDog.getMedicalData());
         }
 
         domesticatedDogDto.setDogStatus(domesticatedDog.getDogStatus());
+
         return domesticatedDogDto;
     }
 
-    private DomesticatedDog transferToDomesticatedDog(DomesticatedDogInputDto dto){
+    /**
+     * A method to transform a domesticated dog in input dto format to a domesticated dog format
+     * @param domesticatedDogInputDto Data Transfer Objects that carries data between processes in order to reduce the number of methods calls
+     * @return domesticatedDog
+     */
+    private DomesticatedDog transferToDomesticatedDog(DomesticatedDogInputDto domesticatedDogInputDto){
         DomesticatedDog domesticatedDog = new DomesticatedDog();
 
-        domesticatedDog.setName(dto.getName());
-        domesticatedDog.setHairColor(dto.getHairColor());
-        domesticatedDog.setFood(dto.getFood());
-        if (dto.getSex() != null) {
-            String newSexString = dto.getSex();
+        domesticatedDog.setName(domesticatedDogInputDto.getName());
+        domesticatedDog.setHairColor(domesticatedDogInputDto.getHairColor());
+        domesticatedDog.setFood(domesticatedDogInputDto.getFood());
+        if (domesticatedDogInputDto.getSex() != null) {
+            String newSexString = domesticatedDogInputDto.getSex();
             Sex newSex;
             //Check if given value exists in enumeration
             //Because patchDTO has no checks on enumerations,
@@ -453,17 +558,17 @@ public class DomesticatedDogService {
             }
             domesticatedDog.setSex(newSex);
         }
-        domesticatedDog.setWeightInGrams(dto.getWeightInGrams());
-        domesticatedDog.setKindOfHair(dto.getKindOfHair());
-        domesticatedDog.setDogYears(dto.getDogYears());
-        domesticatedDog.setDateOfBirth(dto.getDateOfBirth());
-        domesticatedDog.setDateOfDeath(dto.getDateOfDeath());
-        domesticatedDog.setChipNumber(dto.getChipNumber());
-        domesticatedDog.setDogYears(dto.getDogYears());
-        domesticatedDog.setCanSee(dto.isCanSee());
-        domesticatedDog.setCanHear(dto.isCanHear());
-        if (dto.getBreed() != null) {
-            String newBreedString = dto.getBreed();
+        domesticatedDog.setWeightInGrams(domesticatedDogInputDto.getWeightInGrams());
+        domesticatedDog.setKindOfHair(domesticatedDogInputDto.getKindOfHair());
+        domesticatedDog.setDogYears(domesticatedDogInputDto.getDogYears());
+        domesticatedDog.setDateOfBirth(domesticatedDogInputDto.getDateOfBirth());
+        domesticatedDog.setDateOfDeath(domesticatedDogInputDto.getDateOfDeath());
+        domesticatedDog.setChipNumber(domesticatedDogInputDto.getChipNumber());
+        domesticatedDog.setDogYears(domesticatedDogInputDto.getDogYears());
+        domesticatedDog.setCanSee(domesticatedDogInputDto.isCanSee());
+        domesticatedDog.setCanHear(domesticatedDogInputDto.isCanHear());
+        if (domesticatedDogInputDto.getBreed() != null) {
+            String newBreedString = domesticatedDogInputDto.getBreed();
             Breed newBreed;
             //Check if given value exists in enumeration
             //Because patchDTO has no checks on enumerations,
@@ -475,8 +580,8 @@ public class DomesticatedDogService {
             }
             domesticatedDog.setBreed(newBreed);
         }
-        if (dto.getBreedGroup() != null) {
-            String newBreedGroupString = dto.getBreedGroup();
+        if (domesticatedDogInputDto.getBreedGroup() != null) {
+            String newBreedGroupString = domesticatedDogInputDto.getBreedGroup();
             BreedGroup newBreedGroup;
             //Check if given value exists in enumeration
             //Because patchDTO has no checks on enumerations,
@@ -488,19 +593,19 @@ public class DomesticatedDogService {
             }
             domesticatedDog.setBreedGroup(newBreedGroup);
         }
-        domesticatedDog.setPerson(dto.getPerson());
+        domesticatedDog.setPerson(domesticatedDogInputDto.getPerson());
 
-        Long parentId = dto.getParentId();
+        Long parentId = domesticatedDogInputDto.getParentId();
         if(parentId != null) {
             Optional<DomesticatedDog> parentDog = domesticatedDogRepository.findById(parentId);
             if (parentDog.isPresent()) {
-                domesticatedDog.setParentId(dto.getParentId());
+                domesticatedDog.setParentId(domesticatedDogInputDto.getParentId());
             } else {
                 throw new RecordNotFoundException("Parent ID not found");
             }
         }
-        if(dto.getDogStatus() != null) {
-            String newStatusString = String.valueOf(dto.getDogStatus());
+        if(domesticatedDogInputDto.getDogStatus() != null) {
+            String newStatusString = String.valueOf(domesticatedDogInputDto.getDogStatus());
             Status newStatus;
             //Check if given value exists in enumeration
             //Because patchDTO has no checks on enumerations,
@@ -512,32 +617,30 @@ public class DomesticatedDogService {
             }
             domesticatedDog.setDogStatus(newStatus);
 
-            List<DomesticatedDog> litters = dto.getLitters();
+            List<DomesticatedDog> litters = domesticatedDogInputDto.getLitters();
             if(litters != null){
-                domesticatedDog.setLitter(dto.getLitters());
+                domesticatedDog.setLitter(domesticatedDogInputDto.getLitters());
             }
-            List<VeterinarianAppointment> veterinarianAppointments = dto.getVeterinarianAppointments();
+            List<VeterinarianAppointment> veterinarianAppointments = domesticatedDogInputDto.getVeterinarianAppointments();
             if(veterinarianAppointments != null){
-                domesticatedDog.setVeterinarianAppointments(dto.getVeterinarianAppointments());
+                domesticatedDog.setVeterinarianAppointments(domesticatedDogInputDto.getVeterinarianAppointments());
             }
 
-            List<MedicalData> medicalData = dto.getMedicalData();
+            List<MedicalData> medicalData = domesticatedDogInputDto.getMedicalData();
             if(medicalData != null){
-                domesticatedDog.setMedicalData(dto.getMedicalData());
+                domesticatedDog.setMedicalData(domesticatedDogInputDto.getMedicalData());
             }
         }
         return domesticatedDog;
     }
 
-
      /**
-     *
-     Look for person by id in personrespository.
-     When nu person ID is given, the get person method returns 0 and an error is thrown.
-     When person id is found, person is returned. If there is no person found in the repository, null is returned.
-     * Get all person information recorded by give ID.
-     * @param personId ID of the person information requested
-     * @return Person or null if not present.
+     * Look for person by id in person repository.
+     * When no person ID is given, the get person method returns 0 and an error is thrown.
+     * When person ID is found, person is returned.
+     * If there is no person found in the repository, null is returned.
+     * @param personId ID of the person for which information is requested
+     * @return person or null if not present.
      */
     private Person getCompletePersonById(Long personId) {
         if (personId == 0) {

@@ -7,5 +7,10 @@ import java.util.Optional;
 
 public interface AuthorityRepository extends JpaRepository<Authority, Long> {
 
+    /**
+     * A repository for retrieval of authorities
+     * @param authority which is requested to be searched for in the database
+     * @return an Optional Authority - Authority is returned if found
+     */
     Optional<Authority> findByAuthority(String authority);
 }

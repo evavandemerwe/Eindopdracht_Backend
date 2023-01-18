@@ -62,6 +62,7 @@ public class PersonService {
         }
     }
 
+    //GET a list of dog breeders (persons who own a breeddog)
     public List<PersonOutputDto> getDogBreeders(){
         List<Person> persons = personRepository.findAll();
         List<Person> dogBreeders = new ArrayList<>();
@@ -80,7 +81,7 @@ public class PersonService {
         return transferPersonListToDtoList(dogBreeders);
     }
 
-    //Create creates a new entity in the database
+    //Create creates a new person entity in the database
     public Long createPerson(PersonInputDto personInputDto){
     //Check if a dog is given
         if(personInputDto.getDogs() != null){
@@ -105,7 +106,7 @@ public class PersonService {
     }
 
     //PUT sends an enclosed entity of a resource to the server.
-    //If the entity already exists, the server overrides the entity. Otherwise, the server creates a new entity
+    //If the entity already exists, the server overrides the entity. Otherwise, the server creates a new entity.
     public Object updatePerson(Long id, PersonInputDto personInputDto) {
         if (personRepository.findById(id).isPresent()){
             Person person = personRepository.findById(id).get();
@@ -116,8 +117,8 @@ public class PersonService {
                 for (DomesticatedDog domesticatedDog : domesticatedDogList) {
                     long foundDogId = domesticatedDog.getId();
                     Optional<DomesticatedDog> dogFound = domesticatedDogRepository.findById(foundDogId);
-                    if(dogFound.isPresent()) {
-                        DomesticatedDog dog = dogFound.get();
+                    if(domesticatedDogRepository.findById(foundDogId).isPresent()) {
+                        DomesticatedDog dog = domesticatedDogRepository.findById(foundDogId).get();
                         newDomesticatedDogList.add(dog);
                     }else {
                         throw new RecordNotFoundException("Dog " + foundDogId + " not found");
@@ -133,9 +134,9 @@ public class PersonService {
 
             //Keeping the former id, as we will update the existing dog
             updatedPerson.setId(person.getId());
-            personRepository.save(updatedPerson);
+            Person savedPerson = personRepository.save(updatedPerson);
 
-            return transferToOutputDto(updatedPerson);
+            return transferToOutputDto(savedPerson);
 
         } else {
             Long newPersonId = createPerson(personInputDto);
@@ -143,6 +144,7 @@ public class PersonService {
             return transferToOutputDto(newPerson);
         }
     }
+
     //PATCH will only update an existing object,
     //with the properties mapped in the request body (that are not null).
     public PersonOutputDto patchPerson(Long id, PersonPatchDto personPatchDto) {
@@ -192,7 +194,17 @@ public class PersonService {
                 updatedPerson.setCountry(personPatchDto.getCountry());
             }
             if (personPatchDto.getDogs() != null){
-                updatedPerson.setDogs(personPatchDto.getDogs());
+                List <DomesticatedDog> dogs = personPatchDto.getDogs();
+                List<DomesticatedDog> newDogs = new ArrayList<>();
+                for(DomesticatedDog dog : dogs){
+                    Long dogId = dog.getId();
+                    if(domesticatedDogRepository.findById(dogId).isPresent()) {
+                        DomesticatedDog newDog = getCompleteDogId(dogId);
+                        newDogs.add(newDog);
+                    }
+                }
+                updatedPerson.setDogs(newDogs);
+
             }
 
             personRepository.save(updatedPerson);
