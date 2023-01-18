@@ -57,9 +57,9 @@ public class DomesticatedDogService {
 
     /**
      * A method for retrieval of one domesticated dog from the database by id
-     * @param domesticatedDogId ID of the dog for which information is requested
+     * @param domesticatedDogId ID of the domesticated dog for which information is requested
      * @return a domesticated dog in output dto format
-     * @throws RecordNotFoundException throws an exception when no dog is found by given id
+     * @throws RecordNotFoundException throws an exception when no domesticated dog is found by given id
      */
     public DomesticatedDogOutputDto getDomesticatedDogById(Long domesticatedDogId) {
         if (domesticatedDogRepository.findById(domesticatedDogId).isPresent()){
@@ -71,10 +71,10 @@ public class DomesticatedDogService {
     }
 
     /**
-     * A method to retrieve a list of dogs based on name
+     * A method to retrieve a list of domesticated dogs based on name
      * @param domesticatedDogName name of the person for which information is requested
      * @return a list of all domesticated dogs in output dto format
-     * @throws RecordNotFoundException throws an exception when no dog is found by name
+     * @throws RecordNotFoundException throws an exception when no domesticated dog is found by name
      */
     public List<DomesticatedDogOutputDto> getDomesticatedDogByName(String domesticatedDogName) {
         if (domesticatedDogRepository.findByNameContaining(domesticatedDogName).isEmpty()){
@@ -93,8 +93,8 @@ public class DomesticatedDogService {
      * A method to retrieve al children from a domesticated dog by domesticated dog ID
      * @param domesticatedDogId ID of the domesticated dog for which information is requested
      * @return a list of domesticated dogs in output dto format
-     * @throws RecordNotFoundException throws an exception when no dog is found by ID,
-     * or no children are found for dog
+     * @throws RecordNotFoundException throws an exception when no domesticated dog is found by ID,
+     * or no children are found for domesticated dog
      */
     public List<DomesticatedDogOutputDto> getAllChildren(Long domesticatedDogId){
         List<DomesticatedDog> children = new ArrayList<>();
@@ -117,9 +117,9 @@ public class DomesticatedDogService {
     }
 
     /**
-     * Method that retrieves a list of available dogs from the database
-     * @return a list of available dogs (based on status) in output dto format
-     * @throws RecordNotFoundException throws an exception when no available dogs are found
+     * A method that retrieves a list of available domesticated dogs from the database
+     * @return a list of available domesticated dogs (based on status) in output dto format
+     * @throws RecordNotFoundException throws an exception when no available domesticated dogs are found
      */
     public List<DomesticatedDogOutputDto> getAvailableDomesticatedDogs(){
         List<DomesticatedDog> domesticatedDogList = domesticatedDogRepository.findAll();
@@ -136,8 +136,8 @@ public class DomesticatedDogService {
     }
 
     /**
-     * A method to retrieve a list of breed dogs from the database
-     * @return a list of breed dogs in output dto format
+     * A method to retrieve a list of domesticated breed dogs from the database
+     * @return a list of domesticated breed dogs in output dto format
      */
     public List<DomesticatedDogOutputDto> getDomesticatedBreedDogs(){
         List<DomesticatedDog> domesticatedDogList = domesticatedDogRepository.findAll();
@@ -155,7 +155,7 @@ public class DomesticatedDogService {
 
     /**
      * A method that retrieves the parent of a domesticated dog based on ID
-     * @param domesticatedDogId ID of the dog for which information is requested
+     * @param domesticatedDogId ID of the domesticated dog for which information is requested
      * @return a domesticated dog in output dto format
      * @throws RecordNotFoundException throws an exception when no parent information is found,
      * or when there is no domesticated dog found based on given domesticated dog ID
@@ -231,8 +231,6 @@ public class DomesticatedDogService {
         return createdDogsFromLitterArray;
     }
 
-
-
     /**
      * A method (PUT) sends an enclosed entity of a resource to the server.
      * If the entity already exists, the server overrides the existing object,
@@ -271,7 +269,7 @@ public class DomesticatedDogService {
      * @param domesticatedDogId ID of the domesticated for which an update is requested
      * @param domesticatedDogPatchDto Data Transfer Objects that carries data between processes in order to reduce the number of methods calls
      * @return a message stating that the domesticated dog is successfully updated,
-     * plus an optional String warning based on the weight of the  domesticateddog
+     * plus an optional String warning based on the weight of the domesticated dog
      * @throws EnumValueNotFoundException throws an exception when the provided enum value is not found in enum
      * @throws RecordNotFoundException throws an exception when domesticated dog / dog owner is not found based on ID
      */
@@ -537,7 +535,7 @@ public class DomesticatedDogService {
     }
 
     /**
-     * Transform a domesticated dog in input dto format to a domesticated dog format
+     * A method to transform a domesticated dog in input dto format to a domesticated dog format
      * @param domesticatedDogInputDto Data Transfer Objects that carries data between processes in order to reduce the number of methods calls
      * @return domesticatedDog
      */
@@ -639,9 +637,10 @@ public class DomesticatedDogService {
      /**
      * Look for person by id in person repository.
      * When no person ID is given, the get person method returns 0 and an error is thrown.
-     * When person id is found, person is returned. If there is no person found in the repository, null is returned.
+     * When person ID is found, person is returned.
+     * If there is no person found in the repository, null is returned.
      * @param personId ID of the person for which information is requested
-     * @return Person or null if not present.
+     * @return person or null if not present.
      */
     private Person getCompletePersonById(Long personId) {
         if (personId == 0) {
