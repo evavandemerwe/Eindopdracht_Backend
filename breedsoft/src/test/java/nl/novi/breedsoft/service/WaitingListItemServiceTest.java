@@ -40,44 +40,43 @@ class WaitingListItemServiceTest {
                         this.waitingListItemRepository,
                         this.personRepository
                 );
-        Person person1 = new Person();
-        person1.setId(1L);
-        person1.setFirstName("Eva");
-        person1.setLastName("Hauber");
-        person1.setStreet("Maas");
-        person1.setHouseNumber(31);
-        person1.setZipCode("5172CN");
-        person1.setCity("Kaatsheuvel");
+        Person eva = new Person();
+        eva.setId(1L);
+        eva.setFirstName("Eva");
+        eva.setLastName("Hauber");
+        eva.setStreet("Maas");
+        eva.setHouseNumber(31);
+        eva.setZipCode("5172CN");
+        eva.setCity("Kaatsheuvel");
 
-
-        Person person2 = new Person();
-        person1.setId(2L);
-        person1.setFirstName("Teun");
-        person1.setLastName("van de Merwe");
-        person1.setStreet("Maas");
-        person1.setHouseNumber(31);
-        person1.setZipCode("5172CN");
-        person1.setCity("Kaatsheuvel");
+        Person teun = new Person();
+        teun.setId(2L);
+        teun.setFirstName("Teun");
+        teun.setLastName("van de Merwe");
+        teun.setStreet("Maas");
+        teun.setHouseNumber(31);
+        teun.setZipCode("5172CN");
+        teun.setCity("Kaatsheuvel");
 
         WaitingListItem waitingListItem1 = new WaitingListItem();
         waitingListItem1.setId(1L);
         waitingListItem1.setNumberOnList(1);
         waitingListItem1.setSex(Sex.female);
         waitingListItem1.setBreed(Breed.Dachschund);
-        waitingListItem1.setPerson(person1);
+        waitingListItem1.setPerson(eva);
         waitingListItem1.setKindOfHair("Long Haired");
         waitingListItemList.add(waitingListItem1);
-        List<WaitingListItem> waitingListPerson1= new ArrayList();
-        waitingListPerson1.add(waitingListItem1);
 
-        person1.setWaitingListItems(waitingListPerson1);
+        List<WaitingListItem> waitingListEva= new ArrayList<>();
+        waitingListEva.add(waitingListItem1);
+        eva.setWaitingListItems(waitingListEva);
 
         WaitingListItem waitingListItem2 = new WaitingListItem();
         waitingListItem2.setId(2L);
         waitingListItem2.setNumberOnList(1);
         waitingListItem2.setSex(Sex.female);
         waitingListItem2.setBreed(Breed.Dachschund);
-        waitingListItem2.setPerson(person2);
+        waitingListItem2.setPerson(teun);
         waitingListItem2.setKindOfHair("Long Haired");
 
         waitingListItemList.add(waitingListItem2);
@@ -113,7 +112,6 @@ class WaitingListItemServiceTest {
         //Assert
         assertTrue(result.isEmpty());
     }
-
     @Test
     void getWaitingListItemByPersonID() {
         //Arrange
