@@ -230,6 +230,7 @@ public class MedicalDataService {
      * If there is no domesticated dog found in the repository, null is returned.
      * @param dogId ID of the domesticated dog for which information is requested
      * @return domesticated dog or null if not present.
+     * @throws RecordNotFoundException throws an exception when domesticated dog ID is missing
      */
     private DomesticatedDog getCompleteDogById(Long dogId){
         if(dogId == 0){

@@ -26,11 +26,22 @@ public class UserService {
         this.encoder = encoder;
     }
 
+    /**
+     * A method for retrieval of all users from the database
+     * @return a list of all users in output dto format
+     */
     public List<UserOutputDto> getAllUsers(){
         List<User> userList = userRepository.findAll();
         return transferToUserOutputDtoList(userList);
     }
 
+    /**
+     * A method to create a new user in the database
+     * @param userInputDto Data Transfer Objects that carries data between processes in order to reduce the number of methods calls
+     * @return the ID of the user created in the database
+     * @throws DuplicateNotAllowedException throws an exception when the username already exist in the database
+     * @throws RecordNotFoundException throws an exception when given authority is not found in the database
+     */
     public Long createUser(UserInputDto userInputDto){
 
         Optional<User> isUserPresent = userRepository.findByUsername(userInputDto.getUsername());
@@ -58,26 +69,24 @@ public class UserService {
         return newUser.getId();
     }
 
-    public void deleteUser(Long id){
-        if(userRepository.findById(id).isPresent()){
-            userRepository.deleteById(id);
-        } else {
-            throw new RecordNotFoundException("No user with given id found");
-        }
-    }
-
-    //PATCH will only update an existing object,
-    //with the properties mapped in the request body (that are not null).
-    public UserOutputDto patchUser(Long id, UserPatchDto userPatchDto){
-        Optional<User> userFound = userRepository.findById(id);
+    /**
+     * A method (PATCH) will only update an existing object,
+     * with the properties mapped in the request body (that are not null).
+     * We do NOT update veterinarian appointment and medical data here.
+     * @param userId ID of the user for which an update is requested
+     * @param userPatchDto Data Transfer Objects that carries data between processes in order to reduce the number of methods calls
+     * @return the updated user in output dto format
+     */
+    public UserOutputDto patchUser(Long userId, UserPatchDto userPatchDto){
+        Optional<User> userFound = userRepository.findById(userId);
 
         if(userFound.isPresent()){
-            User updatedUser = userRepository.getReferenceById(id);
+            User updatedUser = userRepository.getReferenceById(userId);
             if(userPatchDto.getUsername() != null){
                 updatedUser.setUsername(userPatchDto.getUsername());
             }
             if(userPatchDto.getPassword() != null){
-                String passwordComplexityRegex = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#&()–[{}]:;',?/*~$^+=<>]).{8,20}$";
+                String passwordComplexityRegex = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#&()–{}:;',?/*~$^+=<>]).{8,20}$";
                 if (userPatchDto.getPassword().matches(passwordComplexityRegex)){
                     updatedUser.setPassword(userPatchDto.getUsername());
                 }else{
@@ -86,7 +95,7 @@ public class UserService {
             }
             if(userPatchDto.getAuthorities() != null){
                 List<Authority> authorities = userPatchDto.getAuthorities();
-                List<Authority> foundAuthorities = new ArrayList<Authority>();
+                List<Authority> foundAuthorities = new ArrayList<>();
                 for(Authority authority: authorities){
                     if(authority.getId() == 0){
                         throw new RecordNotFoundException("Missing authority ID.");
@@ -107,15 +116,39 @@ public class UserService {
         }
     }
 
-    private List<UserOutputDto> transferToUserOutputDtoList(List<User> users){
+    /**
+     * A method for deleting a user from the database by id
+     * @param userId ID of the user for which deletion is requested
+     * @throws RecordNotFoundException throws an exception when no user with given id is found in the database
+     */
+    public void deleteUser(Long userId){
+        if(userRepository.findById(userId).isPresent()){
+            userRepository.deleteById(userId);
+        } else {
+            throw new RecordNotFoundException("No user with given id found");
+        }
+    }
+
+    //DTO helper classes
+    /**
+     * A method to transform a list with users to a list of users in output dto format
+     * @param userList list of users to be transformed
+     * @return a list of users in output dto format
+     */
+    private List<UserOutputDto> transferToUserOutputDtoList(List<User> userList){
         List<UserOutputDto> userOutputDtoList = new ArrayList<>();
-        for(User user : users){
+        for(User user : userList){
             UserOutputDto outputDto = transferToUserOutputDto(user);
             userOutputDtoList.add(outputDto);
         }
         return userOutputDtoList;
     }
 
+    /**
+     * A method to transform a user to a user in output dto format
+     * @param user user to be transformed
+     * @return a user in output dto format
+     */
     private UserOutputDto transferToUserOutputDto(User user){
         UserOutputDto userOutputDto = new UserOutputDto();
         userOutputDto.setId(user.getId());
@@ -126,14 +159,4 @@ public class UserService {
     }
 
 
-    //Look for authority by id in authorityrespository.
-    //When nu authority ID is given, the get authority method returns 0 and an error is thrown.
-    //When authority id is found, authority is returned. If there is no authority found in the repository, null is returned.
-    private Authority getCompleteAuthorityID(Long authorityId){
-        if(authorityId == 0){
-            throw new RecordNotFoundException("Missing authority ID.");
-        }
-        Optional<Authority> authority = authorityRepository.findById(authorityId);
-        return(authority.isPresent()) ? authority.get() : null;
-    }
 }

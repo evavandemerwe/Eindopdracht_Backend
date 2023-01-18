@@ -11,7 +11,7 @@ public final class KeyGeneratorUtils {
     }
 
     /**
-     * Generate an RSA Keypair with keysize of 2048 bits
+     * A method that generates an RSA Keypair with keysize of 2048 bits
      * @return Generated RSA algorithm keypair
      */
     static KeyPair generateRsaKey() {
