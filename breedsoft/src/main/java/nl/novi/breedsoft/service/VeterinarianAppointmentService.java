@@ -41,7 +41,7 @@ public class VeterinarianAppointmentService {
 
     /**
      * A method for retrieval of one veterinarian appointment from the database by id
-     * @param veterinarianAppointmentsId ID of the veterinarian appointment for which information is requested
+     * @param domesticatedDogId ID of the veterinarian appointment for which information is requested
      * @return a veterinarian appointment in output dto format
      * @throws RecordNotFoundException throws an exception when veterinarian appointment is not found by id
      */
