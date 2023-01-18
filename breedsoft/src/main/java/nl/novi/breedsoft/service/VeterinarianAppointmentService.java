@@ -7,12 +7,10 @@ import nl.novi.breedsoft.dto.veterinarianAppointmentDtos.VeterinarianAppointment
 import nl.novi.breedsoft.exception.IncorrectInputException;
 import nl.novi.breedsoft.exception.RecordNotFoundException;
 import nl.novi.breedsoft.model.management.DomesticatedDog;
-import nl.novi.breedsoft.model.management.MedicalData;
 import nl.novi.breedsoft.model.management.VeterinarianAppointment;
 import nl.novi.breedsoft.repository.VeterinarianAppointmentRepository;
 import nl.novi.breedsoft.repository.DomesticatedDogRepository;
 import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -31,20 +29,28 @@ public class VeterinarianAppointmentService {
         this.domesticatedDogRepository = domesticatedDogRepository;
     }
 
-    //GET a list of all appointments from the database
+    /**
+     * A method for retrieval of all veterinarian appointments from the database
+     * @return a list of all veterinarian appointments in output dto format
+     */
     public List<VeterinarianAppointmentOutputDto> getAllAppointments(){
         List<VeterinarianAppointment> allAppointmentsList = veterinarianAppointmentRepository.findAll();
         return transferAppointmentListToDtoList(allAppointmentsList);
     }
 
-    //GET a list of all appointments by dog id
-    public List <VeterinarianAppointmentOutputDto> getAllAppointmentsByDogId(Long id){
+    /**
+     * A method for retrieval of one veterinarian appointment from the database by id
+     * @param veterinarianAppointmentsId ID of the veterinarian appointment for which information is requested
+     * @return a veterinarian appointment in output dto format
+     * @throws RecordNotFoundException throws an exception when veterinarian appointment is not found by id
+     */
+    public List <VeterinarianAppointmentOutputDto> getAllAppointmentsByDogId(Long veterinarianAppointmentsId){
         List<VeterinarianAppointment> allAppointmentsList = veterinarianAppointmentRepository.findAll();
         List<VeterinarianAppointment> dogVeterinarianAppointmentList = new ArrayList<>();
 
         for(VeterinarianAppointment veterinarianAppointment : allAppointmentsList){
             Long dogId = veterinarianAppointment.getDomesticatedDog().getId();
-            if(dogId.equals(id)){
+            if(dogId.equals(veterinarianAppointmentsId)){
                 dogVeterinarianAppointmentList.add(veterinarianAppointment);
             }
         }
@@ -54,7 +60,12 @@ public class VeterinarianAppointmentService {
         return transferAppointmentListToDtoList(dogVeterinarianAppointmentList);
     }
 
-    //Create a new appointment
+    /**
+     * A method to create a new veterinarian appointment in the database
+     * @param veterinarianAppointmentInputDto Data Transfer Objects that carries data between processes in order to reduce the number of methods calls
+     * @return the ID of the veterinarian appointment created in the database
+     * @throws RecordNotFoundException throws an exception when provided dog ID is not found in the database
+     */
     public Long createVeterinarianAppointment(VeterinarianAppointmentInputDto veterinarianAppointmentInputDto){
         //Check if a dog is given
         if(veterinarianAppointmentInputDto.getDomesticatedDog() != null) {
@@ -70,12 +81,18 @@ public class VeterinarianAppointmentService {
         return veterinarianAppointment.getId();
     }
 
-    //PUT sends an enclosed entity of a resource to the server.
-    //If the entity already exists, the server overrides the existing object.
-    //Otherwise, the server creates a new entity
-    public Object updateVeterinarianAppointment(Long id, VeterinarianAppointmentInputDto veterinarianAppointmentInputDto){
-        if(veterinarianAppointmentRepository.findById(id).isPresent()){
-            VeterinarianAppointment veterinarianAppointment = veterinarianAppointmentRepository.findById(id).get();
+    /**
+     * A method (PUT) sends an enclosed entity of a resource to the server.
+     * If the entity already exists, the server overrides the existing object,
+     * otherwise the server creates a new entity.
+     * @param veterinarianAppointmentId ID of the veterinarian appointment for which information is requested
+     * @param veterinarianAppointmentInputDto Data Transfer Objects that carries data between processes in order to reduce the number of methods calls
+     * @return a new or updated veterinarian appointment in output dto format
+     * @throws RecordNotFoundException throws an exception when provided dog ID is not found
+     */
+    public Object updateVeterinarianAppointment(Long veterinarianAppointmentId, VeterinarianAppointmentInputDto veterinarianAppointmentInputDto){
+        if(veterinarianAppointmentRepository.findById(veterinarianAppointmentId).isPresent()){
+            VeterinarianAppointment veterinarianAppointment = veterinarianAppointmentRepository.findById(veterinarianAppointmentId).get();
             VeterinarianAppointment updateVeterinarianAppointment = transferToVeterinarianAppointment(veterinarianAppointmentInputDto);
             if(veterinarianAppointmentInputDto.getDomesticatedDog() != null) {
                 DomesticatedDog dog = getCompleteDogById(veterinarianAppointmentInputDto.getDomesticatedDog().getId());
@@ -96,11 +113,19 @@ public class VeterinarianAppointmentService {
         }
     }
 
-    //PATCH will only update an existing object,
-    //with the properties mapped in the request body (that are not null).
-    public VeterinarianAppointmentOutputDto patchVeterinarianAppointment(Long id, VeterinarianAppointmentPatchDto veterinarianAppointmentPatchDto){
-        if(veterinarianAppointmentRepository.findById(id).isPresent()){
-            VeterinarianAppointment updatedVeterinarianAppointment = veterinarianAppointmentRepository.getReferenceById(id);
+    /**
+     * A method (PATCH) will only update an existing object,
+     * with the properties mapped in the request body (that are not null).
+     * We do NOT update veterinarian appointment and medical data here.
+     * @param veterinarianAppointmentId ID of the veterinarian appointment for which information is requested
+     * @param veterinarianAppointmentPatchDto Data Transfer Objects that carries data between processes in order to reduce the number of methods calls
+     * @return the updated veterinarian appointment in output dto format
+     * @throws RecordNotFoundException throws an exception when provided dog ID is not found
+     * @throws IncorrectInputException throws an exception when subject is shoter than 3 characters
+     */
+    public VeterinarianAppointmentOutputDto patchVeterinarianAppointment(Long veterinarianAppointmentId, VeterinarianAppointmentPatchDto veterinarianAppointmentPatchDto){
+        if(veterinarianAppointmentRepository.findById(veterinarianAppointmentId).isPresent()){
+            VeterinarianAppointment updatedVeterinarianAppointment = veterinarianAppointmentRepository.getReferenceById(veterinarianAppointmentId);
             if(veterinarianAppointmentPatchDto.getAppointmentDate() != null){
                 updatedVeterinarianAppointment.setAppointmentDate(veterinarianAppointmentPatchDto.getAppointmentDate());
             }
@@ -130,22 +155,28 @@ public class VeterinarianAppointmentService {
         }
     }
 
-    public void deleteAppointment(Long id) {
+    /**
+     * A method for deleting a veterinarian appointment from the database by id
+     * @param veterinarianAppointmentId ID of the veterinarian appointment for which information is requested
+     * @throws RecordNotFoundException throws an exception when no veterinarian appointment is found by ID
+     */
+    public void deleteAppointment(Long veterinarianAppointmentId) {
 
-        if (veterinarianAppointmentRepository.findById(id).isPresent()){
+        if (veterinarianAppointmentRepository.findById(veterinarianAppointmentId).isPresent()){
             // If an appointment is deleted from the database, this appointment is detached from dogs.
-            VeterinarianAppointment veterinarianAppointmentFound = veterinarianAppointmentRepository.getReferenceById(id);
+            VeterinarianAppointment veterinarianAppointmentFound = veterinarianAppointmentRepository.getReferenceById(veterinarianAppointmentId);
 
             if(veterinarianAppointmentFound.getDomesticatedDog() != null){
                 veterinarianAppointmentFound.setDomesticatedDog(null);
             }
-            veterinarianAppointmentRepository.deleteById(id);
+            veterinarianAppointmentRepository.deleteById(veterinarianAppointmentId);
         } else {
             throw new RecordNotFoundException("No appointment with given ID found.");
         }
     }
 
     //DTO helper classes
+
     private VeterinarianAppointment transferToVeterinarianAppointment(VeterinarianAppointmentInputDto veterinarianAppointmentInputDto){
         VeterinarianAppointment veterinarianAppointment = new VeterinarianAppointment();
         veterinarianAppointment.setDomesticatedDog(veterinarianAppointmentInputDto.getDomesticatedDog());
