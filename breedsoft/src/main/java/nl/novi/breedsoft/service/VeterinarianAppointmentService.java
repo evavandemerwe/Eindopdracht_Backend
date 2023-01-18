@@ -7,7 +7,6 @@ import nl.novi.breedsoft.dto.veterinarianAppointmentDtos.VeterinarianAppointment
 import nl.novi.breedsoft.exception.IncorrectInputException;
 import nl.novi.breedsoft.exception.RecordNotFoundException;
 import nl.novi.breedsoft.model.management.DomesticatedDog;
-import nl.novi.breedsoft.model.management.MedicalData;
 import nl.novi.breedsoft.model.management.VeterinarianAppointment;
 import nl.novi.breedsoft.repository.VeterinarianAppointmentRepository;
 import nl.novi.breedsoft.repository.DomesticatedDogRepository;
@@ -31,13 +30,20 @@ public class VeterinarianAppointmentService {
         this.domesticatedDogRepository = domesticatedDogRepository;
     }
 
-    //GET a list of all appointments from the database
+    /**
+     * A method that returns a list of all appointments from the database
+     * @return a list of all appointments in output dto format
+     */
     public List<VeterinarianAppointmentOutputDto> getAllAppointments(){
         List<VeterinarianAppointment> allAppointmentsList = veterinarianAppointmentRepository.findAll();
         return transferAppointmentListToDtoList(allAppointmentsList);
     }
 
-    //GET a list of all appointments by dog id
+    /**
+     * A method that returns a list of all appointments by dog id
+     * @param id Dog id of the dog to get appointments for
+     * @return a list of appointments for given dog in output dto format
+     */
     public List <VeterinarianAppointmentOutputDto> getAllAppointmentsByDogId(Long id){
         List<VeterinarianAppointment> allAppointmentsList = veterinarianAppointmentRepository.findAll();
         List<VeterinarianAppointment> dogVeterinarianAppointmentList = new ArrayList<>();
@@ -55,6 +61,12 @@ public class VeterinarianAppointmentService {
     }
 
     //Create a new appointment
+
+    /**
+     * A method to create a new appointment
+     * @param veterinarianAppointmentInputDto Input parameters for appointment to be created
+     * @return ID of the created appointment
+     */
     public Long createVeterinarianAppointment(VeterinarianAppointmentInputDto veterinarianAppointmentInputDto){
         //Check if a dog is given
         if(veterinarianAppointmentInputDto.getDomesticatedDog() != null) {
@@ -73,6 +85,13 @@ public class VeterinarianAppointmentService {
     //PUT sends an enclosed entity of a resource to the server.
     //If the entity already exists, the server overrides the existing object.
     //Otherwise, the server creates a new entity
+
+    /**
+     * A method to update an existing appointment
+     * @param id of the appointment to be updated
+     * @param veterinarianAppointmentInputDto Updated appointment
+     * @return Updated appointment
+     */
     public Object updateVeterinarianAppointment(Long id, VeterinarianAppointmentInputDto veterinarianAppointmentInputDto){
         if(veterinarianAppointmentRepository.findById(id).isPresent()){
             VeterinarianAppointment veterinarianAppointment = veterinarianAppointmentRepository.findById(id).get();
@@ -96,8 +115,12 @@ public class VeterinarianAppointmentService {
         }
     }
 
-    //PATCH will only update an existing object,
-    //with the properties mapped in the request body (that are not null).
+    /**
+     * A method to patch an existing appointment
+     * @param id of the appointment to be patched
+     * @param veterinarianAppointmentPatchDto Patched appointment
+     * @return Patched appointment
+     */
     public VeterinarianAppointmentOutputDto patchVeterinarianAppointment(Long id, VeterinarianAppointmentPatchDto veterinarianAppointmentPatchDto){
         if(veterinarianAppointmentRepository.findById(id).isPresent()){
             VeterinarianAppointment updatedVeterinarianAppointment = veterinarianAppointmentRepository.getReferenceById(id);
@@ -130,6 +153,10 @@ public class VeterinarianAppointmentService {
         }
     }
 
+    /**
+     * A method to delete an existing appointment
+     * @param id of the appointment to be deleted
+     */
     public void deleteAppointment(Long id) {
 
         if (veterinarianAppointmentRepository.findById(id).isPresent()){
@@ -145,7 +172,11 @@ public class VeterinarianAppointmentService {
         }
     }
 
-    //DTO helper classes
+    /**
+     * A method to transfer a veterinarian appointment DTO to a veterinarian appointment
+     * @param veterinarianAppointmentInputDto DTO to be transferred
+     * @return VeterinarianAppointment of the given input DTO
+     */
     private VeterinarianAppointment transferToVeterinarianAppointment(VeterinarianAppointmentInputDto veterinarianAppointmentInputDto){
         VeterinarianAppointment veterinarianAppointment = new VeterinarianAppointment();
         veterinarianAppointment.setDomesticatedDog(veterinarianAppointmentInputDto.getDomesticatedDog());
@@ -154,6 +185,11 @@ public class VeterinarianAppointmentService {
 
         return veterinarianAppointment;
     }
+    /**
+     * A method to transfer a list of veterinarian appointment DTOs to a list of veterinarian appointments
+     * @param veterinarianAppointments List of DTOs to be transferred
+     * @return List of VeterinarianAppointments of the given input DTOs
+     */
     private List<VeterinarianAppointmentOutputDto>transferAppointmentListToDtoList(List<VeterinarianAppointment> veterinarianAppointments){
 
         List<VeterinarianAppointmentOutputDto> appointmentOutputDtoList = new ArrayList<>();
@@ -165,7 +201,13 @@ public class VeterinarianAppointmentService {
         return appointmentOutputDtoList;
     }
 
-    public VeterinarianAppointmentOutputDto transferVeterinarianAppointmentToOutputDto(VeterinarianAppointment veterinarianAppointment){
+    /**
+     * A method to transfer a veterinarian appointment to a veterinarian appointment DTO
+     * @param veterinarianAppointment to be transferred tp DTO
+     * @return DTO of the given veterinarian appointment
+     */
+
+    private VeterinarianAppointmentOutputDto transferVeterinarianAppointmentToOutputDto(VeterinarianAppointment veterinarianAppointment){
       VeterinarianAppointmentOutputDto veterinarianAppointmentOutputDto = new VeterinarianAppointmentOutputDto();
       veterinarianAppointmentOutputDto.setId(veterinarianAppointment.getId());
       veterinarianAppointmentOutputDto.setSubject(veterinarianAppointment.getSubject());

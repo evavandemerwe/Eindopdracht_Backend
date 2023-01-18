@@ -31,7 +31,7 @@ public class SecurityConfig {
     private RSAKey rsaKey;
 
     /**
-     * Returns a password encoder that uses the BCrypt hashing function
+     * A method that returns a password encoder that uses the BCrypt hashing function
      * @return BCryptPasswordEncoder instance with default strength of 10
      */
     @Bean
@@ -40,7 +40,7 @@ public class SecurityConfig {
     }
 
     /**
-     * Returns an instance of the BreedSoft user details service for managing user security
+     * A method that returns an instance of the BreedSoft user details service for managing user security
      * @return BreedSoft UserDetailsService
      */
     @Bean
@@ -49,7 +49,7 @@ public class SecurityConfig {
     }
 
     /**
-     * Security filter chain configuration to be applied on URL path regarding token requests.
+     * A method that creates a security filter chain configuration to be applied on URL path regarding token requests.
      * Highest order security filter chain, first to be applied
      * @param http HttpSecurity chain to which this chain will be added
      * @return SecurityFilterChain
@@ -72,7 +72,7 @@ public class SecurityConfig {
     }
 
     /**
-     * Security filter chain configuration to be applied on all URL paths order than token
+     * A method that creates a security filter chain configuration to be applied on all URL paths order than token
      * @param http HttpSecurity chain to which this chain will be added
      * @return SecurityFilterChain
      * @throws Exception can be thrown on configuring the filter chain
@@ -94,7 +94,7 @@ public class SecurityConfig {
     }
 
     /**
-     * JSON Web Key source used to sign a token on the Authorization server
+     * A method that retunrs a JSON Web Key source that is used to sign a token on the Authorization server
      * @return JWKSource
      */
     @Bean
@@ -105,7 +105,7 @@ public class SecurityConfig {
     }
 
     /**
-     * Returns a JwtEncoder used of encoding a JSON Web token
+     * A method that returns a JwtEncoder used of encoding a JSON Web token
      * @param jwks Encoder parameters containing JWS-headers and JWS-claims
      * @return JwtEncoder
      */
@@ -115,7 +115,7 @@ public class SecurityConfig {
     }
 
     /**
-     * Returns a JwtDecoder used of decoding a JSON Web token
+     * A method that returns a JwtDecoder used of decoding a JSON Web token
      * @return JwtDecoder
      */
     @Bean
@@ -127,7 +127,7 @@ public class SecurityConfig {
     // we filter the roles from the user in JWT the token
 
     /**
-     * Returns an JwtAuthenticationConverter to convert raw JSON Web tokens
+     * A method that returns an JwtAuthenticationConverter to convert raw JSON Web tokens
      * into authentication token.
      * @return JwtAuthenticationConverter
      */
