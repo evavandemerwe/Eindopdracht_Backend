@@ -54,7 +54,7 @@ public class WaitingListItem {
     }
 
     public void setKindOfHair(String kindOfHair) {
-        kindOfHair = kindOfHair;
+        this.kindOfHair = kindOfHair;
     }
 
     public Breed getBreed() {
