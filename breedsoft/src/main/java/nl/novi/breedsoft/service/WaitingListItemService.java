@@ -37,19 +37,19 @@ public class WaitingListItemService {
         return transferWaitingListItemListToOutputDtoList(waitingListItemsList);
     }
 
-
     /**
      * A method for retrieval of one waiting list item from the database by id
-     * @param waitingListItemId ID of the waiting list item for which information is requested
+     * @param personId ID of the person for which information is requested
      * @return a waiting list item in output dto format
      * @throws RecordNotFoundException throws an exception when no waiting list item is found by given id
      */
-    public List <WaitingListItemOutputDto> getWaitingListItemByPersonID(Long waitingListItemId){
+    public List <WaitingListItemOutputDto> getWaitingListItemByPersonID(Long personId){
         List <WaitingListItem> waitingListItemList = waitingListItemRepository.findAll();
         List <WaitingListItem> foundWaitingListItem = new ArrayList<>();
         for(WaitingListItem waitingListItem : waitingListItemList){
+
             Person person = waitingListItem.getPerson();
-            if(person.getId().equals(waitingListItemId)){
+            if(person.getId().equals(personId)){
                 foundWaitingListItem = person.getWaitingListItems();
             }
         }
