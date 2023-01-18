@@ -11,7 +11,6 @@ import nl.novi.breedsoft.model.management.VeterinarianAppointment;
 import nl.novi.breedsoft.repository.VeterinarianAppointmentRepository;
 import nl.novi.breedsoft.repository.DomesticatedDogRepository;
 import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -31,8 +30,9 @@ public class VeterinarianAppointmentService {
     }
 
     /**
-     * A method that returns a list of all appointments from the database
-     * @return a list of all appointments in output dto format
+
+     * A method for retrieval of all veterinarian appointments from the database
+     * @return a list of all veterinarian appointments in output dto format
      */
     public List<VeterinarianAppointmentOutputDto> getAllAppointments(){
         List<VeterinarianAppointment> allAppointmentsList = veterinarianAppointmentRepository.findAll();
@@ -40,9 +40,10 @@ public class VeterinarianAppointmentService {
     }
 
     /**
-     * A method that returns a list of all appointments by dog id
-     * @param domesticatedDogId Dog ID of the dog to get appointments for
-     * @return a list of appointments for given dog in output dto format
+     * A method for retrieval of one veterinarian appointment from the database by id
+     * @param veterinarianAppointmentsId ID of the veterinarian appointment for which information is requested
+     * @return a veterinarian appointment in output dto format
+     * @throws RecordNotFoundException throws an exception when veterinarian appointment is not found by id
      */
     public List <VeterinarianAppointmentOutputDto> getAllAppointmentsByDogId(Long domesticatedDogId){
         List<VeterinarianAppointment> allAppointmentsList = veterinarianAppointmentRepository.findAll();
@@ -50,8 +51,9 @@ public class VeterinarianAppointmentService {
 
         for(VeterinarianAppointment veterinarianAppointment : allAppointmentsList){
             Long dogId = veterinarianAppointment.getDomesticatedDog().getId();
+
             if(dogId.equals(domesticatedDogId)){
-                dogVeterinarianAppointmentList.add(veterinarianAppointment);
+              dogVeterinarianAppointmentList.add(veterinarianAppointment);
             }
         }
         if(dogVeterinarianAppointmentList.isEmpty()){
@@ -63,7 +65,8 @@ public class VeterinarianAppointmentService {
     /**
      * A method to create a new veterinarian appointment in the database
      * @param veterinarianAppointmentInputDto Data Transfer Objects that carries data between processes in order to reduce the number of methods calls
-     * @return ID of the created appointment
+     * @return the ID of the veterinarian appointment created in the database
+     * @throws RecordNotFoundException throws an exception when provided dog ID is not found in the database
      */
     public Long createVeterinarianAppointment(VeterinarianAppointmentInputDto veterinarianAppointmentInputDto){
         //Check if a dog is given
@@ -161,9 +164,9 @@ public class VeterinarianAppointmentService {
     }
 
     /**
-     * A method to delete an existing appointment
-     * @param veterinarianAppointmentId ID of the appointment to be deleted
-     * @throws RecordNotFoundException throws an exception when veterinarian appointment is not found by ID
+     * A method for deleting a veterinarian appointment from the database by id
+     * @param veterinarianAppointmentId ID of the veterinarian appointment for which information is requested
+     * @throws RecordNotFoundException throws an exception when no veterinarian appointment is found by ID
      */
     public void deleteAppointment(Long veterinarianAppointmentId) {
 
@@ -180,6 +183,8 @@ public class VeterinarianAppointmentService {
         }
     }
 
+
+    //DTO helper classes
     /**
      * A method to transfer a veterinarian appointment in input dto format to a veterinarian appointment
      * @param veterinarianAppointmentInputDto veterinarian appointment in input dto format

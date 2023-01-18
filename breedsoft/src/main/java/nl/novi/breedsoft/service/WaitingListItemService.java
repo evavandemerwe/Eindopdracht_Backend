@@ -37,6 +37,7 @@ public class WaitingListItemService {
         return transferWaitingListItemListToOutputDtoList(waitingListItemsList);
     }
 
+
     /**
      * A method for retrieval of one waiting list item from the database by id
      * @param waitingListItemId ID of the waiting list item for which information is requested
