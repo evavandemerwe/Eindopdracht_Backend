@@ -6,7 +6,7 @@ import java.util.Collection;
 
 public class BreedSoftUser extends User {
     /**
-     * Create a BreedSoft user with given username, password and granted authorities.
+     * Constructor that creates a BreedSoft user with given username, password and granted authorities.
      * Extension of the Spring Security framework user authentication and authorization information
      * @param username Username of the user to be created
      * @param password Password of the user to be created

@@ -3,12 +3,9 @@ package nl.novi.breedsoft.security;
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
-
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
 import nl.novi.breedsoft.service.BreedSoftUserDetailsService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
@@ -31,12 +28,10 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-    @Autowired
-    private ApplicationContext context;
     private RSAKey rsaKey;
 
     /**
-     * Returns a password encoder that uses the BCrypt hashing function
+     * A method that returns a password encoder that uses the BCrypt hashing function
      * @return BCryptPasswordEncoder instance with default strength of 10
      */
     @Bean
@@ -45,7 +40,7 @@ public class SecurityConfig {
     }
 
     /**
-     * Returns an instance of the BreedSoft user details service for managing user security
+     * A method that returns an instance of the BreedSoft user details service for managing user security
      * @return BreedSoft UserDetailsService
      */
     @Bean
@@ -53,14 +48,12 @@ public class SecurityConfig {
         return new BreedSoftUserDetailsService();
     }
 
-    // We have 2 security filters, this one has the highest precedence
-
     /**
-     * Security filter chain configuration to be applied on URL path regarding token requests.
+     * A method that creates a security filter chain configuration to be applied on URL path regarding token requests.
      * Highest order security filter chain, first to be applied
      * @param http HttpSecurity chain to which this chain will be added
      * @return SecurityFilterChain
-     * @throws Exception
+     * @throws Exception can be thrown on configuring the filter chain
      */
     @Order(Ordered.HIGHEST_PRECEDENCE)
     @Bean
@@ -79,10 +72,10 @@ public class SecurityConfig {
     }
 
     /**
-     * Security filter chain configuration to be applied on all URL paths order than token
+     * A method that creates a security filter chain configuration to be applied on all URL paths order than token
      * @param http HttpSecurity chain to which this chain will be added
      * @return SecurityFilterChain
-     * @throws Exception
+     * @throws Exception can be thrown on configuring the filter chain
      */
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -100,11 +93,9 @@ public class SecurityConfig {
                 .build();
     }
 
-    // Beans to secure the JWT Token
-
     /**
-     * JSON Web Key source
-     * @return
+     * A method that retunrs a JSON Web Key source that is used to sign a token on the Authorization server
+     * @return JWKSource
      */
     @Bean
     public JWKSource<SecurityContext> jwkSource() {
@@ -113,11 +104,20 @@ public class SecurityConfig {
         return ((jwkSelector, securityContext) -> jwkSelector.select(jwkSet));
     }
 
+    /**
+     * A method that returns a JwtEncoder used of encoding a JSON Web token
+     * @param jwks Encoder parameters containing JWS-headers and JWS-claims
+     * @return JwtEncoder
+     */
     @Bean
     JwtEncoder jwtEncoder(JWKSource<SecurityContext> jwks){
         return new NimbusJwtEncoder(jwks);
     }
 
+    /**
+     * A method that returns a JwtDecoder used of decoding a JSON Web token
+     * @return JwtDecoder
+     */
     @Bean
     JwtDecoder jwtDecoder() throws JOSEException {
         return NimbusJwtDecoder.withPublicKey(rsaKey.toRSAPublicKey()).build();
@@ -125,6 +125,12 @@ public class SecurityConfig {
 
     // Is used to filter the user data from the JWT Token
     // we filter the roles from the user in JWT the token
+
+    /**
+     * A method that returns an JwtAuthenticationConverter to convert raw JSON Web tokens
+     * into authentication token.
+     * @return JwtAuthenticationConverter
+     */
     @Bean
     public JwtAuthenticationConverter jwtAuthenticationConverter() {
         final JwtGrantedAuthoritiesConverter grantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
