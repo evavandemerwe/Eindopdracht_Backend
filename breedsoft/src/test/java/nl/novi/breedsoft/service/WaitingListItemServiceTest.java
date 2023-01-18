@@ -99,7 +99,7 @@ class WaitingListItemServiceTest {
 
         //Assert
         assertEquals(Sex.female, result.get(0).getSex());
-        assertEquals("Teun", result.get(0).getPerson().getFirstName());
+        assertEquals("Eva", result.get(0).getPerson().getFirstName());
     }
     @Test
     void getAllWaitingListItemsWhenListIsEmpty() {
