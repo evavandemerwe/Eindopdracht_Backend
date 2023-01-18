@@ -134,7 +134,7 @@ public class PersonService {
      * A method (PUT) sends an enclosed entity of a resource to the server.
      * If the entity already exists, the server overrides the existing object,
      * otherwise the server creates a new entity.
-     * @param personId ID of the person for which information is requested
+     * @param personId ID of the person for which an update is requested
      * @param personInputDto Data Transfer Objects that carries data between processes in order to reduce the number of methods calls
      * @return a new or updated person in output dto format
      * @throws RecordNotFoundException throws an exception when given domesticated dog is not found by id
@@ -363,6 +363,7 @@ public class PersonService {
      * If there is no domesticated dog found in the repository, null is returned.
      * @param dogId ID of the domesticated dog for which information is requested
      * @return domesticated dog or null if not present.
+     * @throws RecordNotFoundException throws an exception when domesticated dog ID is missing
      */
    private DomesticatedDog getCompleteDogId(Long dogId){
         if(dogId == 0){

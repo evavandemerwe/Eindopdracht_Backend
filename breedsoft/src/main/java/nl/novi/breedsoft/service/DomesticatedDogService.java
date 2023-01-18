@@ -640,6 +640,7 @@ public class DomesticatedDogService {
      * If there is no person found in the repository, null is returned.
      * @param personId ID of the person for which information is requested
      * @return person or null if not present.
+     * @throws RecordNotFoundException throws an exception when person ID is missing
      */
     private Person getCompletePersonById(Long personId) {
         if (personId == 0) {
