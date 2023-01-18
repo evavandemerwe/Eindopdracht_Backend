@@ -3,12 +3,9 @@ package nl.novi.breedsoft.security;
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
-
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
 import nl.novi.breedsoft.service.BreedSoftUserDetailsService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
@@ -31,8 +28,6 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-    @Autowired
-    private ApplicationContext context;
     private RSAKey rsaKey;
 
     /**
@@ -103,8 +98,8 @@ public class SecurityConfig {
     // Beans to secure the JWT Token
 
     /**
-     * JSON Web Key source
-     * @return
+     * JSON Web Key source used to sign a token on the Authorization server
+     * @return JWKSource
      */
     @Bean
     public JWKSource<SecurityContext> jwkSource() {
@@ -113,11 +108,21 @@ public class SecurityConfig {
         return ((jwkSelector, securityContext) -> jwkSelector.select(jwkSet));
     }
 
+    /**
+     * Returns a JwtEncoder used of encoding a JSON Web token
+     * @param jwks Encoder parameters containing JWS-headers and JWS-claims
+     * @return JwtEncoder
+     */
     @Bean
     JwtEncoder jwtEncoder(JWKSource<SecurityContext> jwks){
-        return new NimbusJwtEncoder(jwks);
-    }
 
+        return new NimbusJwtEncoder(jwks);
+        }
+
+    /**
+     * Returns a JwtDecoder used of decoding a JSON Web token
+     * @return JwtDecoder
+     */
     @Bean
     JwtDecoder jwtDecoder() throws JOSEException {
         return NimbusJwtDecoder.withPublicKey(rsaKey.toRSAPublicKey()).build();
@@ -125,6 +130,12 @@ public class SecurityConfig {
 
     // Is used to filter the user data from the JWT Token
     // we filter the roles from the user in JWT the token
+
+    /**
+     * Returns an JwtAuthenticationConverter to convert raw JSON Web tokens
+     * into authentication token.
+     * @return JwtAuthenticationConverter
+     */
     @Bean
     public JwtAuthenticationConverter jwtAuthenticationConverter() {
         final JwtGrantedAuthoritiesConverter grantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
