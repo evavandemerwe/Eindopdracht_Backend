@@ -452,13 +452,13 @@ public class DomesticatedDogService {
     //DTO helper classes
     /**
      * A method to transform a list with domesticated dog to a list of domesticated dogs in output dto format
-     * @param domesticatedDogs list of domesticated dogs to be transformed
+     * @param domesticatedDogList list of domesticated dogs to be transformed
      * @return a list of domesticated dogs in output dto format
      */
-    private List<DomesticatedDogOutputDto> transferDomesticatedDogListToOutputDtoList(List<DomesticatedDog> domesticatedDogs){
+    private List<DomesticatedDogOutputDto> transferDomesticatedDogListToOutputDtoList(List<DomesticatedDog> domesticatedDogList){
         List<DomesticatedDogOutputDto> domesticatedDogDtoList = new ArrayList<>();
 
-        for(DomesticatedDog domesticatedDog : domesticatedDogs) {
+        for(DomesticatedDog domesticatedDog : domesticatedDogList) {
             DomesticatedDogOutputDto dto = transferToOutputDto(domesticatedDog);
             domesticatedDogDtoList.add(dto);
         }
