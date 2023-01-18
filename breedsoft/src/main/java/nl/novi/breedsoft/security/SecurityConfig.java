@@ -35,17 +35,33 @@ public class SecurityConfig {
     private ApplicationContext context;
     private RSAKey rsaKey;
 
+    /**
+     * Returns a password encoder that uses the BCrypt hashing function
+     * @return BCryptPasswordEncoder instance with default strength of 10
+     */
     @Bean
     BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder(10);
     }
 
+    /**
+     * Returns an instance of the BreedSoft user details service for managing user security
+     * @return BreedSoft UserDetailsService
+     */
     @Bean
     UserDetailsService breedsoftUserDetailsService() {
         return new BreedSoftUserDetailsService();
     }
 
     // We have 2 security filters, this one has the highest precedence
+
+    /**
+     * Security filter chain configuration to be applied on URL path regarding token requests.
+     * Highest order security filter chain, first to be applied
+     * @param http HttpSecurity chain to which this chain will be added
+     * @return SecurityFilterChain
+     * @throws Exception
+     */
     @Order(Ordered.HIGHEST_PRECEDENCE)
     @Bean
     public SecurityFilterChain tokenSecurityFilterChain(HttpSecurity http) throws Exception {
@@ -62,6 +78,12 @@ public class SecurityConfig {
                 .build();
     }
 
+    /**
+     * Security filter chain configuration to be applied on all URL paths order than token
+     * @param http HttpSecurity chain to which this chain will be added
+     * @return SecurityFilterChain
+     * @throws Exception
+     */
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
@@ -79,6 +101,11 @@ public class SecurityConfig {
     }
 
     // Beans to secure the JWT Token
+
+    /**
+     * JSON Web Key source
+     * @return
+     */
     @Bean
     public JWKSource<SecurityContext> jwkSource() {
         rsaKey = Jwks.generateRsa();
