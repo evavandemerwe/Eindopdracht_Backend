@@ -16,7 +16,7 @@ public class BindingResultErrorUtility {
     public static ResponseEntity<Object> bindingResultError(BindingResult bindingResult){
         StringBuilder sb = new StringBuilder();
         for (FieldError fe : bindingResult.getFieldErrors()) {
-            sb.append(fe.getField() + ": ");
+            sb.append(fe.getField()).append(": ");
             sb.append(fe.getDefaultMessage());
             sb.append("\n");
         }
