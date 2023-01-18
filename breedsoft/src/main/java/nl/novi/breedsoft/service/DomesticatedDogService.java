@@ -12,11 +12,11 @@ import nl.novi.breedsoft.model.management.Person;
 import nl.novi.breedsoft.model.management.enumerations.Status;
 import nl.novi.breedsoft.repository.VeterinarianAppointmentRepository;
 import nl.novi.breedsoft.repository.MedicalDataRepository;
-import nl.novi.breedsoft.repository.PersonRepository;
 import nl.novi.breedsoft.model.management.enumerations.Breed;
 import nl.novi.breedsoft.model.management.enumerations.BreedGroup;
 import nl.novi.breedsoft.model.animal.enumerations.Sex;
 import nl.novi.breedsoft.repository.DomesticatedDogRepository;
+import nl.novi.breedsoft.utility.RepositoryUtility;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -30,20 +30,22 @@ import java.util.Optional;
 @Service
 public class DomesticatedDogService {
     private final DomesticatedDogRepository domesticatedDogRepository;
-    private final PersonRepository personRepository;
     private final VeterinarianAppointmentRepository veterinarianAppointmentRepository;
     private final MedicalDataRepository medicalDataRepository;
+
+    private final RepositoryUtility repositoryUtility;
 
     //Constructor injection
     public DomesticatedDogService(
             DomesticatedDogRepository domesticatedDogRepository,
-            PersonRepository personRepository,
             VeterinarianAppointmentRepository veterinarianAppointmentRepository,
-            MedicalDataRepository medicalDataRepository){
+            MedicalDataRepository medicalDataRepository,
+            RepositoryUtility repositoryUtility
+    ){
         this.domesticatedDogRepository = domesticatedDogRepository;
-        this.personRepository = personRepository;
         this.veterinarianAppointmentRepository = veterinarianAppointmentRepository;
         this.medicalDataRepository = medicalDataRepository;
+        this.repositoryUtility = repositoryUtility;
     }
 
     /**
@@ -188,7 +190,7 @@ public class DomesticatedDogService {
     public Long createDomesticatedDog(DomesticatedDogInputDto domesticatedDogInputDto){
         //Check if a dog owner is given
         if(domesticatedDogInputDto.getPerson() != null) {
-            Person dogOwner = getCompletePersonById(domesticatedDogInputDto.getPerson().getId());
+            Person dogOwner = repositoryUtility.getCompletePersonById(domesticatedDogInputDto.getPerson().getId());
             if (dogOwner == null) {
                 throw new RecordNotFoundException("Provided dog owner does not exist");
             }
@@ -245,7 +247,7 @@ public class DomesticatedDogService {
             DomesticatedDog domesticatedDog = domesticatedDogRepository.findById(domesticatedDogId).get();
             DomesticatedDog updatedDog = transferToDomesticatedDog(domesticatedDogInputDto);
             if (domesticatedDogInputDto.getPerson() != null) {
-                Person dogOwner = getCompletePersonById(domesticatedDogInputDto.getPerson().getId());
+                Person dogOwner = repositoryUtility.getCompletePersonById(domesticatedDogInputDto.getPerson().getId());
                 if (dogOwner == null) {
                     throw new RecordNotFoundException("Provided dog owner does not exist");
                 }
@@ -351,7 +353,7 @@ public class DomesticatedDogService {
                 updatedDog.setChipNumber(domesticatedDogPatchDto.getChipNumber());
             }
             if (domesticatedDogPatchDto.getPerson() != null) {
-                Person dogOwner = getCompletePersonById(domesticatedDogPatchDto.getPerson().getId());
+                Person dogOwner = repositoryUtility.getCompletePersonById(domesticatedDogPatchDto.getPerson().getId());
                 if (dogOwner == null) {
                     throw new RecordNotFoundException("Provided dog owner does not exist");
                 }
@@ -604,7 +606,7 @@ public class DomesticatedDogService {
             }
         }
         if(domesticatedDogInputDto.getDogStatus() != null) {
-            String newStatusString = String.valueOf(domesticatedDogInputDto.getDogStatus());
+            String newStatusString = domesticatedDogInputDto.getDogStatus();
             Status newStatus;
             //Check if given value exists in enumeration
             //Because patchDTO has no checks on enumerations,
@@ -632,22 +634,4 @@ public class DomesticatedDogService {
         }
         return domesticatedDog;
     }
-
-     /**
-     * Look for person by id in person repository.
-     * When no person ID is given, the get person method returns 0 and an error is thrown.
-     * When person ID is found, person is returned.
-     * If there is no person found in the repository, null is returned.
-     * @param personId ID of the person for which information is requested
-     * @return person or null if not present.
-     * @throws RecordNotFoundException throws an exception when person ID is missing
-     */
-    private Person getCompletePersonById(Long personId) {
-        if (personId == 0) {
-            throw new RecordNotFoundException("Missing Person ID");
-        }
-        Optional<Person> person = personRepository.findById(personId);
-        return person.orElse(null);
-    }
-
 }

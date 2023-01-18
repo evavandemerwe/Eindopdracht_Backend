@@ -8,24 +8,26 @@ import nl.novi.breedsoft.model.animal.enumerations.Sex;
 import nl.novi.breedsoft.model.management.Person;
 import nl.novi.breedsoft.model.management.WaitingListItem;
 import nl.novi.breedsoft.model.management.enumerations.Breed;
-import nl.novi.breedsoft.repository.PersonRepository;
 import nl.novi.breedsoft.repository.WaitingListItemRepository;
+import nl.novi.breedsoft.utility.RepositoryUtility;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class WaitingListItemService {
 
     private final WaitingListItemRepository waitingListItemRepository;
-    private final PersonRepository personRepository;
 
-    public WaitingListItemService(WaitingListItemRepository waitingListItemRepository,
-                                  PersonRepository personRepository) {
+    private final RepositoryUtility repositoryUtility;
+
+    public WaitingListItemService(
+        WaitingListItemRepository waitingListItemRepository,
+        RepositoryUtility repositoryUtility
+    ) {
         this.waitingListItemRepository = waitingListItemRepository;
-        this.personRepository = personRepository;
+        this.repositoryUtility = repositoryUtility;
     }
 
     /**
@@ -148,7 +150,7 @@ public class WaitingListItemService {
     public Long createWaitingListItem(WaitingListItemInputDto waitingListItemInputDto){
         //check if person is given
         if(waitingListItemInputDto.getPerson() != null){
-            Person person = getCompletePersonById(waitingListItemInputDto.getPerson().getId());
+            Person person = repositoryUtility.getCompletePersonById(waitingListItemInputDto.getPerson().getId());
             if(person == null) {
                 throw new RecordNotFoundException("Provided person does not exist in the database.");
             }
@@ -254,22 +256,5 @@ public class WaitingListItemService {
         waitingListItemOutputDto.setKindOfHair(waitingListItem.getKindOfHair());
 
         return waitingListItemOutputDto;
-    }
-
-    /**
-     * Look for person by id in person repository.
-     * When no person ID is given, the get person method returns 0 and an error is thrown.
-     * When person ID is found, person is returned.
-     * If there is no person found in the repository, null is returned.
-     * @param personId ID of the person for which information is requested
-     * @return person or null if not present.
-     * @throws RecordNotFoundException throws an exception when person ID is missing
-     */
-       private Person getCompletePersonById(Long personId){
-        if(personId == 0){
-            throw new RecordNotFoundException("Missing person ID");
-        }
-        Optional<Person> personOptional = personRepository.findById(personId);
-        return personOptional.orElse(null);
     }
 }
