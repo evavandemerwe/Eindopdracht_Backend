@@ -35,7 +35,7 @@ public class WaitingListItemService {
     }
 
     //GET a list of all waiting list items by person ID
-    public List <WaitingListItemOutputDto> getWaitingListItemByPersonID(Long id){
+    public List<WaitingListItemOutputDto> getWaitingListItemByPersonID(Long id){
         List <WaitingListItem> waitingListItemList = waitingListItemRepository.findAll();
         List <WaitingListItem> foundWaitingListItem = new ArrayList<>();
         for(WaitingListItem waitingListItem : waitingListItemList){
