@@ -10,12 +10,12 @@ public class BindingResultErrorUtility {
     /**
      * A method that returns a Bad Request HTTP message containing all HTTP request
      * input parameters that have invalid values.
-     * @param br list errors of input parameters
+     * @param bindingResult list errors of input parameters
      * @return Bad Request object with messages containing invalid input data
      */
-    public static ResponseEntity<Object> bindingResultError(BindingResult br){
+    public static ResponseEntity<Object> bindingResultError(BindingResult bindingResult){
         StringBuilder sb = new StringBuilder();
-        for (FieldError fe : br.getFieldErrors()) {
+        for (FieldError fe : bindingResult.getFieldErrors()) {
             sb.append(fe.getField() + ": ");
             sb.append(fe.getDefaultMessage());
             sb.append("\n");

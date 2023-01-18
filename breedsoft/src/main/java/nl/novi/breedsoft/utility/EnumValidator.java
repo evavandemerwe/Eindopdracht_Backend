@@ -16,9 +16,7 @@ public class EnumValidator implements ConstraintValidator<ValueOfEnum, CharSeque
 
     /**
      * Initialize ValueOfEnumValidator with given Enumeration.
-     *
      * @param annotation Enumeration to be validated against
-     *
      */
     @Override
     public void initialize(ValueOfEnum annotation) {
@@ -28,7 +26,6 @@ public class EnumValidator implements ConstraintValidator<ValueOfEnum, CharSeque
     }
 
     /**
-     *
      * @param value String to be checked if exists in initialized Enumeration
      * @param context
      * @return true if given String exists in initialized Enumeration else false
