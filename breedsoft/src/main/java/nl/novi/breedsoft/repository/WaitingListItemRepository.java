@@ -43,5 +43,4 @@ public interface WaitingListItemRepository extends JpaRepository<WaitingListItem
             nativeQuery = true
     )
     List<WaitingListItem> findByCriteria(@Param("sex")String sex, @Param("kindOfHair")String kindOfHair, @Param("breed")String breed);
-
 }

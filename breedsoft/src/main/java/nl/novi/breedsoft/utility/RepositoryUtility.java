@@ -5,9 +5,10 @@ import nl.novi.breedsoft.model.management.DomesticatedDog;
 import nl.novi.breedsoft.model.management.Person;
 import nl.novi.breedsoft.repository.DomesticatedDogRepository;
 import nl.novi.breedsoft.repository.PersonRepository;
+import org.springframework.stereotype.Component;
 
 import java.util.Optional;
-
+@Component
 public class RepositoryUtility {
 
     private final DomesticatedDogRepository domesticatedDogRepository;
