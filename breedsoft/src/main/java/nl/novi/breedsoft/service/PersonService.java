@@ -11,24 +11,28 @@ import nl.novi.breedsoft.model.animal.enumerations.Sex;
 import nl.novi.breedsoft.repository.DomesticatedDogRepository;
 import nl.novi.breedsoft.repository.PersonRepository;
 import nl.novi.breedsoft.repository.WaitingListItemRepository;
+import nl.novi.breedsoft.utility.RepositoryUtility;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class PersonService {
     private final PersonRepository personRepository;
     private final DomesticatedDogRepository domesticatedDogRepository;
     private final WaitingListItemRepository waitingListItemRepository;
-
+    private final RepositoryUtility repositoryUtility;
+    
     public PersonService(
-            PersonRepository personRepository,
-            DomesticatedDogRepository domesticatedDogRepository,
-            WaitingListItemRepository waitingListItemRepository) {
+        PersonRepository personRepository,
+        DomesticatedDogRepository domesticatedDogRepository,
+        WaitingListItemRepository waitingListItemRepository,
+        RepositoryUtility repositoryUtility
+    ) {
         this.personRepository = personRepository;
         this.domesticatedDogRepository = domesticatedDogRepository;
         this.waitingListItemRepository = waitingListItemRepository;
+        this.repositoryUtility = repositoryUtility;
     }
 
     /**
@@ -113,7 +117,7 @@ public class PersonService {
             for(DomesticatedDog domesticatedDog : givenDogsList){
                 Long dogId = domesticatedDog.getId();
                 if(domesticatedDogRepository.findById(dogId).isPresent()) {
-                    DomesticatedDog foundDog = getCompleteDogId(dogId);
+                    DomesticatedDog foundDog = repositoryUtility.getCompleteDogId(dogId);
                     if (foundDog != null) {
                         foundDogsList.add(foundDog);
                     }
@@ -239,7 +243,7 @@ public class PersonService {
                 for(DomesticatedDog dog : dogs){
                     Long dogId = dog.getId();
                     if(domesticatedDogRepository.findById(dogId).isPresent()) {
-                        DomesticatedDog newDog = getCompleteDogId(dogId);
+                        DomesticatedDog newDog = repositoryUtility.getCompleteDogId(dogId);
                         newDogs.add(newDog);
                     }
                 }
@@ -354,22 +358,5 @@ public class PersonService {
         }
 
         return person;
-    }
-
-    /**
-     * Look for domesticated dog by id in domesticated dog repository.
-     * When no domesticated dog ID is given, the get domesticated dog method returns 0 and an error is thrown.
-     * When domesticated dog ID is found, domesticated dog is returned.
-     * If there is no domesticated dog found in the repository, null is returned.
-     * @param dogId ID of the domesticated dog for which information is requested
-     * @return domesticated dog or null if not present.
-     * @throws RecordNotFoundException throws an exception when domesticated dog ID is missing
-     */
-   private DomesticatedDog getCompleteDogId(Long dogId){
-        if(dogId == 0){
-            throw new RecordNotFoundException("Missing Dog ID");
-        }
-        Optional<DomesticatedDog> domesticatedDog = domesticatedDogRepository.findById(dogId);
-        return domesticatedDog.orElse(null);
     }
 }
