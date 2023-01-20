@@ -16,6 +16,7 @@ import nl.novi.breedsoft.model.management.enumerations.Breed;
 import nl.novi.breedsoft.model.management.enumerations.BreedGroup;
 import nl.novi.breedsoft.model.animal.enumerations.Sex;
 import nl.novi.breedsoft.repository.DomesticatedDogRepository;
+import nl.novi.breedsoft.utility.EnumValidator;
 import nl.novi.breedsoft.utility.RepositoryUtility;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -290,18 +291,8 @@ public class DomesticatedDogService {
             if (domesticatedDogPatchDto.getFood() != null) {
                 updatedDog.setFood(domesticatedDogPatchDto.getFood());
             }
-            if (domesticatedDogPatchDto.getSex() != null) {
-                String newSexString = domesticatedDogPatchDto.getSex();
-                Sex newSex;
-                //Check if given value exists in enumeration
-                //Because patchDTO has no checks on enumerations,
-                //We have to throw an exception if the value does not exist in the enum
-                try {
-                    newSex = Sex.valueOf(newSexString);
-                } catch (IllegalArgumentException ex) {
-                    throw new EnumValueNotFoundException("Sex is not found");
-                }
-                updatedDog.setSex(newSex);
+            if (EnumValidator.validateEnumValue(Sex.class, domesticatedDogPatchDto.getSex())) {
+                updatedDog.setSex(Sex.valueOf(domesticatedDogPatchDto.getSex()));
             }
             String message= "";
             if (domesticatedDogPatchDto.getWeightInGrams() > 0.0) {
@@ -323,31 +314,11 @@ public class DomesticatedDogService {
             if (domesticatedDogPatchDto.getFood() != null) {
                 updatedDog.setFood(domesticatedDogPatchDto.getFood());
             }
-            if (domesticatedDogPatchDto.getBreed() != null) {
-                String newBreedString = domesticatedDogPatchDto.getBreed();
-                Breed newBreed;
-                //Check if given value exists in enumeration
-                //Because patchDTO has no checks on enumerations,
-                //We have to throw an exception if the value does not exist in the enum
-                try {
-                    newBreed = Breed.valueOf(newBreedString);
-                } catch (IllegalArgumentException ex) {
-                    throw new EnumValueNotFoundException("Breed is not found");
-                }
-                updatedDog.setBreed(newBreed);
+            if (EnumValidator.validateEnumValue(Breed.class, domesticatedDogPatchDto.getBreed())) {
+                updatedDog.setBreed(Breed.valueOf(domesticatedDogPatchDto.getBreed()));
             }
-            if (domesticatedDogPatchDto.getBreedGroup() != null) {
-                String newBreedGroupString = domesticatedDogPatchDto.getBreedGroup();
-                BreedGroup newBreedGroup;
-                //Check if given value exists in enumeration
-                //Because patchDTO has no checks on enumerations,
-                //We have to throw an exception if the value does not exist in the enum
-                try {
-                    newBreedGroup = BreedGroup.valueOf(newBreedGroupString);
-                } catch (IllegalArgumentException ex) {
-                    throw new EnumValueNotFoundException("Breedgroup is not found");
-                }
-                updatedDog.setBreedGroup(newBreedGroup);
+            if (EnumValidator.validateEnumValue(BreedGroup.class, domesticatedDogPatchDto.getBreedGroup())) {
+                updatedDog.setBreedGroup(BreedGroup.valueOf(domesticatedDogPatchDto.getBreedGroup()));
             }
             if (domesticatedDogPatchDto.getChipNumber() != null) {
                 updatedDog.setChipNumber(domesticatedDogPatchDto.getChipNumber());
@@ -359,18 +330,8 @@ public class DomesticatedDogService {
                 }
                 updatedDog.setPerson(dogOwner);
             }
-            if (domesticatedDogPatchDto.getDogStatus() != null) {
-                String newStatusString = domesticatedDogPatchDto.getDogStatus();
-                Status newStatus;
-                //Check if given value exists in enumeration
-                //Because patchDTO has no checks on enumerations,
-                //We have to throw an exception if the value does not exist in the enum
-                try {
-                    newStatus = Status.valueOf(newStatusString);
-                } catch (IllegalArgumentException ex) {
-                    throw new EnumValueNotFoundException("Status is not found");
-                }
-                updatedDog.setDogStatus(newStatus);
+            if (EnumValidator.validateEnumValue(Status.class, domesticatedDogPatchDto.getDogStatus())) {
+                updatedDog.setDogStatus(Status.valueOf(domesticatedDogPatchDto.getDogStatus()));
             }
             domesticatedDogRepository.save(updatedDog);
 
