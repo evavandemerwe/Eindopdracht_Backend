@@ -83,8 +83,7 @@ public class SecurityConfig {
                 // CSRF disabled because we are working with stateless sessions
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/users").hasAnyAuthority("ROLE_ADMIN")
-                        .requestMatchers("/admin").hasAuthority("ROLE_ADMIN")
+                        .requestMatchers("/authorities").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt())

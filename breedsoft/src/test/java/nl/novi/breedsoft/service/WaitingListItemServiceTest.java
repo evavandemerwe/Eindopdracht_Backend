@@ -7,8 +7,8 @@ import nl.novi.breedsoft.model.animal.enumerations.Sex;
 import nl.novi.breedsoft.model.management.Person;
 import nl.novi.breedsoft.model.management.WaitingListItem;
 import nl.novi.breedsoft.model.management.enumerations.Breed;
-import nl.novi.breedsoft.repository.PersonRepository;
 import nl.novi.breedsoft.repository.WaitingListItemRepository;
+import nl.novi.breedsoft.utility.RepositoryUtility;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -28,7 +28,7 @@ class WaitingListItemServiceTest {
     WaitingListItemRepository waitingListItemRepository;
 
     @Mock
-    PersonRepository personRepository;
+    RepositoryUtility repositoryUtility;
 
     @Mock
     WaitingListItemService waitingListItemService;
@@ -40,7 +40,7 @@ class WaitingListItemServiceTest {
         this.waitingListItemService =
                 new WaitingListItemService(
                         this.waitingListItemRepository,
-                        this.personRepository
+                        this.repositoryUtility
                 );
         Person eva = new Person();
         eva.setId(1L);
@@ -102,7 +102,7 @@ class WaitingListItemServiceTest {
         waitingListItemService = null;
         waitingListItemList = null;
         waitingListItemRepository = null;
-        personRepository = null;
+        repositoryUtility = null;
     }
 
     @Test
