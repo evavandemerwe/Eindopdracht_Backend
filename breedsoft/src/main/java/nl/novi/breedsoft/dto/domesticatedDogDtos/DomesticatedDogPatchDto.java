@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 import lombok.Data;
 import nl.novi.breedsoft.model.management.DomesticatedDog;
 import nl.novi.breedsoft.model.management.Person;
+
 import java.time.LocalDate;
 import java.util.List;
 
@@ -27,7 +28,6 @@ public class DomesticatedDogPatchDto {
     private boolean canHear;
     private Long parentId;
     private String dogStatus;
-
     @JsonIncludeProperties({"id", "firstName", "lastName", "street", "houseNumber", "houseNumberExtension", "zipCode", "city", "country"})
     private Person person;
 }
