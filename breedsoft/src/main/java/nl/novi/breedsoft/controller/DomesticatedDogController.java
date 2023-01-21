@@ -205,23 +205,16 @@ public class DomesticatedDogController {
      * PATCH method that updates a dog only when the dog exists in the database
      * @param domesticatedDogId ID of the person for which information is put
      * @param domesticatedDogPatchDto Data Transfer Objects that carries data between processes in order to reduce the number of methods calls
-     * @param bindingResult a Spring object that holds the result of the validation and binding and contains errors that may have occurred
      * @return ResponseEntity with OK http status code and String message,
      * or bindingResultError if there is an error in the binding
      */
     @PatchMapping("/{id}")
     public ResponseEntity<Object> patchDomesticatedDog(
             @PathVariable("id") Long domesticatedDogId,
-            @Valid @RequestBody DomesticatedDogPatchDto domesticatedDogPatchDto,
-            BindingResult bindingResult
+            @RequestBody DomesticatedDogPatchDto domesticatedDogPatchDto
     ){
-        //If there is an error in the binding
-        if (bindingResult.hasErrors()) {
-            return bindingResultError(bindingResult);
-        } else {
-            String response = domesticatedDogService.patchDomesticatedDog(domesticatedDogId, domesticatedDogPatchDto);
-            return ResponseEntity.ok().body(response);
-        }
+        String response = domesticatedDogService.patchDomesticatedDog(domesticatedDogId, domesticatedDogPatchDto);
+        return ResponseEntity.ok().body(response);
     }
 
     /**

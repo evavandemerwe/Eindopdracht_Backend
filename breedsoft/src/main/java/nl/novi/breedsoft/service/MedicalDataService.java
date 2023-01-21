@@ -39,7 +39,7 @@ public class MedicalDataService {
      * @return medical data in output dto format
      * @throws RecordNotFoundException throws an exception when no medical data is found for dog with given id
      */
-    public List<MedicalDataOutputDto> getMedicaLDataByDogId(Long domesticatedDogId){
+    public List<MedicalDataOutputDto> getmedicaldatabydogid(Long domesticatedDogId){
         List<MedicalData> allMedicalData = medicalDataRepository.findAll();
         List<MedicalData> dogMedicalData = new ArrayList<>();
 
@@ -133,15 +133,17 @@ public class MedicalDataService {
             if(medicalDataPatchDto.getMedicine() != null){
                 updateMedicalData.setMedicine(medicalDataPatchDto.getMedicine());
             }
-            if(
-                    medicalDataPatchDto.getDomesticatedDog().getId() != null &&
-                    medicalDataPatchDto.getDomesticatedDog().getId() != 0
-            ){
-                DomesticatedDog dog = getCompleteDogById(medicalDataPatchDto.getDomesticatedDog().getId());
-                if (dog == null) {
-                    throw new RecordNotFoundException("Provided dog does not exist.");
+            if(medicalDataPatchDto.getDomesticatedDog() != null){
+                if(
+                        medicalDataPatchDto.getDomesticatedDog().getId() != null &&
+                        medicalDataPatchDto.getDomesticatedDog().getId() != 0
+                ){
+                    DomesticatedDog dog = getCompleteDogById(medicalDataPatchDto.getDomesticatedDog().getId());
+                    if (dog == null) {
+                        throw new RecordNotFoundException("Provided dog does not exist.");
+                    }
+                    updateMedicalData.setDomesticatedDog(dog);
                 }
-                updateMedicalData.setDomesticatedDog(dog);
             }
             medicalDataRepository.save(updateMedicalData);
             return transferMedicalDataToOutputDto(updateMedicalData);

@@ -57,23 +57,16 @@ public class UserController {
      * PATCH method that updates a user only when the user exists in the database
      * @param userId ID of the user for which information is requested
      * @param userPatchDto Data Transfer Objects that carries data between processes in order to reduce the number of methods calls
-     * @param bindingResult a Spring object that holds the result of the validation and binding and contains errors that may have occurred
      * @return ResponseEntity with OK http status code and the updated user,
      * or bindingResultError if there is an error in the binding
      */
     @PatchMapping("/{id}")
     public ResponseEntity<Object> patchUser(
             @PathVariable("id") Long userId,
-            @Valid @RequestBody UserPatchDto userPatchDto,
-            BindingResult bindingResult
+            @RequestBody UserPatchDto userPatchDto
     ){
-        //If there is an error in the binding
-        if (bindingResult.hasErrors()) {
-            return bindingResultError(bindingResult);
-        } else {
-            UserOutputDto userOutputDto = userService.patchUser(userId, userPatchDto);
-            return ResponseEntity.ok().body(userOutputDto);
-        }
+        UserOutputDto userOutputDto = userService.patchUser(userId, userPatchDto);
+        return ResponseEntity.ok().body(userOutputDto);
     }
 
     /**
