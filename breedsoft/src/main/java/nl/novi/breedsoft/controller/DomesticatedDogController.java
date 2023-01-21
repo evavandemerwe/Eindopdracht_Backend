@@ -8,6 +8,7 @@ import nl.novi.breedsoft.service.DomesticatedDogService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.multipart.MultipartFile;
 import jakarta.validation.Valid;
 import java.io.IOException;
@@ -89,7 +90,7 @@ public class DomesticatedDogController {
      * GET method to get all available dogs from the database
      * @return ResponseEntity with OK http status code and a list with requested domesticated Dogs
      */
-    @GetMapping("/available")
+        @GetMapping("/available")
     public ResponseEntity<List<DomesticatedDogOutputDto>> getAvailableDogs() {
         List<DomesticatedDogOutputDto> availableDogs = domesticatedDogService.getAvailableDomesticatedDogs();
         return ResponseEntity.ok().body(availableDogs);
@@ -162,6 +163,7 @@ public class DomesticatedDogController {
             @PathVariable("id") Long domesticatedDogId,
             @RequestParam("image") MultipartFile image
     ){
+
         if(image.isEmpty()) {
             throw new BadFileException("The provided file is empty");
         }
@@ -169,6 +171,8 @@ public class DomesticatedDogController {
             Long createdId = domesticatedDogService.storeDogImage(domesticatedDogId, image);
             URI uri = createUri(createdId, "/dogs/");
             return ResponseEntity.created(uri).body("Picture is successfully uploaded!");
+        }catch (MultipartException ex) {
+            throw new BadFileException("The provided file is not a valid image");
         } catch (IOException ex){
             throw new BadFileException("The provided file is not a valid image");
         }
