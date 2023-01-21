@@ -162,8 +162,7 @@ public class DomesticatedDogController {
     public ResponseEntity<Object> uploadDogImage(
             @PathVariable("id") Long domesticatedDogId,
             @RequestParam("image") MultipartFile image
-    ){
-
+    ) {
         if(image.isEmpty()) {
             throw new BadFileException("The provided file is empty");
         }
@@ -171,8 +170,6 @@ public class DomesticatedDogController {
             Long createdId = domesticatedDogService.storeDogImage(domesticatedDogId, image);
             URI uri = createUri(createdId, "/dogs/");
             return ResponseEntity.created(uri).body("Picture is successfully uploaded!");
-        }catch (MultipartException ex) {
-            throw new BadFileException("The provided file is not a valid image");
         } catch (IOException ex){
             throw new BadFileException("The provided file is not a valid image");
         }

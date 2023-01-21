@@ -10,6 +10,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.ContextConfiguration;
@@ -19,6 +21,9 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+
+import java.io.File;
+import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.List;
 import static org.hamcrest.Matchers.is;
@@ -251,20 +256,17 @@ class DomesticatedDogControllerTest {
 
     @Test
     void uploadDogImage() throws Exception {
-
-        MockMultipartFile image = new MockMultipartFile("multipartimage", "", "multipart/form-data", "{\"image\": ..\\images\\Lotje.jpeg\"}".getBytes());
+        Resource fileResource = new ClassPathResource(".\\images\\Lotje.jpeg");
+        MockMultipartFile image = new MockMultipartFile("image", fileResource.getFilename(), MediaType.MULTIPART_FORM_DATA_VALUE, fileResource.getInputStream());
         when(domesticatedDogService.storeDogImage(1L, image)).thenReturn(1L);
 
-        this.mockMvc
-                .perform(
-                MockMvcRequestBuilders.post("/dogs/{id}/image", "1")
-                        .contentType(MediaType.MULTIPART_FORM_DATA)
-                        .content("image")
-                        .with(jwt())
+        this.mockMvc.perform(
+            MockMvcRequestBuilders.multipart("/dogs/{id}/image", "1")
+            .file(image)
+            .with(jwt())
         )
-                .andDo(MockMvcResultHandlers.print())
-                .andExpect(status().isOk());
-
+        .andDo(MockMvcResultHandlers.print())
+        .andExpect(status().isCreated());
     }
 
     @Test
