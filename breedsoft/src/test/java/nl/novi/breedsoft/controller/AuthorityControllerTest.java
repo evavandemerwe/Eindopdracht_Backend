@@ -57,10 +57,9 @@ class AuthorityControllerTest {
 
     @Test
     void getAllAuthorities() throws Exception {
-
         Mockito.when(authorityService.getAllAuthorities()).thenReturn(authorityList);
         this.mockMvc
-                .perform(MockMvcRequestBuilders.get("/authorities"))
+                .perform(MockMvcRequestBuilders.get("/authorities").with(jwt()))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.[0].authority", is("ROLE_TESTER")));
