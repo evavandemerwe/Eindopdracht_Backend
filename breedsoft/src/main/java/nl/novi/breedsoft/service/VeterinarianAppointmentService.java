@@ -145,15 +145,17 @@ public class VeterinarianAppointmentService {
                 }
                 updatedVeterinarianAppointment.setSubject(subject);
             }
-            if(
-                    veterinarianAppointmentPatchDto.getDomesticatedDog().getId() != null &&
-                    veterinarianAppointmentPatchDto.getDomesticatedDog().getId() != 0
-            ){
-                    DomesticatedDog dog = getCompleteDogById(veterinarianAppointmentPatchDto.getDomesticatedDog().getId());
-                    if (dog == null) {
-                        throw new RecordNotFoundException("Provided dog does not exist.");
-                    }
-                    updatedVeterinarianAppointment.setDomesticatedDog(dog);
+            if(veterinarianAppointmentPatchDto.getDomesticatedDog()!= null){
+                if(
+                        veterinarianAppointmentPatchDto.getDomesticatedDog().getId() != null &&
+                        veterinarianAppointmentPatchDto.getDomesticatedDog().getId() != 0
+                ){
+                        DomesticatedDog dog = getCompleteDogById(veterinarianAppointmentPatchDto.getDomesticatedDog().getId());
+                        if (dog == null) {
+                            throw new RecordNotFoundException("Provided dog does not exist.");
+                        }
+                        updatedVeterinarianAppointment.setDomesticatedDog(dog);
+                }
             }
             veterinarianAppointmentRepository.save(updatedVeterinarianAppointment);
             return transferVeterinarianAppointmentToOutputDto(updatedVeterinarianAppointment);
