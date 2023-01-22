@@ -3,7 +3,7 @@ package nl.novi.breedsoft.utility;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 
-public class createUriResponse {
+public class UriResponseUtility {
 
     /**
      * A method that creates an uri based on id and path
