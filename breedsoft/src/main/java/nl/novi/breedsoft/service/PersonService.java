@@ -11,6 +11,7 @@ import nl.novi.breedsoft.model.animal.enumerations.Sex;
 import nl.novi.breedsoft.repository.DomesticatedDogRepository;
 import nl.novi.breedsoft.repository.PersonRepository;
 import nl.novi.breedsoft.repository.WaitingListItemRepository;
+import nl.novi.breedsoft.utility.EnumValidator;
 import nl.novi.breedsoft.utility.RepositoryUtility;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
@@ -200,15 +201,8 @@ public class PersonService {
             if (personPatchDto.getLastName() != null) {
                 updatedPerson.setLastName(personPatchDto.getLastName());
             }
-            if (personPatchDto.getSex() != null) {
-                String newSexString = personPatchDto.getSex();
-                Sex newSex;
-                try{
-                    newSex = Sex.valueOf(newSexString);
-                } catch (IllegalArgumentException ex) {
-                    throw new EnumValueNotFoundException("Sex is not found");
-                }
-                updatedPerson.setSex(newSex);
+            if (EnumValidator.validateEnumValue(Sex.class, personPatchDto.getSex())) {
+                updatedPerson.setSex(Sex.valueOf(personPatchDto.getSex()));
             }
             if (personPatchDto.getDateOfBirth() != null) {
                 updatedPerson.setDateOfBirth(personPatchDto.getDateOfBirth());

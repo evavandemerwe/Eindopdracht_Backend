@@ -77,7 +77,7 @@ public class AuthorityService {
      * @param authorities list with authorities that has to be transformed
      * @return a list of authorities in output dto format
      */
-    private List<AuthorityOutputDto>transferToAuthorityOutputDtoList(List<Authority> authorities){
+    private List<AuthorityOutputDto> transferToAuthorityOutputDtoList(List<Authority> authorities){
         List<AuthorityOutputDto> authorityOutputDtoList = new ArrayList<>();
         for(Authority authority : authorities){
             AuthorityOutputDto outputDto = transferToAuthorityOutputDto(authority);
