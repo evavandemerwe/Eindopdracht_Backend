@@ -30,7 +30,6 @@ class WaitingListItemServiceTest {
     @Mock
     RepositoryUtility repositoryUtility;
 
-    @Mock
     WaitingListItemService waitingListItemService;
 
     List<WaitingListItem> waitingListItemList = new ArrayList<>();
