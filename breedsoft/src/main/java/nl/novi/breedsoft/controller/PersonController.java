@@ -11,7 +11,7 @@ import jakarta.validation.Valid;
 import java.net.URI;
 import java.util.List;
 import static nl.novi.breedsoft.utility.BindingResultErrorUtility.bindingResultError;
-import static nl.novi.breedsoft.utility.createUriResponse.createUri;
+import static nl.novi.breedsoft.utility.UriResponseUtility.createUri;
 
 @RestController
 @RequestMapping("persons")
