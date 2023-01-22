@@ -9,7 +9,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import java.net.URI;
 import static nl.novi.breedsoft.utility.BindingResultErrorUtility.bindingResultError;
-import static nl.novi.breedsoft.utility.createUriResponse.createUri;
+import static nl.novi.breedsoft.utility.UriResponseUtility.createUri;
 
 @RestController
 @RequestMapping("waitinglistitems")

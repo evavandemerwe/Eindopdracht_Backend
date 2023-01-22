@@ -8,13 +8,12 @@ import nl.novi.breedsoft.service.DomesticatedDogService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.multipart.MultipartFile;
 import jakarta.validation.Valid;
 import java.io.IOException;
 import java.net.URI;
 import java.util.List;
-import static nl.novi.breedsoft.utility.createUriResponse.createUri;
+import static nl.novi.breedsoft.utility.UriResponseUtility.createUri;
 import static nl.novi.breedsoft.utility.BindingResultErrorUtility.bindingResultError;
 @RestController
 @RequestMapping("dogs")

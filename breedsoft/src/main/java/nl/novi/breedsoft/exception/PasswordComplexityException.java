@@ -5,7 +5,7 @@ import java.io.Serial;
 public class PasswordComplexityException extends RuntimeException{
 
     @Serial
-    private static final long serialVersionUID = 1L;
+    private static final long SERIAL_VERSION_UID = 1L;
 
     /**
      * Exception method with a form of Throwable that indicates conditions that might need to be caught
