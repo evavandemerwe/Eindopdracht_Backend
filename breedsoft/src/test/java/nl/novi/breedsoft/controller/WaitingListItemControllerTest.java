@@ -211,21 +211,19 @@ class WaitingListItemControllerTest {
 
     @Test
     void getAllWaitingListItemsForCriteria() throws Exception {
-        String expectedSex = "female";
-        String expectedKindOfHair = "Short haired";
-        String expectedBreed = "Pinscher";
-        when(waitingListItemService.getWaitingListItemByCriteria(expectedSex, expectedKindOfHair, expectedBreed))
-                .thenReturn(null);
+        String sex = "female";
+        String kindOfHair = "Short haired";
+        String breed = "Pinscher";
+        when(waitingListItemService.getWaitingListItemByCriteria(sex, kindOfHair, breed))
+                .thenReturn(waitingListItemOutputDtoList);
         this.mockMvc
                 .perform(
-                        MockMvcRequestBuilders.get("/waitinglistitems/criteria", expectedSex, expectedBreed, expectedKindOfHair)
+                        MockMvcRequestBuilders.get(
+                                "/waitinglistitems/criteria?sex={sex}&kindofhair={kindOfHair}&breed={breed}",
+                                        sex, kindOfHair, breed)
                         .with(jwt()))
                 .andDo(MockMvcResultHandlers.print())
-                .andExpect(status().isNotFound());
-    }
-
-    @Test
-    void getAllWaitingListItemsForCriteriaWithEmptyList() {
+                .andExpect(status().isOk());
     }
 
     @Test
