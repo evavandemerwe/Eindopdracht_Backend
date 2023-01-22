@@ -3,6 +3,7 @@ package nl.novi.breedsoft.controller;
 import nl.novi.breedsoft.dto.domesticatedDogDtos.DomesticatedDogInputDto;
 import nl.novi.breedsoft.dto.domesticatedDogDtos.DomesticatedDogOutputDto;
 import nl.novi.breedsoft.dto.domesticatedDogDtos.DomesticatedDogPatchDto;
+import nl.novi.breedsoft.exception.EnumValueNotFoundException;
 import nl.novi.breedsoft.model.management.enumerations.Breed;
 import nl.novi.breedsoft.service.DomesticatedDogService;
 import org.junit.jupiter.api.AfterEach;
@@ -47,6 +48,7 @@ class DomesticatedDogControllerTest {
     DomesticatedDogOutputDto domesticatedDogOutputDto = new DomesticatedDogOutputDto();
     DomesticatedDogInputDto domesticatedDogInputDto = new DomesticatedDogInputDto();
     DomesticatedDogPatchDto domesticatedDogPatchDto = new DomesticatedDogPatchDto();
+    DomesticatedDogPatchDto domesticatedDogPatchDtoWithWrongEnum = new DomesticatedDogPatchDto();
     List<DomesticatedDogOutputDto> domesticatedDogOutputDtoList = new ArrayList();
     List<DomesticatedDogInputDto> domesticatedDogInputDtoList = new ArrayList();
 
@@ -70,6 +72,11 @@ class DomesticatedDogControllerTest {
         domesticatedDogPatchDto.setName("Lotje");
         domesticatedDogPatchDto.setBreed("");
         domesticatedDogPatchDto.setFood("dog chow");
+
+        domesticatedDogPatchDtoWithWrongEnum.setName("Lotje");
+        domesticatedDogPatchDtoWithWrongEnum.setSex("x");
+        domesticatedDogPatchDtoWithWrongEnum.setFood("dog chow");
+
     }
 
     @AfterEach
@@ -353,6 +360,39 @@ class DomesticatedDogControllerTest {
     }
 
     @Test
+    void updateDomesticatedDogWithWrongEnumValue() throws Exception{
+        when(domesticatedDogService.patchDomesticatedDog(1L, domesticatedDogPatchDtoWithWrongEnum))
+                .thenThrow(EnumValueNotFoundException.class);
+        this.mockMvc
+                .perform(
+                        MockMvcRequestBuilders.put("/dogs/{id}", "1")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content("    {\n" +
+                                        "        \"color\": \"brown\",\n" +
+                                        "        \"dateOfBirth\": \"2017-01-13\",\n" +
+                                        "        \"dateOfDeath\": null,\n" +
+                                        "        \"food\": \"dog chow\",\n" +
+                                        "        \"sex\": \"x\",\n" +
+                                        "        \"weightInGrams\": 5.0,\n" +
+                                        "        \"kindOfHair\": \"short haired\",\n" +
+                                        "        \"litter\": null,\n" +
+                                        "        \"name\": \"pupje\",\n" +
+                                        "        \"chipNumber\": 999999999999999,\n" +
+                                        "        \"breed\": \"Dachschund\",\n" +
+                                        "        \"breedGroup\": \"Hound\",\n" +
+                                        "        \"hairColor\" : \"Grey\",\n" +
+                                        "        \"person\": {\n" +
+                                        "            \"id\" : 2001\n" +
+                                        "        },\n" +
+                                        "        \"dogStatus\" : \"availablePreOwned\"\n" +
+                                        "    }")
+                                .with(jwt())
+                )
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
     void patchDomesticatedDog() throws Exception{
         when(domesticatedDogService.patchDomesticatedDog(1L, domesticatedDogPatchDto))
                 .thenReturn("Your dog has been updated.");
@@ -396,6 +436,7 @@ class DomesticatedDogControllerTest {
                 .andExpect(status().isBadRequest());
 
     }
+
 
     @Test
     void deleteDogImage() throws Exception{
