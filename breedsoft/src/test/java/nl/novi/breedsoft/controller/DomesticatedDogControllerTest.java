@@ -22,6 +22,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import static org.hamcrest.Matchers.is;
@@ -67,7 +68,7 @@ class DomesticatedDogControllerTest {
         domesticatedDogInputDtoList.add(domesticatedDogInputDto);
 
         domesticatedDogPatchDto.setName("Lotje");
-        domesticatedDogPatchDto.setBreed("Dachschund");
+        domesticatedDogPatchDto.setBreed("");
         domesticatedDogPatchDto.setFood("dog chow");
     }
 
@@ -76,23 +77,30 @@ class DomesticatedDogControllerTest {
         context = null;
         mockMvc = null;
         domesticatedDogService = null;
+        domesticatedDogInputDto = null;
+        domesticatedDogPatchDto = null;
+        domesticatedDogOutputDto = null;
         domesticatedDogOutputDtoList = null;
+        domesticatedDogInputDtoList = null;
     }
 
     @Test
     void getAllDomesticatedDogs() throws Exception {
-        when(domesticatedDogService.getAllDomesticatedDogs()).thenReturn(domesticatedDogOutputDtoList);
+        when(domesticatedDogService.getAllDomesticatedDogs())
+                .thenReturn(domesticatedDogOutputDtoList);
         this.mockMvc
-                .perform(MockMvcRequestBuilders.get("/dogs").with(jwt()))
+                .perform(MockMvcRequestBuilders.get("/dogs")
+                        .with(jwt()))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.[0].name", is("Saar")));
-
+                .andExpect(MockMvcResultMatchers.
+                        jsonPath("$.[0].name", is("Saar")));
     }
 
     @Test
     void getDomesticatedDogById() throws Exception {
-        when(domesticatedDogService.getDomesticatedDogById(1L)).thenReturn(domesticatedDogOutputDto);
+        when(domesticatedDogService.getDomesticatedDogById(1L))
+                .thenReturn(domesticatedDogOutputDto);
         this.mockMvc
                 .perform(MockMvcRequestBuilders.get("/dogs/id/{id}", "1").with(jwt()))
                 .andDo(MockMvcResultHandlers.print())
@@ -102,7 +110,8 @@ class DomesticatedDogControllerTest {
 
     @Test
     void getDomesticatedDogByName() throws Exception {
-        when(domesticatedDogService.getDomesticatedDogByName("Saar")).thenReturn(domesticatedDogOutputDtoList);
+        when(domesticatedDogService.getDomesticatedDogByName("Saar"))
+                .thenReturn(domesticatedDogOutputDtoList);
         this.mockMvc
                 .perform(MockMvcRequestBuilders.get("/dogs/name/{name}", "Saar").with(jwt()))
                 .andDo(MockMvcResultHandlers.print())
@@ -112,7 +121,8 @@ class DomesticatedDogControllerTest {
 
     @Test
     void getChildrenById() throws Exception {
-            when(domesticatedDogService.getAllChildren(1L)).thenReturn(domesticatedDogOutputDtoList);
+            when(domesticatedDogService.getAllChildren(1L))
+                    .thenReturn(domesticatedDogOutputDtoList);
             this.mockMvc
                     .perform(MockMvcRequestBuilders.get("/dogs/{id}/children", "1").with(jwt()))
                     .andDo(MockMvcResultHandlers.print())
@@ -122,7 +132,8 @@ class DomesticatedDogControllerTest {
 
     @Test
     void getParentById() throws Exception {
-        when(domesticatedDogService.getParentDog(1L)).thenReturn(domesticatedDogOutputDto);
+        when(domesticatedDogService.getParentDog(1L))
+                .thenReturn(domesticatedDogOutputDto);
         this.mockMvc
                 .perform(MockMvcRequestBuilders.get("/dogs/{id}/parent", "1").with(jwt()))
                 .andDo(MockMvcResultHandlers.print())
@@ -132,7 +143,8 @@ class DomesticatedDogControllerTest {
 
     @Test
     void getAvailableDogs() throws Exception {
-        when(domesticatedDogService.getAvailableDomesticatedDogs()).thenReturn(domesticatedDogOutputDtoList);
+        when(domesticatedDogService.getAvailableDomesticatedDogs())
+                .thenReturn(domesticatedDogOutputDtoList);
         this.mockMvc
                 .perform(MockMvcRequestBuilders.get("/dogs/available").with(jwt()))
                 .andDo(MockMvcResultHandlers.print())
@@ -142,7 +154,8 @@ class DomesticatedDogControllerTest {
 
     @Test
     void getAllBreedDogs() throws Exception {
-        when(domesticatedDogService.getDomesticatedBreedDogs()).thenReturn(domesticatedDogOutputDtoList);
+        when(domesticatedDogService.getDomesticatedBreedDogs())
+                .thenReturn(domesticatedDogOutputDtoList);
         this.mockMvc
                 .perform(MockMvcRequestBuilders.get("/dogs/breeddogs").with(jwt()))
                 .andDo(MockMvcResultHandlers.print())
@@ -152,7 +165,8 @@ class DomesticatedDogControllerTest {
 
     @Test
     void createDomesticatedDog() throws Exception {
-        when(domesticatedDogService.createDomesticatedDog(domesticatedDogInputDto)).thenReturn(1L);
+        when(domesticatedDogService.createDomesticatedDog(domesticatedDogInputDto))
+                .thenReturn(1L);
         this.mockMvc
                 .perform(
                         MockMvcRequestBuilders.post("/dogs")
@@ -274,11 +288,12 @@ class DomesticatedDogControllerTest {
         .andExpect(status().isCreated());
     }
 
-/*    @Test
+    @Test
     void uploadDogImageWithBindingResultError() throws Exception {
         Resource fileResource = new ClassPathResource(".\\images\\Lotje.txt");
         MockMultipartFile image = new MockMultipartFile("image", fileResource.getFilename(), MediaType.MULTIPART_FORM_DATA_VALUE, fileResource.getInputStream());
-        when(domesticatedDogService.storeDogImage(1L, image)).thenReturn(1L);
+        when(domesticatedDogService.storeDogImage(1L, image))
+                .thenThrow(IOException.class);
 
         this.mockMvc.perform(
                         MockMvcRequestBuilders.multipart("/dogs/{id}/image", "1")
@@ -286,8 +301,8 @@ class DomesticatedDogControllerTest {
                                 .with(jwt())
                 )
                 .andDo(MockMvcResultHandlers.print())
-                .andExpect(status().isCreated());
-    }*/
+                .andExpect(status().isPreconditionFailed());
+    }
 
     @Test
     void updateDog() throws Exception {
@@ -381,6 +396,7 @@ class DomesticatedDogControllerTest {
                 .andExpect(status().isBadRequest());
 
     }
+
     @Test
     void deleteDogImage() throws Exception{
         this.mockMvc
@@ -402,6 +418,5 @@ class DomesticatedDogControllerTest {
                 )
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(status().isNoContent());
-
     }
 }
