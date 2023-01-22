@@ -133,22 +133,19 @@ public class DomesticatedDogController {
      * POST method to create a new litter (list of dogs)
      * @param domesticatedDogId ID of the dog for which information is requested
      * @param domesticatedDogInputDtoList Data Transfer Objects that carries data between processes in order to reduce the number of methods calls
-     * @param bindingResult a Spring object that holds the result of the validation and binding and contains errors that may have occurred
      * @return ResponseEntity with OK http status code and a list with all created dogs
      */
     @PostMapping("/{id}/children")
     public ResponseEntity<Object> uploadLitter(
             @PathVariable("id") Long domesticatedDogId,
-            @Valid @RequestBody List<DomesticatedDogInputDto> domesticatedDogInputDtoList,
-            BindingResult bindingResult
-    ){
-        //If there is an error in the binding
-        if (bindingResult.hasErrors()) {
-            return bindingResultError(bindingResult);
-        } else {
-            List<DomesticatedDogOutputDto> domesticatedDogOutputDtoList = domesticatedDogService.createLitterList(domesticatedDogInputDtoList, domesticatedDogId);
-            return ResponseEntity.ok().body(domesticatedDogOutputDtoList);
-        }
+            @RequestBody List<DomesticatedDogInputDto> domesticatedDogInputDtoList)
+    {
+        List<DomesticatedDogOutputDto> domesticatedDogOutputDtoList =
+                domesticatedDogService.createLitterList(
+                        domesticatedDogInputDtoList, domesticatedDogId
+                );
+        return ResponseEntity.ok().body(domesticatedDogOutputDtoList);
+
     }
 
     /**
@@ -163,9 +160,6 @@ public class DomesticatedDogController {
             @PathVariable("id") Long domesticatedDogId,
             @RequestParam("image") MultipartFile image
     ) {
-        if(image.isEmpty()) {
-            throw new BadFileException("The provided file is empty");
-        }
         try {
             Long createdId = domesticatedDogService.storeDogImage(domesticatedDogId, image);
             URI uri = createUri(createdId, "/dogs/");

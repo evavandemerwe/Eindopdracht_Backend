@@ -2,6 +2,7 @@ package nl.novi.breedsoft.controller;
 
 import nl.novi.breedsoft.dto.domesticatedDogDtos.DomesticatedDogInputDto;
 import nl.novi.breedsoft.dto.domesticatedDogDtos.DomesticatedDogOutputDto;
+import nl.novi.breedsoft.dto.domesticatedDogDtos.DomesticatedDogPatchDto;
 import nl.novi.breedsoft.model.management.enumerations.Breed;
 import nl.novi.breedsoft.service.DomesticatedDogService;
 import org.junit.jupiter.api.AfterEach;
@@ -21,9 +22,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
-
-import java.io.File;
-import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.List;
 import static org.hamcrest.Matchers.is;
@@ -47,6 +45,7 @@ class DomesticatedDogControllerTest {
 
     DomesticatedDogOutputDto domesticatedDogOutputDto = new DomesticatedDogOutputDto();
     DomesticatedDogInputDto domesticatedDogInputDto = new DomesticatedDogInputDto();
+    DomesticatedDogPatchDto domesticatedDogPatchDto = new DomesticatedDogPatchDto();
     List<DomesticatedDogOutputDto> domesticatedDogOutputDtoList = new ArrayList();
     List<DomesticatedDogInputDto> domesticatedDogInputDtoList = new ArrayList();
 
@@ -66,6 +65,10 @@ class DomesticatedDogControllerTest {
         domesticatedDogOutputDto.setBreed(Breed.Dachschund);
         domesticatedDogOutputDto.setFood("dog chow");
         domesticatedDogInputDtoList.add(domesticatedDogInputDto);
+
+        domesticatedDogPatchDto.setName("Lotje");
+        domesticatedDogPatchDto.setBreed("Dachschund");
+        domesticatedDogPatchDto.setFood("dog chow");
     }
 
     @AfterEach
@@ -243,7 +246,9 @@ class DomesticatedDogControllerTest {
 
     @Test
     void uploadLitterWithBindingResultError() throws Exception {
-         this.mockMvc
+        when(domesticatedDogService.createLitterList(domesticatedDogInputDtoList, 1L))
+                .thenReturn(domesticatedDogOutputDtoList);
+        this.mockMvc
                 .perform(
                         MockMvcRequestBuilders.post("/dogs/{id}/children", "1")
                                 .contentType(MediaType.APPLICATION_JSON)
@@ -269,12 +274,62 @@ class DomesticatedDogControllerTest {
         .andExpect(status().isCreated());
     }
 
-    @Test
+/*    @Test
     void uploadDogImageWithBindingResultError() throws Exception {
+        Resource fileResource = new ClassPathResource(".\\images\\Lotje.txt");
+        MockMultipartFile image = new MockMultipartFile("image", fileResource.getFilename(), MediaType.MULTIPART_FORM_DATA_VALUE, fileResource.getInputStream());
+        when(domesticatedDogService.storeDogImage(1L, image)).thenReturn(1L);
+
+        this.mockMvc.perform(
+                        MockMvcRequestBuilders.multipart("/dogs/{id}/image", "1")
+                                .file(image)
+                                .with(jwt())
+                )
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isCreated());
+    }*/
+
+    @Test
+    void updateDog() throws Exception {
+        when(domesticatedDogService.updateDomesticatedDog(1L, domesticatedDogInputDto))
+                .thenReturn(domesticatedDogOutputDto);
         this.mockMvc
                 .perform(
-                        MockMvcRequestBuilders.post("/dogs/{id}/image", "1")
-                                .contentType(MediaType.MULTIPART_FORM_DATA)
+                        MockMvcRequestBuilders.put("/dogs/{id}", "1")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content("{\n" +
+                                        "        \"color\": \"brown\",\n" +
+                                        "        \"dateOfBirth\": \"2017-01-13\",\n" +
+                                        "        \"dateOfDeath\": null,\n" +
+                                        "        \"food\": \"dog chow\",\n" +
+                                        "        \"sex\": \"female\",\n" +
+                                        "        \"weightInGrams\": 5.0,\n" +
+                                        "        \"kindOfHair\": \"short haired\",\n" +
+                                        "        \"litter\": null,\n" +
+                                        "        \"name\": \"pupje\",\n" +
+                                        "        \"chipNumber\": 999999999999999,\n" +
+                                        "        \"breed\": \"Dachschund\",\n" +
+                                        "        \"breedGroup\": \"Hound\",\n" +
+                                        "        \"hairColor\" : \"Grey\",\n" +
+                                        "        \"person\": {\n" +
+                                        "            \"id\" : 2001\n" +
+                                        "        },\n" +
+                                        "        \"dogStatus\" : \"availablePreOwned\"\n" +
+                                        "    }")
+                                .with(jwt())
+                )
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void updateDogWithBindingResultError() throws Exception {
+        when(domesticatedDogService.updateDomesticatedDog(1L, domesticatedDogInputDto))
+                .thenReturn(domesticatedDogOutputDto);
+        this.mockMvc
+                .perform(
+                        MockMvcRequestBuilders.put("/dogs/{id}", "1")
+                                .contentType(MediaType.APPLICATION_JSON)
                                 .content("{}")
                                 .with(jwt())
                 )
@@ -283,18 +338,70 @@ class DomesticatedDogControllerTest {
     }
 
     @Test
-    void updateDog() {
+    void patchDomesticatedDog() throws Exception{
+        when(domesticatedDogService.patchDomesticatedDog(1L, domesticatedDogPatchDto))
+                .thenReturn("Your dog has been updated.");
+        this.mockMvc
+                .perform(
+                        MockMvcRequestBuilders.patch("/dogs/{id}", "1")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content("{\n" +
+                                        "    \"name\": \"Hondje1\",\n" +
+                                        "    \"hairColor\": \"yellow\",\n" +
+                                        "    \"food\": \"Hamburgers\",\n" +
+                                        "    \"sex\": \"female\",\n" +
+                                        "    \"weightInGrams\": 0.5,\n" +
+                                        "    \"kindOfHair\": \"long haired\",\n" +
+                                        "    \"dogYears\": 35,\n" +
+                                        "    \"dateOfBirth\": \"2018-01-13\",\n" +
+                                        "    \"breed\": \"Dachschund\",\n" +
+                                        "    \"person\": {\n" +
+                                        "        \"id\" : 2001\n" +
+                                        "    }\n" +
+                                        "    }")
+                                .with(jwt())
+                )
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isOk());
+
     }
 
     @Test
-    void patchDomesticatedDog() {
+    void patchDomesticatedDogWithWrongInput() throws Exception{
+        when(domesticatedDogService.patchDomesticatedDog(1L, domesticatedDogPatchDto))
+                .thenReturn("Your dog has been updated.");
+        this.mockMvc
+                .perform(
+                        MockMvcRequestBuilders.patch("/dogs/{id}", "1")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content("{\"test\": \"test\"\\}")
+                                .with(jwt())
+                )
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isBadRequest());
+
+    }
+    @Test
+    void deleteDogImage() throws Exception{
+        this.mockMvc
+                .perform(
+                        MockMvcRequestBuilders.delete("/dogs/{id}/image", "1")
+                                .with(jwt())
+                )
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isNoContent());
+
     }
 
     @Test
-    void deleteDogImage() {
-    }
+    void deleteDog() throws Exception{
+        this.mockMvc
+                .perform(
+                        MockMvcRequestBuilders.delete("/dogs/{id}", "1")
+                                .with(jwt())
+                )
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isNoContent());
 
-    @Test
-    void deleteDog() {
     }
 }

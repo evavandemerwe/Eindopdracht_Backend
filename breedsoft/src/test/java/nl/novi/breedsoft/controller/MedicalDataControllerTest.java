@@ -104,7 +104,8 @@ class MedicalDataControllerTest {
 
     @Test
     void getMedicalDataByDomesticatedDogId() throws Exception{
-        when(medicalDataService.getmedicaldatabydogid(1L)).thenReturn(medicalDataOutputDtoList);
+        when(medicalDataService.getmedicaldatabydogid(1L))
+                .thenReturn(medicalDataOutputDtoList);
         this.mockMvc
                 .perform(MockMvcRequestBuilders.get("/medicaldata/id/{id}", "1").with(jwt()))
                 .andDo(MockMvcResultHandlers.print())
@@ -114,7 +115,8 @@ class MedicalDataControllerTest {
 
     @Test
     void createMedicalData() throws Exception{
-        when(medicalDataService.createMedicalData(medicalDataInputDto)).thenReturn(1L);
+        when(medicalDataService.createMedicalData(medicalDataInputDto))
+                .thenReturn(1L);
         this.mockMvc
                 .perform(
                         MockMvcRequestBuilders.post("/medicaldata")
@@ -136,7 +138,8 @@ class MedicalDataControllerTest {
 
     @Test
     void createMedicalDataWithBindingResultError() throws Exception{
-        when(medicalDataService.createMedicalData(medicalDataInputDto)).thenReturn(1L);
+        when(medicalDataService.createMedicalData(medicalDataInputDto))
+                .thenReturn(1L);
         this.mockMvc
                 .perform(
                         MockMvcRequestBuilders.post("/medicaldata")
@@ -150,7 +153,8 @@ class MedicalDataControllerTest {
 
     @Test
     void updateMedicalData() throws Exception {
-        when(medicalDataService.updateMedicalData(1L, medicalDataInputDto)).thenReturn(medicalDataOutputDto);
+        when(medicalDataService.updateMedicalData(1L, medicalDataInputDto))
+                .thenReturn(medicalDataOutputDto);
         this.mockMvc
                 .perform(
                         MockMvcRequestBuilders.put("/medicaldata/{id}", "1")
@@ -172,7 +176,8 @@ class MedicalDataControllerTest {
 
     @Test
     void updateMedicalDataWithBindingResultError() throws Exception {
-        when(medicalDataService.updateMedicalData(1L, medicalDataInputDto)).thenReturn(medicalDataOutputDto);
+        when(medicalDataService.updateMedicalData(1L, medicalDataInputDto))
+                .thenReturn(medicalDataOutputDto);
         this.mockMvc
                 .perform(
                         MockMvcRequestBuilders.put("/medicaldata/{id}", "1")
@@ -186,7 +191,8 @@ class MedicalDataControllerTest {
 
     @Test
     void patchMedicalData() throws Exception {
-        when(medicalDataService.patchMedicalData(1L, medicalDataPatchDto)).thenReturn(medicalDataOutputDto);
+        when(medicalDataService.patchMedicalData(1L, medicalDataPatchDto))
+                .thenReturn(medicalDataOutputDto);
         this.mockMvc
                 .perform(
                         MockMvcRequestBuilders.patch("/medicaldata/{id}", "1")
@@ -208,7 +214,8 @@ class MedicalDataControllerTest {
 
     @Test
     void patchMedicalDataWithWrongInput() throws Exception {
-        when(medicalDataService.patchMedicalData(1L, medicalDataPatchDto)).thenReturn(medicalDataOutputDto);
+        when(medicalDataService.patchMedicalData(1L, medicalDataPatchDto))
+                .thenReturn(medicalDataOutputDto);
         this.mockMvc
                 .perform(
                         MockMvcRequestBuilders.patch("/medicaldata/{id}", "1")
@@ -239,7 +246,8 @@ class MedicalDataControllerTest {
         this.mockMvc.perform(MockMvcRequestBuilders
                         .delete("/medicaldata/{id}", "1").with(jwt())
                         .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON))
+                        .accept(MediaType.APPLICATION_JSON)
+                        .with(jwt()))
                 .andExpect(status().isNoContent());
     }
 }
