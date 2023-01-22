@@ -9,6 +9,7 @@ import nl.novi.breedsoft.model.management.Person;
 import nl.novi.breedsoft.model.management.WaitingListItem;
 import nl.novi.breedsoft.model.management.enumerations.Breed;
 import nl.novi.breedsoft.repository.WaitingListItemRepository;
+import nl.novi.breedsoft.utility.EnumValidator;
 import nl.novi.breedsoft.utility.RepositoryUtility;
 import org.springframework.stereotype.Service;
 
@@ -69,17 +70,14 @@ public class WaitingListItemService {
      * @throws EnumValueNotFoundException throws an exception if sex does not exist in enum
      */
     public List<WaitingListItemOutputDto> getWaitingListItemBySex(String sex){
-        Sex newSex;
-        try {
-            newSex = Sex.valueOf(sex);
-        } catch (IllegalArgumentException ex) {
-            throw new EnumValueNotFoundException("Sex is not found for dog");
+        if(EnumValidator.validateEnumValue(Sex.class, sex)) {
+            List<WaitingListItem> foundWaitingListItems = waitingListItemRepository.findBySex(Sex.valueOf(sex));
+            if (foundWaitingListItems.isEmpty()) {
+                throw new RecordNotFoundException("No waiting list items for this sex.");
+            }
+            return transferWaitingListItemListToOutputDtoList(foundWaitingListItems);
         }
-        List<WaitingListItem> foundWaitingListItems = waitingListItemRepository.findBySex(newSex);
-        if(foundWaitingListItems.isEmpty()){
-            throw new RecordNotFoundException("No waiting list items for this sex.");
-        }
-        return transferWaitingListItemListToOutputDtoList(foundWaitingListItems);
+        return new ArrayList<>();
     }
 
     /**
