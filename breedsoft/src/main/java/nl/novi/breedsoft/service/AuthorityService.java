@@ -46,7 +46,7 @@ public class AuthorityService {
         Authority newAuthority = new Authority();
         newAuthority.setAuthority(authorityInputDto.getAuthority());
 
-        authorityRepository.save(newAuthority);
+        newAuthority = authorityRepository.save(newAuthority);
 
         return newAuthority.getId();
     }

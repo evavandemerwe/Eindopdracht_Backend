@@ -23,12 +23,9 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import static org.hamcrest.Matchers.is;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
@@ -50,10 +47,10 @@ class WaitingListItemControllerTest {
     WaitingListItemOutputDto waitingListItemOutputDto = new WaitingListItemOutputDto();
     WaitingListItemInputDto waitingListItemInputDto = new WaitingListItemInputDto();
 
-    List<WaitingListItemOutputDto> waitingListItemOutputDtoList = new ArrayList();
+    List<WaitingListItemOutputDto> waitingListItemOutputDtoList = new ArrayList<>();
 
     DomesticatedDog dog = new DomesticatedDog();
-    List<DomesticatedDog> dogs = new ArrayList();
+    List<DomesticatedDog> dogs = new ArrayList<>();
 
     @BeforeEach
     void setup() {
@@ -234,14 +231,15 @@ class WaitingListItemControllerTest {
                 .perform(
                         MockMvcRequestBuilders.post("/waitinglistitems")
                                 .contentType(MediaType.APPLICATION_JSON)
-                                .content(" {\n" +
-                                        "        \"person\": {\n" +
-                                        "            \"id\": 2002\n" +
-                                        "        },\n" +
-                                        "        \"breed\": \"Dachschund\",\n" +
-                                        "        \"sex\": \"female\",\n" +
-                                        "        \"kindOfHair\": \"Long haired\"\n" +
-                                        "    }")
+                                .content("""
+                                        {
+                                               "person": {
+                                                   "id": 2002
+                                               },
+                                               "breed": "Dachschund",
+                                               "sex": "female",
+                                               "kindOfHair": "Long haired"
+                                           }""".indent(1))
                                 .with(jwt())
                 )
                 .andDo(MockMvcResultHandlers.print())
