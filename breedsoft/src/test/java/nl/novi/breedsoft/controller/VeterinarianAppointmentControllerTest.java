@@ -4,8 +4,6 @@ import nl.novi.breedsoft.dto.domesticatedDogDtos.DomesticatedDogOutputDto;
 import nl.novi.breedsoft.dto.veterinarianAppointmentDtos.VeterinarianAppointmentInputDto;
 import nl.novi.breedsoft.dto.veterinarianAppointmentDtos.VeterinarianAppointmentOutputDto;
 import nl.novi.breedsoft.dto.veterinarianAppointmentDtos.VeterinarianAppointmentPatchDto;
-import nl.novi.breedsoft.exception.EnumValueNotFoundException;
-import nl.novi.breedsoft.model.management.DomesticatedDog;
 import nl.novi.breedsoft.model.management.enumerations.Breed;
 import nl.novi.breedsoft.service.VeterinarianAppointmentService;
 import org.junit.jupiter.api.AfterEach;
@@ -22,14 +20,11 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
-
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.ArrayList;
 import java.util.List;
-
 import static org.hamcrest.Matchers.is;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
@@ -51,7 +46,7 @@ class VeterinarianAppointmentControllerTest {
     VeterinarianAppointmentOutputDto veterinarianAppointmentOutputDto = new VeterinarianAppointmentOutputDto();
     VeterinarianAppointmentInputDto veterinarianAppointmentInputDto = new VeterinarianAppointmentInputDto();
     VeterinarianAppointmentPatchDto veterinarianAppointmentPatchDto = new VeterinarianAppointmentPatchDto();
-    List<VeterinarianAppointmentOutputDto> veterinarianAppointmentOutputDtoList = new ArrayList();
+    List<VeterinarianAppointmentOutputDto> veterinarianAppointmentOutputDtoList = new ArrayList<>();
 
     @BeforeEach
     void setup() {
@@ -116,13 +111,14 @@ class VeterinarianAppointmentControllerTest {
                 .perform(
                         MockMvcRequestBuilders.post("/appointments")
                                 .contentType(MediaType.APPLICATION_JSON)
-                                .content("{\n" +
-                                        "        \"appointmentDate\": \"2023-02-23\",\n" +
-                                        "        \"subject\": \"Second ultrasound examination\",\n" +
-                                        "        \"domesticatedDog\": {\n" +
-                                        "            \"id\": \"1005\"\n" +
-                                        "        }\n" +
-                                        "    }")
+                                .content("""
+                                        {
+                                                "appointmentDate": "2023-02-23",
+                                                "subject": "Second ultrasound examination",
+                                                "domesticatedDog": {
+                                                    "id": "1005"
+                                                }
+                                            }""")
                                 .with(jwt()))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(status().isCreated());
@@ -150,13 +146,14 @@ class VeterinarianAppointmentControllerTest {
                 .perform(
                         MockMvcRequestBuilders.put("/appointments/{id}", "1")
                                 .contentType(MediaType.APPLICATION_JSON)
-                                .content("{\n" +
-                                        "    \"appointmentDate\": \"2023-02-23\",\n" +
-                                        "    \"subject\": \"hii examination\",\n" +
-                                        "    \"domesticatedDog\": {\n" +
-                                        "        \"id\": 1005\n" +
-                                        "    }\n" +
-                                        "}")
+                                .content("""
+                                        {
+                                            "appointmentDate": "2023-02-23",
+                                            "subject": "hii examination",
+                                            "domesticatedDog": {
+                                                "id": 1005
+                                            }
+                                        }""")
                                 .with(jwt())
                 )
                 .andDo(MockMvcResultHandlers.print())
@@ -186,13 +183,14 @@ class VeterinarianAppointmentControllerTest {
                 .perform(
                         MockMvcRequestBuilders.patch("/appointments/{id}", "1")
                                 .contentType(MediaType.APPLICATION_JSON)
-                                .content("{\n" +
-                                        "    \"appointmentDate\": \"2023-02-23\",\n" +
-                                        "    \"subject\": \"hii examination\",\n" +
-                                        "    \"domesticatedDog\": {\n" +
-                                        "        \"id\": 1005\n" +
-                                        "    }\n" +
-                                        "}")
+                                .content("""
+                                        {
+                                            "appointmentDate": "2023-02-23",
+                                            "subject": "hii examination",
+                                            "domesticatedDog": {
+                                                "id": 1005
+                                            }
+                                        }""")
                                 .with(jwt())
                 )
                 .andDo(MockMvcResultHandlers.print())
