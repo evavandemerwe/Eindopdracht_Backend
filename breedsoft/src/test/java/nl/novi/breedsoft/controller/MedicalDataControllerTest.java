@@ -49,7 +49,7 @@ class MedicalDataControllerTest {
     MedicalDataOutputDto medicalDataOutputDto = new MedicalDataOutputDto();
     MedicalDataInputDto medicalDataInputDto = new MedicalDataInputDto();
     MedicalDataPatchDto medicalDataPatchDto = new MedicalDataPatchDto();
-    List<MedicalDataOutputDto> medicalDataOutputDtoList = new ArrayList();
+    List<MedicalDataOutputDto> medicalDataOutputDtoList = new ArrayList<>();
 
     @BeforeEach
     void setup() {
@@ -121,15 +121,16 @@ class MedicalDataControllerTest {
                 .perform(
                         MockMvcRequestBuilders.post("/medicaldata")
                                 .contentType(MediaType.APPLICATION_JSON)
-                                .content("    {\n" +
-                                        "        \"dateOfMedicalTreatment\": \"2022-01-10\",\n" +
-                                        "        \"medicine\": \"Anti flea product dog\",\n" +
-                                        "        \"diagnose\": \"Healty\",\n" +
-                                        "        \"treatment\": \"Prescribed medicine\",\n" +
-                                        "        \"domesticatedDog\": {\n" +
-                                        "            \"id\": 1\n" +
-                                        "        }\n" +
-                                        "    }")
+                                .content("""
+                                        {
+                                            "dateOfMedicalTreatment": "2022-01-10",
+                                            "medicine": "Anti flea product dog",
+                                            "diagnose": "Healty",
+                                            "treatment": "Prescribed medicine",
+                                            "domesticatedDog": {
+                                                "id": 1
+                                            }
+                                        }""".indent(4))
                                 .with(jwt())
                 )
                 .andDo(MockMvcResultHandlers.print())
@@ -159,15 +160,16 @@ class MedicalDataControllerTest {
                 .perform(
                         MockMvcRequestBuilders.put("/medicaldata/{id}", "1")
                                 .contentType(MediaType.APPLICATION_JSON)
-                                .content("    {\n" +
-                                        "        \"dateOfMedicalTreatment\": \"2018-06-02\",\n" +
-                                        "        \"medicine\": \"None\",\n" +
-                                        "        \"diagnose\": \"Sick as a dog\",\n" +
-                                        "        \"treatment\": \"Annual dog vaccination\",\n" +
-                                        "        \"domesticatedDog\": {\n" +
-                                        "            \"id\": 1002\n" +
-                                        "        }\n" +
-                                        "    }")
+                                .content("""
+                                        {
+                                            "dateOfMedicalTreatment": "2018-06-02",
+                                            "medicine": "None",
+                                            "diagnose": "Sick as a dog",
+                                            "treatment": "Annual dog vaccination",
+                                            "domesticatedDog": {
+                                                "id": 1002
+                                            }
+                                        }""".indent(4))
                                 .with(jwt())
                 )
                 .andDo(MockMvcResultHandlers.print())
@@ -197,15 +199,16 @@ class MedicalDataControllerTest {
                 .perform(
                         MockMvcRequestBuilders.patch("/medicaldata/{id}", "1")
                                 .contentType(MediaType.APPLICATION_JSON)
-                                .content("    {\n" +
-                                        "        \"dateOfMedicalTreatment\": \"2018-06-02\",\n" +
-                                        "        \"medicine\": \"None\",\n" +
-                                        "        \"diagnose\": \"Sick as a dog\",\n" +
-                                        "        \"treatment\": \"Annual dog vaccination\",\n" +
-                                        "        \"domesticatedDog\": {\n" +
-                                        "            \"id\": 1002\n" +
-                                        "        }\n" +
-                                        "    }")
+                                .content("""
+                                        {
+                                            "dateOfMedicalTreatment": "2018-06-02",
+                                            "medicine": "None",
+                                            "diagnose": "Sick as a dog",
+                                            "treatment": "Annual dog vaccination",
+                                            "domesticatedDog": {
+                                                "id": 1002
+                                            }
+                                        }""".indent(4))
                                 .with(jwt())
                 )
                 .andDo(MockMvcResultHandlers.print())

@@ -42,7 +42,7 @@ class UserControllerTest {
     @MockBean
     UserService userService;
 
-    List<UserOutputDto> userOutputDtoList = new ArrayList();
+    List<UserOutputDto> userOutputDtoList = new ArrayList<>();
     UserOutputDto userOutputDto = new UserOutputDto();
     UserInputDto userInputDto = new UserInputDto();
     UserPatchDto userPatchDto = new UserPatchDto();
@@ -55,7 +55,7 @@ class UserControllerTest {
                 .build();
 
         Authority authority = new Authority();
-        List<Authority> authorityList = new ArrayList();
+        List<Authority> authorityList = new ArrayList<>();
         authority.setAuthority("ROLE_ADMIN");
         authorityList.add(authority);
 
@@ -101,15 +101,16 @@ class UserControllerTest {
                 .perform(
                         MockMvcRequestBuilders.post("/users")
                                 .contentType(MediaType.APPLICATION_JSON)
-                                .content("    {\n" +
-                                        "        \"username\": \"User03\",\n" +
-                                        "        \"password\": \"Password123!\",\n" +
-                                        "        \"authorities\": [\n" +
-                                        "            {\n" +
-                                        "                \"id\": 1002\n" +
-                                        "            }\n" +
-                                        "        ]\n" +
-                                        "    }")
+                                .content("""
+                                        {
+                                            "username": "User03",
+                                            "password": "Password123!",
+                                            "authorities": [
+                                                {
+                                                    "id": 1002
+                                                }
+                                            ]
+                                        }""".indent(4))
                                 .with(jwt())
                 )
         .andDo(MockMvcResultHandlers.print())
@@ -139,15 +140,16 @@ class UserControllerTest {
                 .perform(
                         MockMvcRequestBuilders.patch("/users/{id}", "1")
                                 .contentType(MediaType.APPLICATION_JSON)
-                                .content("    {\n" +
-                                        "        \"username\": \"!\",\n" +
-                                        "        \"password\": \"Hoi1234!\",\n" +
-                                        "        \"authorities\": [\n" +
-                                        "            {\n" +
-                                        "                \"id\": 1001\n" +
-                                        "            }\n" +
-                                        "        ]\n" +
-                                        "    }")
+                                .content("""
+                                        {
+                                            "username": "!",
+                                            "password": "Hoi1234!",
+                                            "authorities": [
+                                                {
+                                                    "id": 1001
+                                                }
+                                            ]
+                                        }""".indent(4))
                                 .with(jwt())
                 )
                 .andDo(MockMvcResultHandlers.print())

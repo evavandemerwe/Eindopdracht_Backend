@@ -49,8 +49,8 @@ class DomesticatedDogControllerTest {
     DomesticatedDogInputDto domesticatedDogInputDto = new DomesticatedDogInputDto();
     DomesticatedDogPatchDto domesticatedDogPatchDto = new DomesticatedDogPatchDto();
     DomesticatedDogPatchDto domesticatedDogPatchDtoWithWrongEnum = new DomesticatedDogPatchDto();
-    List<DomesticatedDogOutputDto> domesticatedDogOutputDtoList = new ArrayList();
-    List<DomesticatedDogInputDto> domesticatedDogInputDtoList = new ArrayList();
+    List<DomesticatedDogOutputDto> domesticatedDogOutputDtoList = new ArrayList<>();
+    List<DomesticatedDogInputDto> domesticatedDogInputDtoList = new ArrayList<>();
 
     @BeforeEach
     void setup() {
@@ -178,25 +178,26 @@ class DomesticatedDogControllerTest {
                 .perform(
                         MockMvcRequestBuilders.post("/dogs")
                                 .contentType(MediaType.APPLICATION_JSON)
-                                .content("{\n" +
-                                        "    \"color\": \"brown\",\n" +
-                                        "    \"dateOfBirth\": \"2017-01-13\",\n" +
-                                        "    \"dateOfDeath\": null,\n" +
-                                        "    \"food\": \"dog chow\",\n" +
-                                        "    \"sex\": \"male\",\n" +
-                                        "    \"weightInGrams\": 5.0,\n" +
-                                        "    \"kindOfHair\": \"short haired\",\n" +
-                                        "    \"litter\": null,\n" +
-                                        "    \"name\": \"hondje\",\n" +
-                                        "    \"chipNumber\": 999999999999999,\n" +
-                                        "    \"breed\": \"Dachschund\",\n" +
-                                        "    \"breedGroup\": \"Hound\",\n" +
-                                        "    \"hairColor\": \"Grey\",\n" +
-                                        "    \"person\": {\n" +
-                                        "        \"id\": 2001\n" +
-                                        "    },\n" +
-                                        "    \"dogStatus\": \"ownedDog\"\n" +
-                                        "}")
+                                .content("""
+                                        {
+                                            "color": "brown",
+                                            "dateOfBirth": "2017-01-13",
+                                            "dateOfDeath": null,
+                                            "food": "dog chow",
+                                            "sex": "male",
+                                            "weightInGrams": 5.0,
+                                            "kindOfHair": "short haired",
+                                            "litter": null,
+                                            "name": "hondje",
+                                            "chipNumber": 999999999999999,
+                                            "breed": "Dachschund",
+                                            "breedGroup": "Hound",
+                                            "hairColor": "Grey",
+                                            "person": {
+                                                "id": 2001
+                                            },
+                                            "dogStatus": "ownedDog"
+                                        }""")
                                 .with(jwt())
                 )
                 .andDo(MockMvcResultHandlers.print())
@@ -223,42 +224,43 @@ class DomesticatedDogControllerTest {
                 .perform(
                         MockMvcRequestBuilders.post("/dogs/{id}/children", "1")
                                 .contentType(MediaType.APPLICATION_JSON)
-                                .content("[\n" +
-                                        "    {\n" +
-                                        "    \"color\": \"brown\",\n" +
-                                        "    \"dateOfBirth\": \"2017-01-13\",\n" +
-                                        "    \"dateOfDeath\": null,\n" +
-                                        "    \"food\": \"dog chow\",\n" +
-                                        "    \"sex\": \"male\",\n" +
-                                        "    \"weightInGrams\": 5.0,\n" +
-                                        "    \"kindOfHair\": \"short haired\",\n" +
-                                        "    \"litter\": null,\n" +
-                                        "    \"name\": \"hondje\",\n" +
-                                        "    \"chipNumber\": 999999999999999,\n" +
-                                        "    \"breed\": \"Dachschund\",\n" +
-                                        "    \"breedGroup\": \"Hound\",\n" +
-                                        "    \"hairColor\": \"Grey\",\n" +
-                                        "    \"canSee\": true,\n" +
-                                        "    \"canHear\": true\n" +
-                                        "    },\n" +
-                                        "    {\n" +
-                                        "    \"color\": \"brown\",\n" +
-                                        "    \"dateOfBirth\": \"2017-01-13\",\n" +
-                                        "    \"dateOfDeath\": null,\n" +
-                                        "    \"food\": \"dog chow\",\n" +
-                                        "    \"sex\": \"female\",\n" +
-                                        "    \"weightInGrams\": 5.0,\n" +
-                                        "    \"kindOfHair\": \"short haired\",\n" +
-                                        "    \"litter\": null,\n" +
-                                        "    \"name\": \"hondje\",\n" +
-                                        "    \"chipNumber\": 999999999999999,\n" +
-                                        "    \"breed\": \"Dachschund\",\n" +
-                                        "    \"breedGroup\": \"Hound\",\n" +
-                                        "    \"hairColor\": \"Grey\",\n" +
-                                        "    \"canSee\": false,\n" +
-                                        "    \"canHear\": true\n" +
-                                        "    }\n" +
-                                        "]")
+                                .content("""
+                                        [
+                                            {
+                                            "color": "brown",
+                                            "dateOfBirth": "2017-01-13",
+                                            "dateOfDeath": null,
+                                            "food": "dog chow",
+                                            "sex": "male",
+                                            "weightInGrams": 5.0,
+                                            "kindOfHair": "short haired",
+                                            "litter": null,
+                                            "name": "hondje",
+                                            "chipNumber": 999999999999999,
+                                            "breed": "Dachschund",
+                                            "breedGroup": "Hound",
+                                            "hairColor": "Grey",
+                                            "canSee": true,
+                                            "canHear": true
+                                            },
+                                            {
+                                            "color": "brown",
+                                            "dateOfBirth": "2017-01-13",
+                                            "dateOfDeath": null,
+                                            "food": "dog chow",
+                                            "sex": "female",
+                                            "weightInGrams": 5.0,
+                                            "kindOfHair": "short haired",
+                                            "litter": null,
+                                            "name": "hondje",
+                                            "chipNumber": 999999999999999,
+                                            "breed": "Dachschund",
+                                            "breedGroup": "Hound",
+                                            "hairColor": "Grey",
+                                            "canSee": false,
+                                            "canHear": true
+                                            }
+                                        ]""")
                                 .with(jwt())
                 )
                 .andDo(MockMvcResultHandlers.print())
@@ -319,25 +321,26 @@ class DomesticatedDogControllerTest {
                 .perform(
                         MockMvcRequestBuilders.put("/dogs/{id}", "1")
                                 .contentType(MediaType.APPLICATION_JSON)
-                                .content("{\n" +
-                                        "        \"color\": \"brown\",\n" +
-                                        "        \"dateOfBirth\": \"2017-01-13\",\n" +
-                                        "        \"dateOfDeath\": null,\n" +
-                                        "        \"food\": \"dog chow\",\n" +
-                                        "        \"sex\": \"female\",\n" +
-                                        "        \"weightInGrams\": 5.0,\n" +
-                                        "        \"kindOfHair\": \"short haired\",\n" +
-                                        "        \"litter\": null,\n" +
-                                        "        \"name\": \"pupje\",\n" +
-                                        "        \"chipNumber\": 999999999999999,\n" +
-                                        "        \"breed\": \"Dachschund\",\n" +
-                                        "        \"breedGroup\": \"Hound\",\n" +
-                                        "        \"hairColor\" : \"Grey\",\n" +
-                                        "        \"person\": {\n" +
-                                        "            \"id\" : 2001\n" +
-                                        "        },\n" +
-                                        "        \"dogStatus\" : \"availablePreOwned\"\n" +
-                                        "    }")
+                                .content("""
+                                        {
+                                                "color": "brown",
+                                                "dateOfBirth": "2017-01-13",
+                                                "dateOfDeath": null,
+                                                "food": "dog chow",
+                                                "sex": "female",
+                                                "weightInGrams": 5.0,
+                                                "kindOfHair": "short haired",
+                                                "litter": null,
+                                                "name": "pupje",
+                                                "chipNumber": 999999999999999,
+                                                "breed": "Dachschund",
+                                                "breedGroup": "Hound",
+                                                "hairColor" : "Grey",
+                                                "person": {
+                                                    "id" : 2001
+                                                },
+                                                "dogStatus" : "availablePreOwned"
+                                            }""")
                                 .with(jwt())
                 )
                 .andDo(MockMvcResultHandlers.print())
@@ -367,25 +370,26 @@ class DomesticatedDogControllerTest {
                 .perform(
                         MockMvcRequestBuilders.put("/dogs/{id}", "1")
                                 .contentType(MediaType.APPLICATION_JSON)
-                                .content("    {\n" +
-                                        "        \"color\": \"brown\",\n" +
-                                        "        \"dateOfBirth\": \"2017-01-13\",\n" +
-                                        "        \"dateOfDeath\": null,\n" +
-                                        "        \"food\": \"dog chow\",\n" +
-                                        "        \"sex\": \"x\",\n" +
-                                        "        \"weightInGrams\": 5.0,\n" +
-                                        "        \"kindOfHair\": \"short haired\",\n" +
-                                        "        \"litter\": null,\n" +
-                                        "        \"name\": \"pupje\",\n" +
-                                        "        \"chipNumber\": 999999999999999,\n" +
-                                        "        \"breed\": \"Dachschund\",\n" +
-                                        "        \"breedGroup\": \"Hound\",\n" +
-                                        "        \"hairColor\" : \"Grey\",\n" +
-                                        "        \"person\": {\n" +
-                                        "            \"id\" : 2001\n" +
-                                        "        },\n" +
-                                        "        \"dogStatus\" : \"availablePreOwned\"\n" +
-                                        "    }")
+                                .content("""
+                                        {
+                                            "color": "brown",
+                                            "dateOfBirth": "2017-01-13",
+                                            "dateOfDeath": null,
+                                            "food": "dog chow",
+                                            "sex": "x",
+                                            "weightInGrams": 5.0,
+                                            "kindOfHair": "short haired",
+                                            "litter": null,
+                                            "name": "pupje",
+                                            "chipNumber": 999999999999999,
+                                            "breed": "Dachschund",
+                                            "breedGroup": "Hound",
+                                            "hairColor" : "Grey",
+                                            "person": {
+                                                "id" : 2001
+                                            },
+                                            "dogStatus" : "availablePreOwned"
+                                        }""".indent(4))
                                 .with(jwt())
                 )
                 .andDo(MockMvcResultHandlers.print())
@@ -400,20 +404,21 @@ class DomesticatedDogControllerTest {
                 .perform(
                         MockMvcRequestBuilders.patch("/dogs/{id}", "1")
                                 .contentType(MediaType.APPLICATION_JSON)
-                                .content("{\n" +
-                                        "    \"name\": \"Hondje1\",\n" +
-                                        "    \"hairColor\": \"yellow\",\n" +
-                                        "    \"food\": \"Hamburgers\",\n" +
-                                        "    \"sex\": \"female\",\n" +
-                                        "    \"weightInGrams\": 0.5,\n" +
-                                        "    \"kindOfHair\": \"long haired\",\n" +
-                                        "    \"dogYears\": 35,\n" +
-                                        "    \"dateOfBirth\": \"2018-01-13\",\n" +
-                                        "    \"breed\": \"Dachschund\",\n" +
-                                        "    \"person\": {\n" +
-                                        "        \"id\" : 2001\n" +
-                                        "    }\n" +
-                                        "    }")
+                                .content("""
+                                        {
+                                            "name": "Hondje1",
+                                            "hairColor": "yellow",
+                                            "food": "Hamburgers",
+                                            "sex": "female",
+                                            "weightInGrams": 0.5,
+                                            "kindOfHair": "long haired",
+                                            "dogYears": 35,
+                                            "dateOfBirth": "2018-01-13",
+                                            "breed": "Dachschund",
+                                            "person": {
+                                                "id" : 2001
+                                            }
+                                            }""")
                                 .with(jwt())
                 )
                 .andDo(MockMvcResultHandlers.print())
