@@ -128,7 +128,8 @@ public class DomesticatedDogService {
         List<DomesticatedDog> domesticatedDogList = domesticatedDogRepository.findAll();
         List<DomesticatedDog> availableDogs = new ArrayList<>();
         for(DomesticatedDog domesticatedDog : domesticatedDogList){
-            if(domesticatedDog.getDogStatus().toString().equals("availablePup") || domesticatedDog.getDogStatus().toString().equals("availableDog")){
+            Status domesticatedDogStatus = domesticatedDog.getDogStatus();
+            if(domesticatedDogStatus ==  Status.availablePup || domesticatedDogStatus == Status.availablePreOwned){
                 availableDogs.add(domesticatedDog);
             }
         }
@@ -146,7 +147,7 @@ public class DomesticatedDogService {
         List<DomesticatedDog> domesticatedDogList = domesticatedDogRepository.findAll();
         List<DomesticatedDog> breedDogs = new ArrayList<>();
         for(DomesticatedDog domesticatedDog : domesticatedDogList){
-            if(domesticatedDog.getDogStatus().toString().equals("breedDog")){
+            if(domesticatedDog.getDogStatus() == Status.breedDog){
                 breedDogs.add(domesticatedDog);
             }
         }
@@ -197,8 +198,7 @@ public class DomesticatedDogService {
             }
         }
         DomesticatedDog domesticatedDog = transferToDomesticatedDog(domesticatedDogInputDto);
-        domesticatedDogRepository.save(domesticatedDog);
-
+        domesticatedDog = domesticatedDogRepository.save(domesticatedDog);
         return domesticatedDog.getId();
     }
 
@@ -220,12 +220,12 @@ public class DomesticatedDogService {
             throw new RecordNotFoundException("No dog with this id found in database");
         } else {
             for(DomesticatedDogInputDto child : domesticatedDogInputDtoList){
-                    DomesticatedDog transferredDog = transferToDomesticatedDog(child);
-                    transferredDog.setParentId(domesticatedDogId);
+                DomesticatedDog transferredDog = transferToDomesticatedDog(child);
+                transferredDog.setParentId(domesticatedDogId);
 
-                    domesticatedDogRepository.save(transferredDog);
-                    DomesticatedDogOutputDto createdDog = transferToOutputDto(transferredDog);
-                    createdDogsFromLitterArray.add(createdDog);
+                domesticatedDogRepository.save(transferredDog);
+                DomesticatedDogOutputDto createdDog = transferToOutputDto(transferredDog);
+                createdDogsFromLitterArray.add(createdDog);
             }
         }
         if (createdDogsFromLitterArray.isEmpty()) {
