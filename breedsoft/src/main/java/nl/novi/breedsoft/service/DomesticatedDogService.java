@@ -4,6 +4,7 @@ import nl.novi.breedsoft.dto.domesticatedDogDtos.DomesticatedDogInputDto;
 import nl.novi.breedsoft.dto.domesticatedDogDtos.DomesticatedDogOutputDto;
 import nl.novi.breedsoft.dto.domesticatedDogDtos.DomesticatedDogPatchDto;
 import nl.novi.breedsoft.exception.EnumValueNotFoundException;
+import nl.novi.breedsoft.exception.IncorrectInputException;
 import nl.novi.breedsoft.exception.RecordNotFoundException;
 import nl.novi.breedsoft.model.management.VeterinarianAppointment;
 import nl.novi.breedsoft.model.management.DomesticatedDog;
@@ -69,7 +70,7 @@ public class DomesticatedDogService {
             DomesticatedDog domesticatedDog = domesticatedDogRepository.findById(domesticatedDogId).get();
             return transferToOutputDto(domesticatedDog);
         } else {
-            throw new RecordNotFoundException("Dog not found in database");
+            throw new RecordNotFoundException("Dog not found in database.");
         }
     }
 
@@ -81,7 +82,7 @@ public class DomesticatedDogService {
      */
     public List<DomesticatedDogOutputDto> getDomesticatedDogByName(String domesticatedDogName) {
         if (domesticatedDogRepository.findByNameContaining(domesticatedDogName).isEmpty()){
-            throw new RecordNotFoundException("No dog with this name found in database");
+            throw new RecordNotFoundException("No dog with this name found in database.");
         } else {
             List<DomesticatedDog> domesticatedDogList = domesticatedDogRepository.findByNameContaining(domesticatedDogName);
             List<DomesticatedDogOutputDto> domesticatedDogOutputDtoList = new ArrayList<>();
@@ -103,7 +104,7 @@ public class DomesticatedDogService {
         List<DomesticatedDog> children = new ArrayList<>();
 
         if(domesticatedDogRepository.findById(domesticatedDogId).isEmpty()){
-            throw new RecordNotFoundException("No dog with this id found in database");
+            throw new RecordNotFoundException("No dog with this id found in database.");
         } else {
             List<DomesticatedDog> allDomesticatedDogs = domesticatedDogRepository.findAll();
             for(DomesticatedDog domesticatedDog : allDomesticatedDogs){
@@ -112,7 +113,7 @@ public class DomesticatedDogService {
                 }
             }
             if(children.isEmpty()){
-                throw new RecordNotFoundException("This dog doesn't have children");
+                throw new RecordNotFoundException("This dog doesn't have children.");
             }
         }
 
@@ -134,7 +135,7 @@ public class DomesticatedDogService {
             }
         }
         if(availableDogs.isEmpty()){
-            throw new RecordNotFoundException("There are no available dogs found");
+            throw new RecordNotFoundException("There are no available dogs found.");
         }
         return transferDomesticatedDogListToOutputDtoList(availableDogs);
     }
@@ -152,7 +153,7 @@ public class DomesticatedDogService {
             }
         }
         if(breedDogs.isEmpty()){
-            throw new RecordNotFoundException("There are no breed dogs found");
+            throw new RecordNotFoundException("There are no breed dogs found.");
         }
         return transferDomesticatedDogListToOutputDtoList(breedDogs);
     }
@@ -194,7 +195,7 @@ public class DomesticatedDogService {
         if(domesticatedDogInputDto.getPerson() != null) {
             Person dogOwner = repositoryUtility.getCompletePersonById(domesticatedDogInputDto.getPerson().getId());
             if (dogOwner == null) {
-                throw new RecordNotFoundException("Provided dog owner does not exist");
+                throw new RecordNotFoundException("Provided dog owner does not exist.");
             }
         }
         DomesticatedDog domesticatedDog = transferToDomesticatedDog(domesticatedDogInputDto);
@@ -227,10 +228,11 @@ public class DomesticatedDogService {
                 DomesticatedDogOutputDto createdDog = transferToOutputDto(transferredDog);
                 createdDogsFromLitterArray.add(createdDog);
             }
+            if (createdDogsFromLitterArray.isEmpty()) {
+                throw new IncorrectInputException("Empty array. No dogs are created");
+            }
         }
-        if (createdDogsFromLitterArray.isEmpty()) {
-            throw new IllegalStateException("No dogs are created");
-        }
+
         return createdDogsFromLitterArray;
     }
 
@@ -336,7 +338,6 @@ public class DomesticatedDogService {
             domesticatedDogRepository.save(updatedDog);
 
             return "Your dog has been updated. " + message;
-
         } else {
             throw new RecordNotFoundException("Dog is not found.");
         }
@@ -394,6 +395,7 @@ public class DomesticatedDogService {
     public void deleteDomesticatedDog(Long domesticatedDogId) {
 
         if (domesticatedDogRepository.findById(domesticatedDogId).isPresent()){
+            DomesticatedDog test = domesticatedDogRepository.findById(domesticatedDogId).get();
             DomesticatedDog dogToDelete = domesticatedDogRepository.getReferenceById(domesticatedDogId);
             //Delete appointments for domesticated dog
             List<VeterinarianAppointment> dogVeterinarianAppointments = dogToDelete.getVeterinarianAppointments();
@@ -408,7 +410,7 @@ public class DomesticatedDogService {
             //delete domesticated dog
             domesticatedDogRepository.deleteById(domesticatedDogId);
         } else {
-            throw new  RecordNotFoundException("No dogs with given ID found.");
+            throw new  RecordNotFoundException("No dog with given ID found.");
         }
     }
 
@@ -563,7 +565,7 @@ public class DomesticatedDogService {
             if (parentDog.isPresent()) {
                 domesticatedDog.setParentId(domesticatedDogInputDto.getParentId());
             } else {
-                throw new RecordNotFoundException("Parent ID not found");
+                throw new RecordNotFoundException("Parent ID not found.");
             }
         }
         if(domesticatedDogInputDto.getDogStatus() != null) {
