@@ -246,8 +246,8 @@ public class DomesticatedDogService {
      * @throws RecordNotFoundException throws an exception when dog owner is not found based on ID
      */
     public DomesticatedDogOutputDto updateDomesticatedDog(Long domesticatedDogId, DomesticatedDogInputDto domesticatedDogInputDto) {
-        if (domesticatedDogRepository.findById(domesticatedDogId).isPresent()){
-            DomesticatedDog domesticatedDog = domesticatedDogRepository.findById(domesticatedDogId).get();
+        Optional<DomesticatedDog> optionalDomesticatedDog = domesticatedDogRepository.findById(domesticatedDogId);
+        if (optionalDomesticatedDog.isPresent()){
             DomesticatedDog updatedDog = transferToDomesticatedDog(domesticatedDogInputDto);
             if (domesticatedDogInputDto.getPerson() != null) {
                 Person dogOwner = repositoryUtility.getCompletePersonById(domesticatedDogInputDto.getPerson().getId());
@@ -257,7 +257,7 @@ public class DomesticatedDogService {
                 updatedDog.setPerson(dogOwner);
             }
             //Keeping the former id, as we will update the existing dog
-            updatedDog.setId(domesticatedDog.getId());
+            updatedDog.setId(domesticatedDogId);
             domesticatedDogRepository.save(updatedDog);
             return transferToOutputDto(updatedDog);
         } else {
@@ -395,7 +395,6 @@ public class DomesticatedDogService {
     public void deleteDomesticatedDog(Long domesticatedDogId) {
 
         if (domesticatedDogRepository.findById(domesticatedDogId).isPresent()){
-            DomesticatedDog test = domesticatedDogRepository.findById(domesticatedDogId).get();
             DomesticatedDog dogToDelete = domesticatedDogRepository.getReferenceById(domesticatedDogId);
             //Delete appointments for domesticated dog
             List<VeterinarianAppointment> dogVeterinarianAppointments = dogToDelete.getVeterinarianAppointments();

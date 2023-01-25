@@ -2,6 +2,7 @@ package nl.novi.breedsoft.service;
 
 import nl.novi.breedsoft.dto.domesticatedDogDtos.DomesticatedDogInputDto;
 import nl.novi.breedsoft.dto.domesticatedDogDtos.DomesticatedDogOutputDto;
+import nl.novi.breedsoft.exception.IncorrectInputException;
 import nl.novi.breedsoft.exception.RecordNotFoundException;
 import nl.novi.breedsoft.model.management.DomesticatedDog;
 import nl.novi.breedsoft.model.management.MedicalData;
@@ -284,7 +285,7 @@ class DomesticatedDogServiceTest {
     }
 
     @Test
-    void getAvailableDomesticatedDogsWithNotAvailabeDogs() {
+    void getAvailableDomesticatedDogsWithNotAvailableDogs() {
         // Arrange
         Status expectedStatus = Status.ownedDog;
         DomesticatedDog domesticatedDog = new DomesticatedDog();
@@ -410,7 +411,6 @@ class DomesticatedDogServiceTest {
     void createLitterList() {
         // Arrange
         when(domesticatedDogRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(new DomesticatedDog()));
-
         Long expectedParentID = 42L;
         // Act
         List<DomesticatedDogOutputDto> result = domesticatedDogService.createLitterList(List.of(new DomesticatedDogInputDto()),expectedParentID);
@@ -432,7 +432,92 @@ class DomesticatedDogServiceTest {
     }
 
     @Test
+    void createLitterListWithEmptyLitterListInput() {
+        // Arrange
+        when(domesticatedDogRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(new DomesticatedDog()));
+
+        // Act and Assert
+        assertThrows(
+                IncorrectInputException.class,
+                () -> domesticatedDogService.createLitterList(new ArrayList<>(),42L),
+                "Expected incorrect input exception to be thrown"
+        );
+    }
+
+    @Test
     void updateDomesticatedDog() {
+        // Arrange
+        Long expectedID = 42L;
+        DomesticatedDog domesticatedDog = new DomesticatedDog();
+        domesticatedDog.setId(expectedID);
+        when(domesticatedDogRepository.findById(expectedID)).thenReturn(Optional.of(domesticatedDog));
+        // Act
+        DomesticatedDogOutputDto result = domesticatedDogService.updateDomesticatedDog(expectedID, new DomesticatedDogInputDto());
+        // Assert
+        assertEquals(expectedID, result.getId());
+    }
+
+    @Test
+    void updateDomesticatedDogWithPerson() {
+        // Arrange
+        Long expectedID = 42L;
+        DomesticatedDog domesticatedDog = new DomesticatedDog();
+        domesticatedDog.setId(expectedID);
+        when(domesticatedDogRepository.findById(expectedID)).thenReturn(Optional.of(domesticatedDog));
+
+        Long expectedPersonID = 42L;
+        Person person = new Person();
+        person.setId(expectedPersonID);
+        when(repositoryUtility.getCompletePersonById(expectedPersonID)).thenReturn(person);
+
+        DomesticatedDogInputDto domesticatedDogInputDto = new DomesticatedDogInputDto();
+        domesticatedDogInputDto.setPerson(person);
+        // Act
+        DomesticatedDogOutputDto result = domesticatedDogService.updateDomesticatedDog(expectedID, domesticatedDogInputDto);
+        // Assert
+        assertEquals(expectedID, result.getId());
+        assertEquals(expectedPersonID, result.getPerson().getId());
+    }
+
+    @Test
+    void updateDomesticatedDogWithNoneExistingPerson() {
+        // Arrange
+        Long expectedID = 42L;
+        DomesticatedDog domesticatedDog = new DomesticatedDog();
+        domesticatedDog.setId(expectedID);
+        when(domesticatedDogRepository.findById(expectedID)).thenReturn(Optional.of(domesticatedDog));
+        when(repositoryUtility.getCompletePersonById(Mockito.anyLong())).thenReturn(null);
+
+        Person person = new Person();
+        person.setId(42L);
+        DomesticatedDogInputDto domesticatedDogInputDto = new DomesticatedDogInputDto();
+        domesticatedDogInputDto.setPerson(person);
+        // Act and Assert
+        assertThrows(
+                RecordNotFoundException.class,
+                () -> domesticatedDogService.updateDomesticatedDog(expectedID, domesticatedDogInputDto),
+                "Expected record not found exception to be thrown"
+        );
+    }
+
+    @Test
+    void updateDomesticatedDogWithNoneExistingDog() {
+        // Arrange
+        String expectedName = "expectedName";
+        when(domesticatedDogRepository.findById(Mockito.anyLong())).thenReturn(Optional.empty());
+        DomesticatedDogInputDto domesticatedDogInputDto = new DomesticatedDogInputDto();
+        domesticatedDogInputDto.setName(expectedName);
+
+        DomesticatedDog domesticatedDog = new DomesticatedDog();
+        domesticatedDog.setName(expectedName);
+        Long expectedID = 42L;
+        domesticatedDog.setId(expectedID);
+        when(domesticatedDogRepository.save(Mockito.any(DomesticatedDog.class))).thenReturn(domesticatedDog);
+        when(domesticatedDogRepository.getReferenceById(expectedID)).thenReturn(domesticatedDog);
+        // Act
+        DomesticatedDogOutputDto result = domesticatedDogService.updateDomesticatedDog(42L, new DomesticatedDogInputDto());
+        // Assert
+        assertEquals(expectedName, result.getName());
     }
 
     @Test
