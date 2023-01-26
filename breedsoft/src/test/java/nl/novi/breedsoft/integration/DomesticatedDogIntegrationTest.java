@@ -4,8 +4,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import nl.novi.breedsoft.cleanupH2DatabaseTestListener.CleanupH2DatabaseTestListener;
 import nl.novi.breedsoft.dto.domesticatedDogDtos.DomesticatedDogInputDto;
-import nl.novi.breedsoft.dto.domesticatedDogDtos.DomesticatedDogOutputDto;
 import nl.novi.breedsoft.model.animal.enumerations.Sex;
 import nl.novi.breedsoft.model.management.DomesticatedDog;
 import nl.novi.breedsoft.model.management.MedicalData;
@@ -18,8 +18,6 @@ import nl.novi.breedsoft.repository.DomesticatedDogRepository;
 import nl.novi.breedsoft.repository.MedicalDataRepository;
 import nl.novi.breedsoft.repository.PersonRepository;
 import nl.novi.breedsoft.repository.VeterinarianAppointmentRepository;
-
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,15 +26,14 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.TestExecutionListeners;
+import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.ArrayList;
 import java.util.List;
-
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -44,6 +41,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
+@TestExecutionListeners(listeners = {DependencyInjectionTestExecutionListener.class, CleanupH2DatabaseTestListener.class})
 public class DomesticatedDogIntegrationTest {
 
     @Autowired
@@ -61,55 +59,26 @@ public class DomesticatedDogIntegrationTest {
     @Autowired
     VeterinarianAppointmentRepository veterinarianAppointmentRepository;
 
-    DomesticatedDog domesticatedDog1;
-    DomesticatedDog domesticatedDog2;
-    DomesticatedDog domesticatedDog3;
-    DomesticatedDog domesticatedDog4;
+    DomesticatedDog domesticatedDog = new DomesticatedDog();
+    DomesticatedDog domesticatedDogPup = new DomesticatedDog();
+    DomesticatedDog domesticatedDogPreOwned = new DomesticatedDog();
 
-    List<DomesticatedDogInputDto> domesticatedDogInputDtoList;
+    List<DomesticatedDogInputDto> domesticatedDogInputDtoList = new ArrayList<>();
 
-    DomesticatedDogOutputDto dogOutputDto1;
+    DomesticatedDogInputDto dogInputDto = new DomesticatedDogInputDto();
+    DomesticatedDogInputDto dogInputDtoUnknownPerson = new DomesticatedDogInputDto();
+    DomesticatedDogInputDto dogInputDtoUnknownSex = new DomesticatedDogInputDto();
+    DomesticatedDogInputDto dogInputDtoMissingValues = new DomesticatedDogInputDto();
+    DomesticatedDogInputDto dogInputDtoLostWeight = new DomesticatedDogInputDto();
 
-    DomesticatedDogInputDto dogInputDto;
-    DomesticatedDogInputDto dogInputDtoUnknownPerson;
-    DomesticatedDogInputDto dogInputDtoUnknownSex;
-    DomesticatedDogInputDto dogInputDtoMissingValues;
-    DomesticatedDogInputDto dogInputDtoLostWeight;
-
-    Person person;
-    Person person2;
-    Person personNotInRepo;
-
-    VeterinarianAppointment veterinarianAppointment;
-    List<VeterinarianAppointment> veterinarianAppointmentList;
-    MedicalData medicalData;
-    List<MedicalData> medicalDataList;
+    Person person = new Person();
+    Person personNotInRepo = new Person();
+    VeterinarianAppointment veterinarianAppointment = new VeterinarianAppointment();
+    MedicalData medicalData = new MedicalData();
 
     @BeforeEach
-    void setup() {
+    void setup(){
 
-
-        personNotInRepo = new Person();
-        domesticatedDog1 = new DomesticatedDog();
-        domesticatedDog2 = new DomesticatedDog();
-        domesticatedDog3 = new DomesticatedDog();
-        domesticatedDog4 = new DomesticatedDog();
-        person = new Person();
-        person2 = new Person();
-        dogOutputDto1 = new DomesticatedDogOutputDto();
-        dogInputDto = new DomesticatedDogInputDto();
-        domesticatedDogInputDtoList = new ArrayList<>();
-        dogInputDtoLostWeight = new DomesticatedDogInputDto();
-        dogInputDtoUnknownPerson = new DomesticatedDogInputDto();
-        dogInputDtoUnknownSex = new DomesticatedDogInputDto();
-        dogInputDtoMissingValues = new DomesticatedDogInputDto();
-        medicalData = new MedicalData();
-        medicalDataList = new ArrayList<>();
-        veterinarianAppointment = new VeterinarianAppointment();
-        veterinarianAppointmentList = new ArrayList<>();
-
-        person = new Person();
-        person.setId(1L);
         person.setSex(Sex.female);
         person.setFirstName("Eva");
         person.setLastName("Hauber");
@@ -117,77 +86,45 @@ public class DomesticatedDogIntegrationTest {
         person.setHouseNumber(31);
         person.setZipCode("5172CN");
         person.setCity("Kaatsheuvel");
-        person.setDogs(new ArrayList<>(List.of(domesticatedDog1, domesticatedDog2, domesticatedDog3)));
         personRepository.save(person);
-
-        domesticatedDog1.setId(1L);
-        domesticatedDog1.setName("Saar");
-        domesticatedDog1.setBreed(Breed.Dachschund);
-        domesticatedDog1.setFood("dog chow");
-        domesticatedDog1.setDogStatus(Status.breedDog);
-        domesticatedDog1.setSex(Sex.female);
-        domesticatedDog1.setBreedGroup(BreedGroup.Hound);
-        domesticatedDog1.setKindOfHair("Long haired");
-        domesticatedDog1.setWeightInGrams(1000.00);
-        domesticatedDogRepository.save(domesticatedDog1);
-
-        domesticatedDog2.setId(2L);
-        domesticatedDog2.setName("Pip");
-        domesticatedDog2.setBreed(Breed.Dachschund);
-        domesticatedDog2.setFood("dog chow");
-        domesticatedDog2.setDogStatus(Status.ownedDog);
-        domesticatedDog2.setSex(Sex.female);
-        domesticatedDog2.setBreedGroup(BreedGroup.Hound);
-        domesticatedDog2.setKindOfHair("Long haired");
-        domesticatedDogRepository.save(domesticatedDog2);
-
-        domesticatedDog3.setId(3L);
-        domesticatedDog3.setName("Lotje");
-        domesticatedDog3.setBreed(Breed.Affenpinscher);
-        domesticatedDog3.setFood("dog chow");
-        domesticatedDog3.setDogStatus(Status.availablePreOwned);
-        domesticatedDog3.setSex(Sex.female);
-        domesticatedDog3.setBreedGroup(BreedGroup.Hound);
-        domesticatedDog3.setKindOfHair("Short haired");
-        domesticatedDog3.setParentId(1L);
-        domesticatedDogRepository.save(domesticatedDog3);
-
-
-    }
-
-    @AfterEach
-    void tear(){
-
-        if(domesticatedDogRepository.count() > 0){
-            domesticatedDogRepository = null;
-        }
-
-        if(personRepository.count() > 0){
-            personRepository = null;
-        }
-
     }
 
     @Test
     void getAllDomesticatedDogs() throws Exception {
 
+        domesticatedDog.setName("Saar");
+        domesticatedDog.setBreed(Breed.Dachschund);
+        domesticatedDog.setFood("dog chow");
+        domesticatedDog.setDogStatus(Status.breedDog);
+        domesticatedDog.setSex(Sex.female);
+        domesticatedDog.setBreedGroup(BreedGroup.Hound);
+        domesticatedDog.setKindOfHair("Long haired");
+        domesticatedDog.setPerson(person);
+        domesticatedDogRepository.save(domesticatedDog);
+
         mockMvc.perform(get("/dogs").with(jwt()))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].id").value(1))
+                .andExpect(jsonPath("$[0].id").value(domesticatedDog.getId()))
                 .andExpect(jsonPath("$[0].name").value("Saar"))
-                .andExpect(jsonPath("$[0].sex").value("female"))
-                .andExpect(jsonPath("$[1].id").value(2))
-                .andExpect(jsonPath("$[1].breedGroup").value("Hound"))
-                .andExpect(jsonPath("$[1].kindOfHair").value("Long haired"))
-                .andExpect(jsonPath("$[2].id").value(3))
-                .andExpect(jsonPath("$[2].name").value("Lotje"));
+                .andExpect(jsonPath("$[0].sex").value("female"));
     }
 
     @Test
     void getDomesticatedDogById() throws Exception {
-        mockMvc.perform(get("/dogs/id/{id}", "1").with(jwt()))
+
+        domesticatedDog.setName("Saar");
+        domesticatedDog.setBreed(Breed.Dachschund);
+        domesticatedDog.setFood("dog chow");
+        domesticatedDog.setDogStatus(Status.breedDog);
+        domesticatedDog.setSex(Sex.female);
+        domesticatedDog.setBreedGroup(BreedGroup.Hound);
+        domesticatedDog.setKindOfHair("Long haired");
+        domesticatedDog.setPerson(person);
+        domesticatedDogRepository.save(domesticatedDog);
+
+        mockMvc.perform(get("/dogs/id/{id}", domesticatedDog.getId()).with(jwt()))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(1))
+                .andExpect(jsonPath("$.id").value(domesticatedDog.getId()))
                 .andExpect(jsonPath("$.name").value("Saar"))
                 .andExpect(jsonPath("$.sex").value("female"));
     }
@@ -201,8 +138,19 @@ public class DomesticatedDogIntegrationTest {
 
     @Test
     void getDomesticatedDogByName() throws Exception {
+
+        domesticatedDog.setName("Lotje");
+        domesticatedDog.setBreed(Breed.Dachschund);
+        domesticatedDog.setFood("dog chow");
+        domesticatedDog.setDogStatus(Status.breedDog);
+        domesticatedDog.setSex(Sex.female);
+        domesticatedDog.setBreedGroup(BreedGroup.Hound);
+        domesticatedDog.setKindOfHair("Long haired");
+        domesticatedDog.setPerson(person);
+        domesticatedDogRepository.save(domesticatedDog);
+
         mockMvc.perform(get("/dogs/name/{name}", "Lotje").with(jwt()))
-                .andExpect(jsonPath("$[0].id").value(3))
+                .andExpect(jsonPath("$[0].id").value(domesticatedDog.getId()))
                 .andExpect(jsonPath("$[0].name").value("Lotje"))
                 .andExpect(jsonPath("$[0].sex").value("female"));
     }
@@ -217,15 +165,47 @@ public class DomesticatedDogIntegrationTest {
 
     @Test
     void getChildrenById() throws Exception {
-        mockMvc.perform(get("/dogs/{id}/children", "1").with(jwt()))
-                .andExpect(jsonPath("$[0].id").value(3))
+
+        domesticatedDog.setName("Saar");
+        domesticatedDog.setBreed(Breed.Dachschund);
+        domesticatedDog.setFood("dog chow");
+        domesticatedDog.setDogStatus(Status.breedDog);
+        domesticatedDog.setSex(Sex.female);
+        domesticatedDog.setBreedGroup(BreedGroup.Hound);
+        domesticatedDog.setKindOfHair("Long haired");
+        domesticatedDog.setPerson(person);
+        domesticatedDogRepository.save(domesticatedDog);
+
+        domesticatedDogPup.setName("Lotje");
+        domesticatedDogPup.setBreed(Breed.Dachschund);
+        domesticatedDogPup.setFood("dog chow");
+        domesticatedDogPup.setDogStatus(Status.breedDog);
+        domesticatedDogPup.setSex(Sex.female);
+        domesticatedDogPup.setBreedGroup(BreedGroup.Hound);
+        domesticatedDogPup.setKindOfHair("Long haired");
+        domesticatedDogPup.setParentId(domesticatedDog.getId());
+        domesticatedDogRepository.save(domesticatedDogPup);
+
+        mockMvc.perform(get("/dogs/{id}/children", domesticatedDog.getId()).with(jwt()))
+                .andExpect(jsonPath("$[0].id").value(domesticatedDogPup.getId()))
                 .andExpect(jsonPath("$[0].name").value("Lotje"))
                 .andExpect(jsonPath("$[0].sex").value("female"));
     }
 
     @Test
     void getChildrenByIdWithoutChildren() throws Exception {
-        mockMvc.perform(get("/dogs/{id}/children", "2").with(jwt()))
+
+        domesticatedDog.setName("Saar");
+        domesticatedDog.setBreed(Breed.Dachschund);
+        domesticatedDog.setFood("dog chow");
+        domesticatedDog.setDogStatus(Status.breedDog);
+        domesticatedDog.setSex(Sex.female);
+        domesticatedDog.setBreedGroup(BreedGroup.Hound);
+        domesticatedDog.setKindOfHair("Long haired");
+        domesticatedDog.setPerson(person);
+        domesticatedDogRepository.save(domesticatedDog);
+
+        mockMvc.perform(get("/dogs/{id}/children", domesticatedDog.getId()).with(jwt()))
                 .andExpect(status().isNotFound())
                 .andExpect(content().string("This dog doesn't have children."));
     }
@@ -239,37 +219,110 @@ public class DomesticatedDogIntegrationTest {
 
     @Test
     void getParentById() throws Exception {
-        mockMvc.perform(get("/dogs/{id}/parent", "3").with(jwt()))
-                .andExpect(jsonPath("$.id").value(1))
+        domesticatedDog.setName("Saar");
+        domesticatedDog.setBreed(Breed.Dachschund);
+        domesticatedDog.setFood("dog chow");
+        domesticatedDog.setDogStatus(Status.breedDog);
+        domesticatedDog.setSex(Sex.female);
+        domesticatedDog.setBreedGroup(BreedGroup.Hound);
+        domesticatedDog.setKindOfHair("Long haired");
+        domesticatedDog.setPerson(person);
+        domesticatedDogRepository.save(domesticatedDog);
+
+        domesticatedDogPup.setName("Lotje");
+        domesticatedDogPup.setBreed(Breed.Dachschund);
+        domesticatedDogPup.setFood("dog chow");
+        domesticatedDogPup.setDogStatus(Status.availablePup);
+        domesticatedDogPup.setSex(Sex.female);
+        domesticatedDogPup.setBreedGroup(BreedGroup.Hound);
+        domesticatedDogPup.setKindOfHair("Long haired");
+        domesticatedDogPup.setParentId(domesticatedDog.getId());
+        domesticatedDogRepository.save(domesticatedDogPup);
+
+        mockMvc.perform(get("/dogs/{id}/parent", domesticatedDogPup.getId()).with(jwt()))
+                .andExpect(jsonPath("$.id").value(domesticatedDog.getId()))
                 .andExpect(jsonPath("$.name").value("Saar"))
                 .andExpect(jsonPath("$.sex").value("female"));
     }
 
     @Test
     void getParentByIdWithoutParent() throws Exception {
-        mockMvc.perform(get("/dogs/{id}/parent", "1").with(jwt()))
+
+        domesticatedDog.setName("Saar");
+        domesticatedDog.setBreed(Breed.Dachschund);
+        domesticatedDog.setFood("dog chow");
+        domesticatedDog.setDogStatus(Status.breedDog);
+        domesticatedDog.setSex(Sex.female);
+        domesticatedDog.setBreedGroup(BreedGroup.Hound);
+        domesticatedDog.setKindOfHair("Long haired");
+        domesticatedDog.setPerson(person);
+        domesticatedDogRepository.save(domesticatedDog);
+
+        mockMvc.perform(get("/dogs/{id}/parent", domesticatedDog.getId()).with(jwt()))
                 .andExpect(status().isNotFound())
                 .andExpect(content().string("No information about parent found."));
     }
 
     @Test
     void getAvailableDogs() throws Exception {
+
+        domesticatedDog.setName("Saar");
+        domesticatedDog.setBreed(Breed.Dachschund);
+        domesticatedDog.setFood("dog chow");
+        domesticatedDog.setDogStatus(Status.breedDog);
+        domesticatedDog.setSex(Sex.female);
+        domesticatedDog.setBreedGroup(BreedGroup.Hound);
+        domesticatedDog.setKindOfHair("Long haired");
+        domesticatedDog.setPerson(person);
+        domesticatedDogRepository.save(domesticatedDog);
+
+        domesticatedDogPup.setName("Lotje");
+        domesticatedDogPup.setBreed(Breed.Dachschund);
+        domesticatedDogPup.setFood("dog chow");
+        domesticatedDogPup.setDogStatus(Status.availablePup);
+        domesticatedDogPup.setSex(Sex.female);
+        domesticatedDogPup.setBreedGroup(BreedGroup.Hound);
+        domesticatedDogPup.setKindOfHair("Long haired");
+        domesticatedDogPup.setParentId(domesticatedDog.getId());
+        domesticatedDogRepository.save(domesticatedDogPup);
+
+        domesticatedDogPreOwned.setName("Pip");
+        domesticatedDogPreOwned.setBreed(Breed.Dachschund);
+        domesticatedDogPreOwned.setFood("dog chow");
+        domesticatedDogPreOwned.setDogStatus(Status.availablePreOwned);
+        domesticatedDogPreOwned.setSex(Sex.male);
+        domesticatedDogPreOwned.setBreedGroup(BreedGroup.Hound);
+        domesticatedDogPreOwned.setKindOfHair("Long haired");
+
+        domesticatedDogRepository.save(domesticatedDogPreOwned);
         mockMvc.perform(get("/dogs/available").with(jwt()))
-                .andExpect(jsonPath("$[0].id").value(3))
-                .andExpect(jsonPath("$[0].name").value("Lotje"))
-                .andExpect(jsonPath("$[0].sex").value("female"));
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("Pip")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("Lotje")));
+
     }
 
     @Test
     void getBreedDogs() throws Exception {
+
+        domesticatedDog.setName("Saar");
+        domesticatedDog.setBreed(Breed.Dachschund);
+        domesticatedDog.setFood("dog chow");
+        domesticatedDog.setDogStatus(Status.breedDog);
+        domesticatedDog.setSex(Sex.female);
+        domesticatedDog.setBreedGroup(BreedGroup.Hound);
+        domesticatedDog.setKindOfHair("Long haired");
+        domesticatedDog.setPerson(person);
+        domesticatedDogRepository.save(domesticatedDog);
+
         mockMvc.perform(get("/dogs/breeddog").with(jwt()))
-                .andExpect(jsonPath("$[0].id").value(1))
+                .andExpect(jsonPath("$[0].id").value(domesticatedDog.getId()))
                 .andExpect(jsonPath("$[0].name").value("Saar"))
                 .andExpect(jsonPath("$[0].sex").value("female"));
     }
 
     @Test
     void createDog() throws Exception {
+
         dogInputDto.setName("Saar");
         dogInputDto.setBreed("Dachschund");
         dogInputDto.setFood("dog chow");
@@ -279,9 +332,8 @@ public class DomesticatedDogIntegrationTest {
         dogInputDto.setKindOfHair("Long haired");
         dogInputDto.setChipNumber("111111111111111");
         dogInputDto.setHairColor("Brown");
-        dogInputDto.setPerson(person);
+        domesticatedDog.setPerson(person);
         dogInputDto.setDateOfBirth(LocalDate.of(2022, Month.JANUARY, 22));
-        dogInputDto.setParentId(2L);
 
         mockMvc.perform(post("/dogs").with(jwt())
                 .contentType(MediaType.APPLICATION_JSON)
@@ -291,6 +343,7 @@ public class DomesticatedDogIntegrationTest {
 
     @Test
     void createDogWithoutDogObject() throws Exception {
+
         mockMvc.perform(post("/dogs").with(jwt())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJsonString(dogInputDto)))
@@ -300,12 +353,14 @@ public class DomesticatedDogIntegrationTest {
 
     @Test
     void createDogMissingHairColor() throws Exception {
+
         dogInputDtoMissingValues.setName("Saar");
         dogInputDtoMissingValues.setBreed("Dachschund");
         dogInputDtoMissingValues.setFood("dog chow");
         dogInputDtoMissingValues.setDogStatus("breedDog");
         dogInputDtoMissingValues.setSex("female");
         dogInputDtoMissingValues.setBreedGroup("Hound");
+        dogInputDtoMissingValues.setPerson(person);
 
         mockMvc.perform(post("/dogs").with(jwt())
                 .contentType(MediaType.APPLICATION_JSON)
@@ -316,6 +371,7 @@ public class DomesticatedDogIntegrationTest {
 
     @Test
     void createDogUnknownParent() throws Exception {
+
         dogInputDto.setName("Saar");
         dogInputDto.setBreed("Dachschund");
         dogInputDto.setFood("dog chow");
@@ -325,6 +381,8 @@ public class DomesticatedDogIntegrationTest {
         dogInputDto.setKindOfHair("Long haired");
         dogInputDto.setChipNumber("111111111111111");
         dogInputDto.setHairColor("Brown");
+        domesticatedDog.setPerson(person);
+
         dogInputDto.setDateOfBirth(LocalDate.of(2022, Month.JANUARY, 22));
         dogInputDto.setParentId(222L);
 
@@ -337,6 +395,7 @@ public class DomesticatedDogIntegrationTest {
 
     @Test
     void createDogMissingDOB() throws Exception {
+
         dogInputDtoMissingValues.setName("Saar");
         dogInputDtoMissingValues.setBreed("Dachschund");
         dogInputDtoMissingValues.setFood("dog chow");
@@ -353,6 +412,7 @@ public class DomesticatedDogIntegrationTest {
 
     @Test
     void createDogMissingHairKind() throws Exception {
+
         dogInputDtoMissingValues.setName("Saar");
         dogInputDtoMissingValues.setBreed("Dachschund");
         dogInputDtoMissingValues.setFood("dog chow");
@@ -369,6 +429,7 @@ public class DomesticatedDogIntegrationTest {
 
     @Test
     void createDogMissingChipNumber() throws Exception {
+
         dogInputDtoMissingValues.setName("Saar");
         dogInputDtoMissingValues.setBreed("Dachschund");
         dogInputDtoMissingValues.setFood("dog chow");
@@ -385,6 +446,7 @@ public class DomesticatedDogIntegrationTest {
 
     @Test
     void createDogInvalidPersonId() throws Exception {
+
         personNotInRepo.setId(5L);
         dogInputDtoUnknownPerson.setName("Saar");
         dogInputDtoUnknownPerson.setBreed("Dachschund");
@@ -408,6 +470,7 @@ public class DomesticatedDogIntegrationTest {
 
     @Test
     void createDogMissingPersonId() throws Exception {
+
         dogInputDtoUnknownPerson.setName("Saar");
         dogInputDtoUnknownPerson.setBreed("Dachschund");
         dogInputDtoUnknownPerson.setFood("dog chow");
@@ -430,6 +493,7 @@ public class DomesticatedDogIntegrationTest {
 
     @Test
     void createDogInvalidSex() throws Exception {
+
         dogInputDtoUnknownSex.setName("Saar");
         dogInputDtoUnknownSex.setBreed("Dachschund");
         dogInputDtoUnknownSex.setFood("dog chow");
@@ -450,11 +514,20 @@ public class DomesticatedDogIntegrationTest {
 
     @Test
     void createLitter() throws Exception {
+
+        domesticatedDog.setName("Saar");
+        domesticatedDog.setBreed(Breed.Dachschund);
+        domesticatedDog.setFood("dog chow");
+        domesticatedDog.setDogStatus(Status.breedDog);
+        domesticatedDog.setSex(Sex.female);
+        domesticatedDog.setBreedGroup(BreedGroup.Hound);
+        domesticatedDog.setKindOfHair("Long haired");
+        domesticatedDogRepository.save(domesticatedDog);
+
         dogInputDto.setName("Lotje");
         dogInputDto.setBreed("Dachschund");
         dogInputDto.setFood("dog chow");
         dogInputDto.setDogStatus("breedDog");
-        dogInputDto.setPerson(person);
         dogInputDto.setSex("female");
         dogInputDto.setBreedGroup("Hound");
         dogInputDto.setKindOfHair("Long haired");
@@ -465,7 +538,7 @@ public class DomesticatedDogIntegrationTest {
         domesticatedDogInputDtoList = new ArrayList<>();
         domesticatedDogInputDtoList.add(dogInputDto);
 
-        mockMvc.perform(post("/dogs/{id}/children", 1).with(jwt())
+        mockMvc.perform(post("/dogs/{id}/children", domesticatedDog.getId()).with(jwt())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(arrayAsJsonString(domesticatedDogInputDtoList)))
                 .andExpect(status().isOk());
@@ -473,7 +546,17 @@ public class DomesticatedDogIntegrationTest {
 
     @Test
     void createLitterWithNonListInput() throws Exception {
-        mockMvc.perform(post("/dogs/{id}/children", 1).with(jwt())
+
+        domesticatedDog.setName("Saar");
+        domesticatedDog.setBreed(Breed.Dachschund);
+        domesticatedDog.setFood("dog chow");
+        domesticatedDog.setDogStatus(Status.breedDog);
+        domesticatedDog.setSex(Sex.female);
+        domesticatedDog.setBreedGroup(BreedGroup.Hound);
+        domesticatedDog.setKindOfHair("Long haired");
+        domesticatedDogRepository.save(domesticatedDog);
+
+        mockMvc.perform(post("/dogs/{id}/children", domesticatedDog.getId()).with(jwt())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJsonString(dogInputDto)))
                 .andExpect(status().isBadRequest());
@@ -481,9 +564,19 @@ public class DomesticatedDogIntegrationTest {
 
     @Test
     void createLitterWithEmptyListInput() throws Exception {
+
+        domesticatedDog.setName("Saar");
+        domesticatedDog.setBreed(Breed.Dachschund);
+        domesticatedDog.setFood("dog chow");
+        domesticatedDog.setDogStatus(Status.breedDog);
+        domesticatedDog.setSex(Sex.female);
+        domesticatedDog.setBreedGroup(BreedGroup.Hound);
+        domesticatedDog.setKindOfHair("Long haired");
+        domesticatedDogRepository.save(domesticatedDog);
+
         List<DomesticatedDogInputDto> dogs = new ArrayList<>();
 
-        mockMvc.perform(post("/dogs/{id}/children", 1).with(jwt())
+        mockMvc.perform(post("/dogs/{id}/children", domesticatedDog.getId()).with(jwt())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(arrayAsJsonString(dogs)))
                 .andExpect(content().string("Empty array. No dogs are created"));
@@ -492,16 +585,40 @@ public class DomesticatedDogIntegrationTest {
 
     @Test
     void uploadImageWithoutImage() throws Exception {
-        byte[] imageBytes = {1, 2, 3};
-        MockMultipartFile image = new MockMultipartFile("file", "filename.txt", "text/plain", imageBytes);
 
-        mockMvc.perform(MockMvcRequestBuilders.multipart("/dogs/{id}/image", 1)
+        domesticatedDog.setName("Saar");
+        domesticatedDog.setBreed(Breed.Dachschund);
+        domesticatedDog.setFood("dog chow");
+        domesticatedDog.setDogStatus(Status.breedDog);
+        domesticatedDog.setSex(Sex.female);
+        domesticatedDog.setBreedGroup(BreedGroup.Hound);
+        domesticatedDog.setKindOfHair("Long haired");
+        domesticatedDogRepository.save(domesticatedDog);
+
+        byte[] imageBytes = {1, 2, 3};
+        MockMultipartFile image = new MockMultipartFile(
+                "file",
+                "filename.txt",
+                "text/plain",
+                imageBytes);
+
+        mockMvc.perform(MockMvcRequestBuilders.multipart("/dogs/{id}/image", domesticatedDog.getId())
                 .file(image).with(jwt()))
                 .andExpect(status().isBadRequest());
    }
 
     @Test
     void updateDog() throws Exception {
+
+        domesticatedDog.setName("Saar");
+        domesticatedDog.setBreed(Breed.Dachschund);
+        domesticatedDog.setFood("dog chow");
+        domesticatedDog.setDogStatus(Status.breedDog);
+        domesticatedDog.setSex(Sex.female);
+        domesticatedDog.setBreedGroup(BreedGroup.Hound);
+        domesticatedDog.setKindOfHair("Long haired");
+        domesticatedDogRepository.save(domesticatedDog);
+
         dogInputDto.setName("Saar");
         dogInputDto.setBreed("Dachschund");
         dogInputDto.setFood("dog chow");
@@ -514,7 +631,7 @@ public class DomesticatedDogIntegrationTest {
         dogInputDto.setHairColor("Brown");
         dogInputDto.setDateOfBirth(LocalDate.of(2022, Month.JANUARY, 22));
 
-        mockMvc.perform(put("/dogs/{id}", "3").with(jwt())
+        mockMvc.perform(put("/dogs/{id}", domesticatedDog.getId()).with(jwt())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJsonString(dogInputDto)))
                 .andExpect(status().isOk());
@@ -522,6 +639,7 @@ public class DomesticatedDogIntegrationTest {
 
     @Test
     void updateDogWithUnknownId() throws Exception {
+
         dogInputDto.setName("Saar");
         dogInputDto.setBreed("Dachschund");
         dogInputDto.setFood("dog chow");
@@ -542,6 +660,15 @@ public class DomesticatedDogIntegrationTest {
 
     @Test
     void updateDogWithUnknownPerson() throws Exception {
+
+        domesticatedDog.setName("Saar");
+        domesticatedDog.setBreed(Breed.Dachschund);
+        domesticatedDog.setFood("dog chow");
+        domesticatedDog.setDogStatus(Status.breedDog);
+        domesticatedDog.setSex(Sex.female);
+        domesticatedDog.setBreedGroup(BreedGroup.Hound);
+        domesticatedDog.setKindOfHair("Long haired");
+        domesticatedDogRepository.save(domesticatedDog);
         personNotInRepo.setId(5L);
 
         dogInputDtoUnknownPerson.setName("Saar");
@@ -556,7 +683,7 @@ public class DomesticatedDogIntegrationTest {
         dogInputDtoUnknownPerson.setDateOfBirth(LocalDate.of(2022, Month.JANUARY, 22));
         dogInputDtoUnknownPerson.setPerson(personNotInRepo);
 
-        mockMvc.perform(put("/dogs/{id}", "3").with(jwt())
+        mockMvc.perform(put("/dogs/{id}", domesticatedDog.getId()).with(jwt())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJsonString(dogInputDtoUnknownPerson)))
                 .andExpect(status().isNotFound())
@@ -565,7 +692,28 @@ public class DomesticatedDogIntegrationTest {
 
     @Test
     void patchDog() throws Exception {
-        mockMvc.perform(patch("/dogs/{id}", "3").with(jwt())
+        domesticatedDog.setName("Saar");
+        domesticatedDog.setBreed(Breed.Dachschund);
+        domesticatedDog.setFood("dog chow");
+        domesticatedDog.setDogStatus(Status.breedDog);
+        domesticatedDog.setSex(Sex.female);
+        domesticatedDog.setBreedGroup(BreedGroup.Hound);
+        domesticatedDog.setKindOfHair("Long haired");
+        domesticatedDogRepository.save(domesticatedDog);
+
+        dogInputDto.setName("Saar");
+        dogInputDto.setBreed("Dachschund");
+        dogInputDto.setFood("dog chow");
+        dogInputDto.setDogStatus("breedDog");
+        dogInputDto.setPerson(person);
+        dogInputDto.setSex("female");
+        dogInputDto.setBreedGroup("Hound");
+        dogInputDto.setKindOfHair("Long haired");
+        dogInputDto.setChipNumber("111111111111111");
+        dogInputDto.setHairColor("Brown");
+        dogInputDto.setDateOfBirth(LocalDate.of(2022, Month.JANUARY, 22));
+
+        mockMvc.perform(patch("/dogs/{id}", domesticatedDog.getId()).with(jwt())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJsonString(dogInputDto)))
                 .andExpect(status().isOk());
@@ -573,6 +721,19 @@ public class DomesticatedDogIntegrationTest {
 
     @Test
     void patchDogWithUnknownId() throws Exception {
+
+        dogInputDto.setName("Saar");
+        dogInputDto.setBreed("Dachschund");
+        dogInputDto.setFood("dog chow");
+        dogInputDto.setDogStatus("breedDog");
+        dogInputDto.setPerson(person);
+        dogInputDto.setSex("female");
+        dogInputDto.setBreedGroup("Hound");
+        dogInputDto.setKindOfHair("Long haired");
+        dogInputDto.setChipNumber("111111111111111");
+        dogInputDto.setHairColor("Brown");
+        dogInputDto.setDateOfBirth(LocalDate.of(2022, Month.JANUARY, 22));
+
         mockMvc.perform(patch("/dogs/{id}", "666").with(jwt())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJsonString(dogInputDto)))
@@ -582,9 +743,19 @@ public class DomesticatedDogIntegrationTest {
     @Test
     void patchDogWithLostWeight() throws Exception {
 
+        domesticatedDog.setName("Saar");
+        domesticatedDog.setBreed(Breed.Dachschund);
+        domesticatedDog.setFood("dog chow");
+        domesticatedDog.setDogStatus(Status.breedDog);
+        domesticatedDog.setSex(Sex.female);
+        domesticatedDog.setBreedGroup(BreedGroup.Hound);
+        domesticatedDog.setKindOfHair("Long haired");
+        domesticatedDog.setWeightInGrams(1000.99);
+        domesticatedDogRepository.save(domesticatedDog);
+
         dogInputDtoLostWeight.setWeightInGrams(10.00);
 
-        mockMvc.perform(patch("/dogs/{id}", "1").with(jwt())
+        mockMvc.perform(patch("/dogs/{id}", domesticatedDog.getId()).with(jwt())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJsonString(dogInputDtoLostWeight)))
                 .andExpect(status().isOk())
@@ -593,6 +764,15 @@ public class DomesticatedDogIntegrationTest {
 
     @Test
     void patchDogWithUnknownPerson() throws Exception {
+
+        domesticatedDog.setName("Saar");
+        domesticatedDog.setBreed(Breed.Dachschund);
+        domesticatedDog.setFood("dog chow");
+        domesticatedDog.setDogStatus(Status.breedDog);
+        domesticatedDog.setSex(Sex.female);
+        domesticatedDog.setBreedGroup(BreedGroup.Hound);
+        domesticatedDog.setKindOfHair("Long haired");
+        domesticatedDogRepository.save(domesticatedDog);
 
         personNotInRepo.setId(5L);
 
@@ -608,7 +788,7 @@ public class DomesticatedDogIntegrationTest {
         dogInputDtoUnknownPerson.setDateOfBirth(LocalDate.of(2022, Month.JANUARY, 22));
         dogInputDtoUnknownPerson.setPerson(personNotInRepo);
 
-        mockMvc.perform(patch("/dogs/{id}", "1").with(jwt())
+        mockMvc.perform(patch("/dogs/{id}", domesticatedDog.getId()).with(jwt())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJsonString(dogInputDtoUnknownPerson)))
                 .andExpect(status().isNotFound())
@@ -618,7 +798,17 @@ public class DomesticatedDogIntegrationTest {
 
     @Test
     void deleteDogImageWithoutImage() throws Exception {
-        mockMvc.perform(delete("/dogs/{id}/image", "1").with(jwt()))
+
+        domesticatedDog.setName("Saar");
+        domesticatedDog.setBreed(Breed.Dachschund);
+        domesticatedDog.setFood("dog chow");
+        domesticatedDog.setDogStatus(Status.breedDog);
+        domesticatedDog.setSex(Sex.female);
+        domesticatedDog.setBreedGroup(BreedGroup.Hound);
+        domesticatedDog.setKindOfHair("Long haired");
+        domesticatedDogRepository.save(domesticatedDog);
+
+        mockMvc.perform(delete("/dogs/{id}/image", domesticatedDog.getId()).with(jwt()))
                 .andExpect(status().isNotFound())
                 .andExpect(content().string("This dog does not have a picture."));
     }
@@ -639,32 +829,31 @@ public class DomesticatedDogIntegrationTest {
 
     @Test
     void deleteDog() throws Exception {
-        DomesticatedDog domesticatedDogToDelete = new DomesticatedDog();
-        domesticatedDogToDelete.setId(4L);
-        domesticatedDogToDelete.setName("Pupje");
-        domesticatedDogToDelete.setBreed(Breed.Affenpinscher);
-        domesticatedDogToDelete.setFood("milk");
-        domesticatedDogToDelete.setDogStatus(Status.soldPup);
-        domesticatedDogToDelete.setSex(Sex.female);
-        domesticatedDogToDelete.setBreedGroup(BreedGroup.Hound);
-        domesticatedDogToDelete.setKindOfHair("Short haired");
-        domesticatedDogRepository.save(domesticatedDogToDelete);
+
+        domesticatedDog.setName("Saar");
+        domesticatedDog.setBreed(Breed.Dachschund);
+        domesticatedDog.setFood("dog chow");
+        domesticatedDog.setDogStatus(Status.breedDog);
+        domesticatedDog.setSex(Sex.female);
+        domesticatedDog.setBreedGroup(BreedGroup.Hound);
+        domesticatedDog.setKindOfHair("Long haired");
+        domesticatedDogRepository.save(domesticatedDog);
 
         medicalData = new MedicalData();
         medicalData.setId(1L);
         medicalData.setDiagnose("Sick");
         medicalData.setDateOfMedicalTreatment(LocalDate.of(2023, Month.JANUARY, 22));
-        medicalData.setDomesticatedDog(domesticatedDogToDelete);
+        medicalData.setDomesticatedDog(domesticatedDog);
         medicalDataRepository.save(medicalData);
 
         veterinarianAppointment = new VeterinarianAppointment();
         veterinarianAppointment.setId(1L);
         veterinarianAppointment.setSubject("Check up");
         veterinarianAppointment.setAppointmentDate(LocalDate.of(2023, Month.JANUARY, 22));
-        veterinarianAppointment.setDomesticatedDog(domesticatedDogToDelete);
+        veterinarianAppointment.setDomesticatedDog(domesticatedDog);
         veterinarianAppointmentRepository.save(veterinarianAppointment);
 
-        mockMvc.perform(delete("/dogs/{id}", domesticatedDogToDelete.getId()).with(jwt()))
+        mockMvc.perform(delete("/dogs/{id}", domesticatedDog.getId()).with(jwt()))
                 .andExpect(status().isNoContent());
     }
 
