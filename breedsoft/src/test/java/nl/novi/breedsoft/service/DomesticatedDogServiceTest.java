@@ -443,6 +443,21 @@ class DomesticatedDogServiceTest {
     }
 
     @Test
+    void createDomesticatedDogWithNoneExistingParent() {
+        // Arrange
+        Long parentID = 6L;
+        DomesticatedDogInputDto domesticatedDogInputDto = new DomesticatedDogInputDto();
+        domesticatedDogInputDto.setParentId(parentID);
+        when(domesticatedDogRepository.findById(parentID)).thenReturn(Optional.empty());
+        // Act and Assert
+        assertThrows(
+                RecordNotFoundException.class,
+                () -> domesticatedDogService.createDomesticatedDog(domesticatedDogInputDto),
+                "Expected Record not found exception to be thrown"
+        );
+    }
+
+    @Test
     void createLitterList() {
         // Arrange
         when(domesticatedDogRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(new DomesticatedDog()));
@@ -589,9 +604,10 @@ class DomesticatedDogServiceTest {
         String expectedStatus = Status.deceased.name();
         domesticatedDogPatchDto.setDogStatus(expectedStatus);
         DomesticatedDog domesticatedDog = new DomesticatedDog();
+        domesticatedDog.setWeightInGrams(2D);
         when(domesticatedDogRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(domesticatedDog));
         // Act
-        domesticatedDogService.patchDomesticatedDog(3L, domesticatedDogPatchDto);
+        String result = domesticatedDogService.patchDomesticatedDog(3L, domesticatedDogPatchDto);
         // Assert
         assertEquals(expectedName, domesticatedDog.getName());
         assertEquals(expectedHairColor, domesticatedDog.getHairColor());
@@ -607,6 +623,7 @@ class DomesticatedDogServiceTest {
         assertEquals(expectedPersonID, domesticatedDog.getPerson().getId());
         assertEquals(expectedStatus, domesticatedDog.getDogStatus().name());
         verify(domesticatedDogRepository, times(1)).save(domesticatedDog);
+        assertTrue(result.contains("WARNING: Your dog has lost weight!"));
     }
 
     @Test
@@ -617,6 +634,24 @@ class DomesticatedDogServiceTest {
         assertThrows(
                 RecordNotFoundException.class,
                 () -> domesticatedDogService.patchDomesticatedDog(42L, new DomesticatedDogPatchDto()),
+                "Expect record not found exception to be thrown"
+        );
+    }
+
+    @Test
+    void patchDomesticatedDogWithNotFoundOwner() {
+        // Arrange
+        DomesticatedDogPatchDto domesticatedDogPatchDto = new DomesticatedDogPatchDto();
+        Person person = new Person();
+        Long personID = 12L;
+        person.setId(personID);
+        domesticatedDogPatchDto.setPerson(person);
+        when(repositoryUtility.getCompletePersonById(personID)).thenReturn(null);
+        when(domesticatedDogRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(new DomesticatedDog()));
+        // Act and Assert
+        assertThrows(
+                RecordNotFoundException.class,
+                () -> domesticatedDogService.patchDomesticatedDog(42L, domesticatedDogPatchDto),
                 "Expect record not found exception to be thrown"
         );
     }
