@@ -162,6 +162,7 @@ public class DomesticatedDog extends Dog {
     public void setCanHear(boolean canHear){
         this.canHear= canHear;
     }
+
     @Override
     public boolean canHear() {
         return this.canHear;

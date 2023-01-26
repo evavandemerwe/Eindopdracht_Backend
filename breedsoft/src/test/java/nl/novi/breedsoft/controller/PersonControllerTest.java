@@ -15,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.security.core.parameters.P;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -23,12 +22,9 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import static org.hamcrest.Matchers.is;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
@@ -50,10 +46,11 @@ class PersonControllerTest {
     PersonOutputDto personOutputDto = new PersonOutputDto();
     PersonInputDto personInputDto = new PersonInputDto();
     PersonPatchDto personPatchDto = new PersonPatchDto();
-    List<PersonOutputDto> personOutputDtoList = new ArrayList();
+    List<PersonOutputDto> personOutputDtoList = new ArrayList<>();
 
     DomesticatedDog dog = new DomesticatedDog();
-    List<DomesticatedDog> dogs = new ArrayList();
+    List<DomesticatedDog> dogs = new ArrayList<>();
+
     @BeforeEach
     void setup() {
         mockMvc = MockMvcBuilders
@@ -168,24 +165,25 @@ class PersonControllerTest {
                 .perform(
                         MockMvcRequestBuilders.post("/persons")
                                 .contentType(MediaType.APPLICATION_JSON)
-                                .content("{\n" +
-                                        "    \"firstName\": \"Hallo2\",\n" +
-                                        "    \"lastName\": \"van de Merwe\",\n" +
-                                        "    \"dateOfBirth\": \"2017-01-13\",\n" +
-                                        "    \"sex\": \"female\",\n" +
-                                        "    \"age\": 36,\n" +
-                                        "    \"street\": \"Maas\",\n" +
-                                        "    \"houseNumber\": 31,\n" +
-                                        "    \"houseNumberExtension\": null,\n" +
-                                        "    \"zipCode\": \"5172CN\",\n" +
-                                        "    \"city\": \"Kaatsheuvel\",\n" +
-                                        "    \"country\": \"the Netherlands\",\n" +
-                                        "    \"dogs\": [\n" +
-                                        "            {\n" +
-                                        "                \"id\": 1\n" +
-                                        "            }\n" +
-                                        "        ]\n" +
-                                        "}")
+                                .content("""
+                                        {
+                                            "firstName": "Hallo2",
+                                            "lastName": "van de Merwe",
+                                            "dateOfBirth": "2017-01-13",
+                                            "sex": "female",
+                                            "age": 36,
+                                            "street": "Maas",
+                                            "houseNumber": 31,
+                                            "houseNumberExtension": null,
+                                            "zipCode": "5172CN",
+                                            "city": "Kaatsheuvel",
+                                            "country": "the Netherlands",
+                                            "dogs": [
+                                                    {
+                                                        "id": 1
+                                                    }
+                                                ]
+                                        }""")
                                 .with(jwt())
                 )
                 .andDo(MockMvcResultHandlers.print())
@@ -214,24 +212,25 @@ class PersonControllerTest {
                 .perform(
                         MockMvcRequestBuilders.put("/persons/{id}", "1")
                                 .contentType(MediaType.APPLICATION_JSON)
-                                .content("{\n" +
-                                        "    \"firstName\": \"Hallo2\",\n" +
-                                        "    \"lastName\": \"van de Merwe\",\n" +
-                                        "    \"dateOfBirth\": \"2017-01-13\",\n" +
-                                        "    \"sex\": \"female\",\n" +
-                                        "    \"age\": 36,\n" +
-                                        "    \"street\": \"Maas\",\n" +
-                                        "    \"houseNumber\": 31,\n" +
-                                        "    \"houseNumberExtension\": null,\n" +
-                                        "    \"zipCode\": \"5172CN\",\n" +
-                                        "    \"city\": \"Kaatsheuvel\",\n" +
-                                        "    \"country\": \"the Netherlands\",\n" +
-                                        "    \"dogs\": [\n" +
-                                        "            {\n" +
-                                        "                \"id\": 1003\n" +
-                                        "            }\n" +
-                                        "        ]\n" +
-                                        "}")
+                                .content("""
+                                        {
+                                            "firstName": "Hallo2",
+                                            "lastName": "van de Merwe",
+                                            "dateOfBirth": "2017-01-13",
+                                            "sex": "female",
+                                            "age": 36,
+                                            "street": "Maas",
+                                            "houseNumber": 31,
+                                            "houseNumberExtension": null,
+                                            "zipCode": "5172CN",
+                                            "city": "Kaatsheuvel",
+                                            "country": "the Netherlands",
+                                            "dogs": [
+                                                    {
+                                                        "id": 1003
+                                                    }
+                                                ]
+                                        }""")
                                 .with(jwt())
                 )
                 .andDo(MockMvcResultHandlers.print())
@@ -260,18 +259,19 @@ class PersonControllerTest {
                 .perform(
                         MockMvcRequestBuilders.patch("/persons/{id}", "1")
                                 .contentType(MediaType.APPLICATION_JSON)
-                                .content("  {\n" +
-                                        "        \"firstName\": \"Eefjuh\",\n" +
-                                        "        \"lastName\": \"van de Merwe\",\n" +
-                                        "        \"sex\": \"female\",\n" +
-                                        "        \"age\": 36,\n" +
-                                        "        \"street\": \"Maas\",\n" +
-                                        "        \"houseNumber\": 31,\n" +
-                                        "        \"houseNumberExtension\": null,\n" +
-                                        "        \"zipCode\": \"5172CN\",\n" +
-                                        "        \"city\": \"Kaatsheuvel\",\n" +
-                                        "        \"country\": \"the Netherlands\"\n" +
-                                        "  }")
+                                .content("""
+                                        {
+                                              "firstName": "Eefjuh",
+                                              "lastName": "van de Merwe",
+                                              "sex": "female",
+                                              "age": 36,
+                                              "street": "Maas",
+                                              "houseNumber": 31,
+                                              "houseNumberExtension": null,
+                                              "zipCode": "5172CN",
+                                              "city": "Kaatsheuvel",
+                                              "country": "the Netherlands"
+                                        }""".indent(2))
                                 .with(jwt())
                 )
                 .andDo(MockMvcResultHandlers.print())

@@ -30,7 +30,6 @@ class WaitingListItemServiceTest {
     @Mock
     RepositoryUtility repositoryUtility;
 
-    @Mock
     WaitingListItemService waitingListItemService;
 
     List<WaitingListItem> waitingListItemList = new ArrayList<>();
@@ -166,7 +165,7 @@ class WaitingListItemServiceTest {
                 () -> waitingListItemService.getWaitingListItemBySex("x"),
                 "Expected enum value not found exception to be thrown, but it didn't");
         //Assert
-        assertTrue(thrown.getMessage().contentEquals("Sex is not found for dog"));
+        assertTrue(thrown.getMessage().contentEquals("Sex is not found"));
     }
 
     @Test

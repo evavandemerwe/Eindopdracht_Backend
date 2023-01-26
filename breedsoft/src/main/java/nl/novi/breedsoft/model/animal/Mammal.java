@@ -9,9 +9,9 @@ import jakarta.persistence.*;
 @MappedSuperclass
 public abstract class Mammal extends Animal {
     //All mammals give live birth
-    private static final Birthmethod birthmethod = Birthmethod.livebirth;
+    private static final Birthmethod BIRTHMETHOD = Birthmethod.livebirth;
     //All mammals are warmblooded
-    private static final Bloodtemperature bloodtemperature = Bloodtemperature.warmblooded;
+    private static final Bloodtemperature BLOODTEMPERATURE = Bloodtemperature.warmblooded;
     private String kindOfHair;
     private int numberOfTeeth;
 
