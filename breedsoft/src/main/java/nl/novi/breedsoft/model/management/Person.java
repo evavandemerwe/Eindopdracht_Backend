@@ -58,7 +58,6 @@ public class Person extends Mammal {
         super.setAnimalType(AnimalType.omnivore);
     }
 
-
     //getters and setters
     public Long getId() {
         return (id != null) ? id : 0;
@@ -155,5 +154,13 @@ public class Person extends Mammal {
     }
     public void setWaitingListItems(List<WaitingListItem> waitingListItems) {
         this.waitingListItems = waitingListItems;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }
