@@ -7,16 +7,17 @@ import nl.novi.breedsoft.exception.DuplicateNotAllowedException;
 import nl.novi.breedsoft.exception.RecordNotFoundException;
 import nl.novi.breedsoft.model.authority.Authority;
 import nl.novi.breedsoft.repository.AuthorityRepository;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
@@ -34,11 +35,6 @@ class AuthorityServiceTest {
         this.authorityService = new AuthorityService(
                 this.authorityRepository
         );
-    }
-
-    @AfterEach
-    void tearDown() {
-        Mockito.reset(authorityRepository);
     }
 
     @Test

@@ -71,7 +71,7 @@ public class MedicalDataService {
             medicalDataInputDto.setDomesticatedDog(dog);
         }
         MedicalData medicalData = transferToMedicalData(medicalDataInputDto);
-        medicalDataRepository.save(medicalData);
+        medicalData = medicalDataRepository.save(medicalData);
 
         return medicalData.getId();
     }
@@ -85,9 +85,8 @@ public class MedicalDataService {
      * @return a new or updated medical data record in output dto format
      * @throws RecordNotFoundException throws an exception when domesticated dog is not found by id
      */
-    public Object updateMedicalData(Long medicalDataId, MedicalDataInputDto medicalDataInputDto){
+    public MedicalDataOutputDto updateMedicalData(Long medicalDataId, MedicalDataInputDto medicalDataInputDto){
         if(medicalDataRepository.findById(medicalDataId).isPresent()){
-            MedicalData medicalData = medicalDataRepository.findById(medicalDataId).get();
             MedicalData updateMedicalData = transferToMedicalData(medicalDataInputDto);
             if(medicalDataInputDto.getDomesticatedDog() != null) {
                 DomesticatedDog dog = getCompleteDogById(medicalDataInputDto.getDomesticatedDog().getId());
@@ -97,13 +96,12 @@ public class MedicalDataService {
                 updateMedicalData.setDomesticatedDog(dog);
             }
             //Keeping the former id, as we will update the existing appointment
-            updateMedicalData.setId(medicalData.getId());
+            updateMedicalData.setId(medicalDataId);
             medicalDataRepository.save(updateMedicalData);
-            return transferMedicalDataToOutputDto(medicalData);
+            return transferMedicalDataToOutputDto(updateMedicalData);
         } else {
             Long newMedicalDataId = createMedicalData(medicalDataInputDto);
             MedicalData newMedicalData = medicalDataRepository.getReferenceById(newMedicalDataId);
-
             return transferMedicalDataToOutputDto(newMedicalData);
         }
     }
@@ -119,8 +117,9 @@ public class MedicalDataService {
      * or when medical data is not found based on medicalDataId
      */
     public MedicalDataOutputDto patchMedicalData(Long medicalDataId, MedicalDataPatchDto medicalDataPatchDto){
-        if(medicalDataRepository.findById(medicalDataId).isPresent()){
-            MedicalData updateMedicalData = medicalDataRepository.getReferenceById(medicalDataId);
+        Optional<MedicalData> optionalMedicalData = medicalDataRepository.findById(medicalDataId);
+        if(optionalMedicalData.isPresent()){
+            MedicalData updateMedicalData = optionalMedicalData.get();
             if(medicalDataPatchDto.getDateOfMedicalTreatment() != null){
                 updateMedicalData.setDateOfMedicalTreatment(medicalDataPatchDto.getDateOfMedicalTreatment());
             }
@@ -158,10 +157,10 @@ public class MedicalDataService {
      * @throws RecordNotFoundException throws an exception if no medical data is found by medicalDataId
      */
     public void deleteMedicalData(Long medicalDataId){
-
-        if(medicalDataRepository.findById(medicalDataId).isPresent()){
+        Optional<MedicalData> optionalMedicalData = medicalDataRepository.findById(medicalDataId);
+        if(optionalMedicalData.isPresent()){
             // If an appointment is deleted from the database, this appointment is detached from dogs.
-            MedicalData medicalDataFound = medicalDataRepository.getReferenceById(medicalDataId);
+            MedicalData medicalDataFound = optionalMedicalData.get();
 
             if(medicalDataFound.getDomesticatedDog() != null){
                 medicalDataFound.setDomesticatedDog(null);
