@@ -50,6 +50,7 @@ class PersonControllerTest {
 
     DomesticatedDog dog = new DomesticatedDog();
     List<DomesticatedDog> dogs = new ArrayList<>();
+
     @BeforeEach
     void setup() {
         mockMvc = MockMvcBuilders

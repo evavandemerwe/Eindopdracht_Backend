@@ -2,6 +2,7 @@ package nl.novi.breedsoft.dto.personDtos;
 
 import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 import lombok.Data;
+import nl.novi.breedsoft.dto.domesticatedDogDtos.DomesticatedDogOutputDto;
 import nl.novi.breedsoft.model.animal.enumerations.Sex;
 import nl.novi.breedsoft.model.management.DomesticatedDog;
 
@@ -25,4 +26,12 @@ public class PersonOutputDto {
 
     @JsonIncludeProperties({"id", "name", "sex", "dateOfBirth", "breed", "kindOfHair", "haircolor"})
     private List<DomesticatedDog> dogs;
+
+    public List<DomesticatedDog> getDogs() {
+        return dogs;
+    }
+
+    public void setDogs(List<DomesticatedDog> dogs) {
+        this.dogs = dogs;
+    }
 }

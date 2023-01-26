@@ -9,11 +9,13 @@ import nl.novi.breedsoft.dto.personDtos.PersonInputDto;
 import nl.novi.breedsoft.model.animal.enumerations.Sex;
 import nl.novi.breedsoft.model.management.DomesticatedDog;
 import nl.novi.breedsoft.model.management.Person;
+import nl.novi.breedsoft.model.management.WaitingListItem;
 import nl.novi.breedsoft.model.management.enumerations.Breed;
 import nl.novi.breedsoft.model.management.enumerations.BreedGroup;
 import nl.novi.breedsoft.model.management.enumerations.Status;
 import nl.novi.breedsoft.repository.DomesticatedDogRepository;
 import nl.novi.breedsoft.repository.PersonRepository;
+import nl.novi.breedsoft.repository.WaitingListItemRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -26,6 +28,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDate;
 import java.time.Month;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
@@ -47,9 +50,17 @@ public class PersonIntegrationTest {
     @Autowired
     DomesticatedDogRepository domesticatedDogRepository;
 
+    @Autowired
+    WaitingListItemRepository waitingListItemRepository;
+
     Person person = new Person();
     PersonInputDto personInputDto = new PersonInputDto();
+
     DomesticatedDog domesticatedDog = new DomesticatedDog();
+    List<DomesticatedDog> dogs = new ArrayList<>();
+
+    WaitingListItem waitingListItem = new WaitingListItem();
+    List<WaitingListItem> waitingListItemList = new ArrayList<>();
 
     @Test
     void getAllPersons() throws  Exception {
@@ -251,7 +262,285 @@ public class PersonIntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJsonString(personInputDto)))
                 .andExpect(status().isBadRequest());
+    }
 
+    @Test
+    void createPersonWithUnknownDog() throws Exception {
+
+        domesticatedDog.setId(1L);
+
+        List<DomesticatedDog> dogs = new ArrayList<>();
+        dogs.add(domesticatedDog);
+
+        personInputDto = new PersonInputDto();
+        personInputDto.setSex("female");
+        personInputDto.setFirstName("Eva");
+        personInputDto.setLastName("Hauber");
+        personInputDto.setStreet("Maas");
+        personInputDto.setHouseNumber(31);
+        personInputDto.setZipCode("5172CN");
+        personInputDto.setCity("Kaatsheuvel");
+        personInputDto.setCountry("Nederland");
+        personInputDto.setDateOfBirth(LocalDate.of(1986, Month.JANUARY, 02));
+
+        personInputDto.setDogs(dogs);
+
+        mockMvc.perform(post("/persons").with(jwt())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(personInputDto)))
+                .andExpect(status().isNotFound())
+                .andExpect(content().string("No dog with this id found in database"));
+    }
+
+    @Test
+    void createPersonWithDog() throws Exception {
+
+        domesticatedDog.setName("Saar");
+        domesticatedDog.setBreed(Breed.Dachschund);
+        domesticatedDog.setFood("dog chow");
+        domesticatedDog.setDogStatus(Status.breedDog);
+        domesticatedDog.setSex(Sex.female);
+        domesticatedDog.setBreedGroup(BreedGroup.Hound);
+        domesticatedDog.setKindOfHair("Long haired");
+        domesticatedDogRepository.save(domesticatedDog);
+        dogs.add(domesticatedDog);
+
+        personInputDto = new PersonInputDto();
+        personInputDto.setSex("female");
+        personInputDto.setFirstName("Eva");
+        personInputDto.setLastName("Hauber");
+        personInputDto.setStreet("Maas");
+        personInputDto.setHouseNumber(31);
+        personInputDto.setZipCode("5172CN");
+        personInputDto.setCity("Kaatsheuvel");
+        personInputDto.setCountry("Nederland");
+        personInputDto.setDateOfBirth(LocalDate.of(1986, Month.JANUARY, 02));
+
+        personInputDto.setDogs(dogs);
+
+        mockMvc.perform(post("/persons").with(jwt())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(asJsonString(personInputDto)))
+                .andExpect(content().string("Person is successfully created!"));
+    }
+
+    @Test
+    void updatePerson() throws Exception {
+
+        person.setSex(Sex.female);
+        person.setFirstName("Eva");
+        person.setLastName("Hauber");
+        person.setStreet("Maas");
+        person.setHouseNumber(31);
+        person.setZipCode("5172CN");
+        person.setCity("Kaatsheuvel");
+        personRepository.save(person);
+
+        personInputDto = new PersonInputDto();
+        personInputDto.setSex("female");
+        personInputDto.setFirstName("Eva");
+        personInputDto.setLastName("Hauber");
+        personInputDto.setStreet("Maas");
+        personInputDto.setHouseNumber(31);
+        personInputDto.setZipCode("5172CN");
+        personInputDto.setCity("Kaatsheuvel");
+        personInputDto.setCountry("Nederland");
+        personInputDto.setDateOfBirth(LocalDate.of(1986, Month.JANUARY, 02));
+
+        mockMvc.perform(put("/persons/{id}", person.getId()).with(jwt())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(asJsonString(personInputDto)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(person.getId()))
+                .andExpect(jsonPath("$.age").value(37));
+    }
+
+    @Test
+    void updatePersonWithUnknownPerson() throws Exception {
+
+        personInputDto.setSex("female");
+        personInputDto.setFirstName("Eva");
+        personInputDto.setLastName("Hauber");
+        personInputDto.setStreet("Maas");
+        personInputDto.setHouseNumber(31);
+        personInputDto.setZipCode("5172CN");
+        personInputDto.setCity("Kaatsheuvel");
+        personInputDto.setCountry("Nederland");
+        personInputDto.setDateOfBirth(LocalDate.of(1986, Month.JANUARY, 02));
+
+        mockMvc.perform(put("/persons/{id}", "111").with(jwt())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(asJsonString(personInputDto)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.firstName").value("Eva"))
+                .andExpect(jsonPath("$.lastName").value("Hauber"))
+                .andExpect(jsonPath("$.country").value("Nederland"));
+    }
+
+    @Test
+    void patchPerson() throws Exception {
+
+        domesticatedDog.setName("Saar");
+        domesticatedDog.setBreed(Breed.Dachschund);
+        domesticatedDog.setFood("dog chow");
+        domesticatedDog.setDogStatus(Status.breedDog);
+        domesticatedDog.setSex(Sex.female);
+        domesticatedDog.setBreedGroup(BreedGroup.Hound);
+        domesticatedDog.setKindOfHair("Long haired");
+        domesticatedDogRepository.save(domesticatedDog);
+        dogs.add(domesticatedDog);
+
+        person.setSex(Sex.female);
+        person.setFirstName("Eva");
+        person.setLastName("Hauber");
+        person.setStreet("Maas");
+        person.setHouseNumber(31);
+        person.setZipCode("5172CN");
+        person.setCity("Kaatsheuvel");
+        personRepository.save(person);
+
+        personInputDto = new PersonInputDto();
+        personInputDto.setSex("female");
+        personInputDto.setFirstName("Eva");
+        personInputDto.setLastName("Hauber");
+        personInputDto.setStreet("Maas");
+        personInputDto.setHouseNumber(31);
+        personInputDto.setHouseNumberExtension("A");
+        personInputDto.setZipCode("5172CN");
+        personInputDto.setCity("Kaatsheuvel");
+        personInputDto.setCountry("Nederland");
+        personInputDto.setDogs(dogs);
+        personInputDto.setDateOfBirth(LocalDate.of(1986, Month.JANUARY, 02));
+
+        mockMvc.perform(patch("/persons/{id}", person.getId()).with(jwt())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(asJsonString(personInputDto)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(person.getId()))
+                .andExpect(jsonPath("$.age").value(37));
+    }
+
+    @Test
+    void patchPersonWithUnknownPerson() throws Exception {
+
+        personInputDto = new PersonInputDto();
+        personInputDto.setSex("female");
+        personInputDto.setFirstName("Eva");
+        personInputDto.setLastName("Hauber");
+        personInputDto.setStreet("Maas");
+        personInputDto.setHouseNumber(31);
+        personInputDto.setZipCode("5172CN");
+        personInputDto.setCity("Kaatsheuvel");
+        personInputDto.setCountry("Nederland");
+        personInputDto.setDateOfBirth(LocalDate.of(1986, Month.JANUARY, 02));
+
+        mockMvc.perform(patch("/persons/{id}", "111").with(jwt())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(asJsonString(personInputDto)))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void patchPersonInvalidZipCode() throws Exception {
+
+        person.setSex(Sex.female);
+        person.setFirstName("Eva");
+        person.setLastName("Hauber");
+        person.setStreet("Maas");
+        person.setHouseNumber(31);
+        person.setZipCode("5172CN");
+        person.setCity("Kaatsheuvel");
+        personRepository.save(person);
+
+        personInputDto.setSex("female");
+        personInputDto.setFirstName("Eva");
+        personInputDto.setLastName("Hauber");
+        personInputDto.setStreet("Maas");
+        personInputDto.setHouseNumber(31);
+        personInputDto.setZipCode("517CN");
+        personInputDto.setCity("Kaatsheuvel");
+        personInputDto.setCountry("Nederland");
+        personInputDto.setDateOfBirth(LocalDate.of(1986, Month.JANUARY, 02));
+
+        mockMvc.perform(patch("/persons/{id}", person.getId()).with(jwt())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(asJsonString(personInputDto)))
+                .andExpect(status().isPreconditionFailed())
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("Format zipcode as: 1111AA")));
+    }
+
+    @Test
+    void deletePerson() throws Exception {
+
+        person.setSex(Sex.female);
+        person.setFirstName("Eva");
+        person.setLastName("Hauber");
+        person.setStreet("Maas");
+        person.setHouseNumber(31);
+        person.setZipCode("5172CN");
+        person.setCity("Kaatsheuvel");
+        personRepository.save(person);
+
+        mockMvc.perform(delete("/persons/{id}", person.getId()).with(jwt()))
+                .andExpect(status().isNoContent());
+    }
+
+    @Test
+    void deletePersonUnknownId() throws Exception {
+        mockMvc.perform(delete("/persons/{id}", "111").with(jwt()))
+                .andExpect(status().isNotFound())
+                .andExpect(content().string("No person with given ID found."));
+    }
+
+    @Test
+    void deletePersonWithDog() throws Exception {
+
+        domesticatedDog.setName("Saar");
+        domesticatedDog.setBreed(Breed.Dachschund);
+        domesticatedDog.setFood("dog chow");
+        domesticatedDog.setDogStatus(Status.breedDog);
+        domesticatedDog.setSex(Sex.female);
+        domesticatedDog.setBreedGroup(BreedGroup.Hound);
+        domesticatedDog.setKindOfHair("Long haired");
+        domesticatedDogRepository.save(domesticatedDog);
+        dogs.add(domesticatedDog);
+
+        person.setSex(Sex.female);
+        person.setFirstName("Eva");
+        person.setLastName("Hauber");
+        person.setStreet("Maas");
+        person.setHouseNumber(31);
+        person.setZipCode("5172CN");
+        person.setCity("Kaatsheuvel");
+        person.setDogs(dogs);
+        personRepository.save(person);
+
+        mockMvc.perform(delete("/persons/{id}", person.getId()).with(jwt()))
+                .andExpect(status().isNoContent());
+    }
+
+    @Test
+    void deletePersonWithWaitingListItem() throws Exception {
+
+        waitingListItem.setNumberOnList(1);
+        waitingListItem.setSex(Sex.female);
+        waitingListItem.setBreed(Breed.Dachschund);
+        waitingListItem.setKindOfHair("Long Haired");
+        waitingListItemList.add(waitingListItem);
+
+        person.setSex(Sex.female);
+        person.setFirstName("Eva");
+        person.setLastName("Hauber");
+        person.setStreet("Maas");
+        person.setHouseNumber(31);
+        person.setZipCode("5172CN");
+        person.setCity("Kaatsheuvel");
+        person.setDogs(dogs);
+        person.setWaitingListItems(waitingListItemList);
+        personRepository.save(person);
+
+        mockMvc.perform(delete("/persons/{id}", person.getId()).with(jwt()))
+                .andExpect(status().isNoContent());
     }
 
     //TEST HELPER CLASSES
