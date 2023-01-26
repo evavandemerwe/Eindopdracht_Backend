@@ -28,6 +28,7 @@ class AuthorityServiceTest {
     AuthorityRepository authorityRepository;
 
     AuthorityService authorityService;
+
     @BeforeEach
     void setUp() {
         this.authorityService = new AuthorityService(

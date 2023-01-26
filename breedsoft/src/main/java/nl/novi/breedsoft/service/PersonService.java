@@ -139,6 +139,7 @@ public class PersonService {
      * A method (PUT) sends an enclosed entity of a resource to the server.
      * If the entity already exists, the server overrides the existing object,
      * otherwise the server creates a new entity.
+     * We can not add new dogs to a person with this method
      * @param personId ID of the person for which an update is requested
      * @param personInputDto Data Transfer Objects that carries data between processes in order to reduce the number of methods calls
      * @return a new or updated person in output dto format
@@ -148,31 +149,11 @@ public class PersonService {
         if (personRepository.findById(personId).isPresent()){
             Person person = personRepository.findById(personId).get();
             Person updatedPerson = transferToPerson(personInputDto);
-            List<DomesticatedDog> domesticatedDogList = updatedPerson.getDogs();
-            List<DomesticatedDog> newDomesticatedDogList = new ArrayList<>();
-            if(domesticatedDogList != null) {
-                for (DomesticatedDog domesticatedDog : domesticatedDogList) {
-                    long foundDogId = domesticatedDog.getId();
-                    if(domesticatedDogRepository.findById(foundDogId).isPresent()) {
-                        DomesticatedDog dog = domesticatedDogRepository.findById(foundDogId).get();
-                        newDomesticatedDogList.add(dog);
-                    }else {
-                        throw new RecordNotFoundException("Dog " + foundDogId + " not found");
-                    }
-                }
-                updatedPerson.setDogs(newDomesticatedDogList);
-            } else {
-                List <DomesticatedDog> currentDomesticatedDogs = person.getDogs();
-                for(DomesticatedDog dog : currentDomesticatedDogs){
-                    dog.setPerson(null);
-                }
-            }
 
-            //Keeping the former id, as we will update the existing dog
+            //Keeping the former id, as we will update the existing person
             updatedPerson.setId(person.getId());
-            Person savedPerson = personRepository.save(updatedPerson);
-
-            return transferToOutputDto(savedPerson);
+            updatedPerson = personRepository.save(updatedPerson);
+            return transferToOutputDto(updatedPerson);
 
         } else {
             Long newPersonId = createPerson(personInputDto);
@@ -185,6 +166,7 @@ public class PersonService {
      * A method (PATCH) will only update an existing object,
      * with the properties mapped in the request body (that are not null).
      * We do NOT update veterinarian appointment and medical data here.
+     * We can add dogs to a person with this method
      * @param personId ID of the person for which an update is requested
      * @param personPatchDto Data Transfer Objects that carries data between processes in order to reduce the number of methods calls
      * @return an updated person in output dto format

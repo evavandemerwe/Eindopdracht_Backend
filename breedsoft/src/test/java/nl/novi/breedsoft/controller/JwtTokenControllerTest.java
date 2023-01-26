@@ -1,6 +1,7 @@
 package nl.novi.breedsoft.controller;
 
 import nl.novi.breedsoft.security.TokenService;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +42,14 @@ class JwtTokenControllerTest {
                 .webAppContextSetup(context)
                 .apply(springSecurity())
                 .build();
+    }
+
+    @AfterEach
+    void tear(){
+        context = null;
+        mockMvc = null;
+        authentication = null;
+        tokenService = null;
     }
 
     @Test
