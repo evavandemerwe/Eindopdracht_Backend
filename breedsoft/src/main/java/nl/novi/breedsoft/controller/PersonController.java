@@ -11,7 +11,7 @@ import jakarta.validation.Valid;
 import java.net.URI;
 import java.util.List;
 import static nl.novi.breedsoft.utility.BindingResultErrorUtility.bindingResultError;
-import static nl.novi.breedsoft.utility.createUriResponse.createUri;
+import static nl.novi.breedsoft.utility.UriResponseUtility.createUri;
 
 @RestController
 @RequestMapping("persons")
@@ -114,19 +114,16 @@ public class PersonController {
      * PATCH method that updates a person only when the person exists in the database
      * @param personId ID of the person for which information is requested
      * @param personPatchDto Data Transfer Objects that carries data between processes in order to reduce the number of methods calls
-     * @param bindingResult a Spring object that holds the result of the validation and binding and contains errors that may have occurred
      * @return ResponseEntity with OK http status code and the updated person,
      * or bindingResultError if there is an error in the binding
      */
     @PatchMapping("/{id}")
-    public ResponseEntity<Object> patchPerson(@PathVariable("id") Long personId, @Valid @RequestBody PersonPatchDto personPatchDto, BindingResult bindingResult) {
-        //If there is an error in the binding
-        if (bindingResult.hasErrors()) {
-            return bindingResultError(bindingResult);
-        } else {
-            PersonOutputDto personOutputDto = personService.patchPerson(personId, personPatchDto);
-            return ResponseEntity.ok().body(personOutputDto);
-        }
+    public ResponseEntity<Object> patchPerson(
+            @PathVariable("id") Long personId,
+            @RequestBody PersonPatchDto personPatchDto
+    ) {
+        PersonOutputDto personOutputDto = personService.patchPerson(personId, personPatchDto);
+        return ResponseEntity.ok().body(personOutputDto);
     }
 
     /**

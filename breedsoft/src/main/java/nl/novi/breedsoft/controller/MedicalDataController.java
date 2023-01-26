@@ -9,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import java.net.URI;
-import static nl.novi.breedsoft.utility.createUriResponse.createUri;
+import static nl.novi.breedsoft.utility.UriResponseUtility.createUri;
 import static nl.novi.breedsoft.utility.BindingResultErrorUtility.bindingResultError;
 
 @RestController
@@ -36,10 +36,10 @@ public class MedicalDataController {
      * @return ResponseEntity with OK http status code and the requested medical data
      */
     @GetMapping("/id/{id}")
-    public ResponseEntity<Iterable<MedicalDataOutputDto>> getMedicalDataById(
+    public ResponseEntity<Iterable<MedicalDataOutputDto>> getMedicalDataByDomesticatedDogId(
             @PathVariable("id") Long medicalDataId
     ){
-        return ResponseEntity.ok(medicalDataService.getMedicaLDataByDogId(medicalDataId));
+        return ResponseEntity.ok(medicalDataService.getmedicaldatabydogid(medicalDataId));
     }
 
     /**
@@ -91,23 +91,16 @@ public class MedicalDataController {
      * PATCH method that updates medical data only when the medical data exists in the database
      * @param medicalDataId the id of the medical data for which a request is made
      * @param medicalDataPatchDto Data Transfer Objects that carries data between processes in order to reduce the number of methods calls
-     * @param bindingResult a Spring object that holds the result of the validation and binding and contains errors that may have occurred
      * @return ResponseEntity with OK http status code and the requested medical data
      * or bindingResultError if there is an error in the binding
      */
     @PatchMapping("/{id}")
     public ResponseEntity<Object> patchMedicalData(
             @PathVariable("id") Long medicalDataId,
-            @Valid @RequestBody MedicalDataPatchDto medicalDataPatchDto,
-            BindingResult bindingResult
+            @RequestBody MedicalDataPatchDto medicalDataPatchDto
     ){
-        //If there is an error in the binding
-        if (bindingResult.hasErrors()) {
-            return bindingResultError(bindingResult);
-        } else {
             MedicalDataOutputDto medicalDataOutputDto = medicalDataService.patchMedicalData(medicalDataId, medicalDataPatchDto);
             return ResponseEntity.ok().body(medicalDataOutputDto);
-        }
     }
 
     /**

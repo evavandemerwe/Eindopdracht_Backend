@@ -9,7 +9,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import java.net.URI;
 import static nl.novi.breedsoft.utility.BindingResultErrorUtility.bindingResultError;
-import static nl.novi.breedsoft.utility.createUriResponse.createUri;
+import static nl.novi.breedsoft.utility.UriResponseUtility.createUri;
 
 @RestController
 @RequestMapping("waitinglistitems")
@@ -82,7 +82,7 @@ public class WaitingListItemController {
      * @return ResponseEntity with OK http status code and a list with all waiting list items
      */
     @GetMapping("/criteria")
-    public ResponseEntity<Iterable<WaitingListItemOutputDto>> getAllWaitingListItemsForKindOfHair(
+    public ResponseEntity<Iterable<WaitingListItemOutputDto>> getAllWaitingListItemsForCriteria(
             @RequestParam("sex") String sex,
             @RequestParam("kindofhair") String kindOfHair,
             @RequestParam("breed") String breed){

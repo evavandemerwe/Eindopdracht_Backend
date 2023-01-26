@@ -10,7 +10,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import java.net.URI;
 import static nl.novi.breedsoft.utility.BindingResultErrorUtility.bindingResultError;
-import static nl.novi.breedsoft.utility.createUriResponse.createUri;
+import static nl.novi.breedsoft.utility.UriResponseUtility.createUri;
 
 @RestController
 @RequestMapping("appointments")
@@ -91,23 +91,16 @@ public class VeterinarianAppointmentController {
      * PATCH method that updates an appointment only when the appointment exists in the database
      * @param appointmentId ID of the appointment for which information is requested
      * @param veterinarianAppointmentPatchDto Data Transfer Objects that carries data between processes in order to reduce the number of methods calls
-     * @param bindingResult a Spring object that holds the result of the validation and binding and contains errors that may have occurred
      * @return ResponseEntity with OK http status code and the updated appointment,
      * or bindingResultError if there is an error in the binding
      */
     @PatchMapping("/{id}")
     public ResponseEntity<Object> patchVeterinarianAppointment(
             @PathVariable("id") Long appointmentId,
-            @Valid @RequestBody VeterinarianAppointmentPatchDto veterinarianAppointmentPatchDto,
-            BindingResult bindingResult
+            @Valid @RequestBody VeterinarianAppointmentPatchDto veterinarianAppointmentPatchDto
     ){
-        //If there is an error in the binding
-        if (bindingResult.hasErrors()) {
-            return bindingResultError(bindingResult);
-        } else {
-            VeterinarianAppointmentOutputDto veterinarianAppointmentOutputDto = veterinarianAppointmentService.patchVeterinarianAppointment(appointmentId, veterinarianAppointmentPatchDto);
-            return ResponseEntity.ok().body(veterinarianAppointmentOutputDto);
-        }
+        VeterinarianAppointmentOutputDto veterinarianAppointmentOutputDto = veterinarianAppointmentService.patchVeterinarianAppointment(appointmentId, veterinarianAppointmentPatchDto);
+        return ResponseEntity.ok().body(veterinarianAppointmentOutputDto);
     }
 
     /**
