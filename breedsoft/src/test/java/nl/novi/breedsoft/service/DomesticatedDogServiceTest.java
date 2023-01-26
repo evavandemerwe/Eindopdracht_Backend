@@ -31,6 +31,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -384,20 +385,46 @@ class DomesticatedDogServiceTest {
     void createDomesticatedDog() {
         // Arrange
         Person person = new Person();
-        person.setId(1L);
+        Long expectedPersonID = 1L;
+        person.setId(expectedPersonID);
         when(repositoryUtility.getCompletePersonById(Mockito.anyLong())).thenReturn(person);
-
-        Long expectedID = 42L;
-        DomesticatedDog domesticatedDog = new DomesticatedDog();
-        domesticatedDog.setId(expectedID);
-        when(domesticatedDogRepository.save(Mockito.any(DomesticatedDog.class))).thenReturn(domesticatedDog);
+        final AtomicReference<DomesticatedDog> domesticatedDogAtomicReference = new AtomicReference<>() ;
+        when(domesticatedDogRepository.save(Mockito.any(DomesticatedDog.class))).then(i -> {
+            domesticatedDogAtomicReference.set((DomesticatedDog) i.getArguments()[0]);
+            return i.getArguments()[0];
+        });
 
         DomesticatedDogInputDto domesticatedDogInputDto = new DomesticatedDogInputDto();
         domesticatedDogInputDto.setPerson(person);
+        Long expectedParentID = 41L;
+        domesticatedDogInputDto.setParentId(expectedParentID);
+        when(domesticatedDogRepository.findById(expectedParentID)).thenReturn(Optional.of(new DomesticatedDog()));
+        domesticatedDogInputDto.setLitters(new ArrayList<>());
+        domesticatedDogInputDto.setVeterinarianAppointments(new ArrayList<>());
+        domesticatedDogInputDto.setMedicalData(new ArrayList<>());
+        Sex expectedSex = Sex.female;
+        domesticatedDogInputDto.setSex(expectedSex.name());
+        Breed expectedBreed = Breed.AfghanHound;
+        domesticatedDogInputDto.setBreed(expectedBreed.name());
+        BreedGroup expectedBreedGroup = BreedGroup.Toy;
+        domesticatedDogInputDto.setBreedGroup(expectedBreedGroup.name());
+        Status expectedStatus = Status.breedDog;
+        domesticatedDogInputDto.setDogStatus(expectedStatus.name());
+
         // Act
-        Long result = domesticatedDogService.createDomesticatedDog(domesticatedDogInputDto);
+        domesticatedDogService.createDomesticatedDog(domesticatedDogInputDto);
+        DomesticatedDog storedDomesticatedDog = domesticatedDogAtomicReference.get();
         // Assert
-        assertEquals(expectedID, result);
+        assertNotNull(storedDomesticatedDog);
+        assertNotNull(storedDomesticatedDog.getLitter());
+        assertNotNull(storedDomesticatedDog.getVeterinarianAppointments());
+        assertNotNull(storedDomesticatedDog.getMedicalData());
+        assertEquals(expectedParentID, storedDomesticatedDog.getParentId());
+        assertEquals(expectedPersonID, storedDomesticatedDog.getPerson().getId());
+        assertEquals(expectedSex, storedDomesticatedDog.getSex());
+        assertEquals(expectedBreed, storedDomesticatedDog.getBreed());
+        assertEquals(expectedBreedGroup, storedDomesticatedDog.getBreedGroup());
+        assertEquals(expectedStatus, storedDomesticatedDog.getDogStatus());
     }
 
     @Test
@@ -684,5 +711,29 @@ class DomesticatedDogServiceTest {
 
     @Test
     void deleteDomesticatedDog() {
+        // Arrange
+        DomesticatedDog domesticatedDog = new DomesticatedDog();
+        domesticatedDog.setVeterinarianAppointments(new ArrayList<>(List.of(new VeterinarianAppointment())));
+        domesticatedDog.setMedicalData(new ArrayList<>(List.of(new MedicalData())));
+        when(domesticatedDogRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(domesticatedDog));
+        Long expectedID = 42L;
+        // Act
+        domesticatedDogService.deleteDomesticatedDog(expectedID);
+        // Assert
+        verify(veterinarianAppointmentRepository, times(1)).delete(Mockito.any(VeterinarianAppointment.class));
+        verify(medicalDataRepository, times(1)).delete(Mockito.any(MedicalData.class));
+        verify(domesticatedDogRepository, times(1)).deleteById(expectedID);
+    }
+
+    @Test
+    void deleteDomesticatedDogWithNoDogFound() {
+        // Arrange
+        when(domesticatedDogRepository.findById(Mockito.anyLong())).thenReturn(Optional.empty());
+        // Act and Assert
+        assertThrows(
+                RecordNotFoundException.class,
+                () -> domesticatedDogService.deleteDomesticatedDog(42L),
+                "Expected record not found exception to be thrown"
+        );
     }
 }
