@@ -99,7 +99,7 @@ public class DomesticatedDogController {
      * GET method to get all breed dogs from the database
      * @return ResponseEntity with OK http status code and a list with requested domesticated Dogs
      */
-    @GetMapping("/breeddogs")
+    @GetMapping("/breeddog")
     public ResponseEntity<List<DomesticatedDogOutputDto>> getAllBreedDogs(){
         List<DomesticatedDogOutputDto> breedDogs = domesticatedDogService.getDomesticatedBreedDogs();
         return ResponseEntity.ok().body(breedDogs);

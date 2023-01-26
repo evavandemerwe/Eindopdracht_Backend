@@ -2,21 +2,21 @@ package nl.novi.breedsoft.service;
 
 import nl.novi.breedsoft.dto.authorityDtos.AuthorityInputDto;
 import nl.novi.breedsoft.dto.authorityDtos.AuthorityOutputDto;
+import nl.novi.breedsoft.exception.AuthorityInUseException;
 import nl.novi.breedsoft.exception.DuplicateNotAllowedException;
 import nl.novi.breedsoft.exception.RecordNotFoundException;
 import nl.novi.breedsoft.model.authority.Authority;
 import nl.novi.breedsoft.repository.AuthorityRepository;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
@@ -33,6 +33,11 @@ class AuthorityServiceTest {
         this.authorityService = new AuthorityService(
                 this.authorityRepository
         );
+    }
+
+    @AfterEach
+    void tearDown() {
+        Mockito.reset(authorityRepository);
     }
 
     @Test
@@ -52,7 +57,7 @@ class AuthorityServiceTest {
     }
 
     @Test
-    void getAllAuthoritiesEmptyRepositoryResponse() {
+    void getAllAuthoritiesWithEmptyRepositoryResponse() {
         // Arrange
         when(authorityRepository.findAll()).thenReturn(new ArrayList<>());
         // Act
@@ -78,7 +83,7 @@ class AuthorityServiceTest {
     }
 
     @Test
-    void createAuthorityDuplicateAuthority() {
+    void createAuthorityWithDuplicateAuthority() {
         // Arrange
         AuthorityInputDto authorityInputDto = new AuthorityInputDto();
         authorityInputDto.setAuthority("authority");
@@ -105,7 +110,7 @@ class AuthorityServiceTest {
     }
 
     @Test
-    void deleteAuthorityNoDelete() {
+    void deleteAuthorityWithNoAuthority() {
         // Arrange
         when(authorityRepository.findById(Mockito.anyLong()))
                 .thenReturn(Optional.empty());
@@ -114,6 +119,20 @@ class AuthorityServiceTest {
                 RecordNotFoundException.class,
                 () -> authorityService.deleteAuthority(42L),
                 "Expected record not found exception to be thrown"
+        );
+    }
+
+    @Test
+    void deleteAuthorityWithAuthorityInUse() {
+        // Arrange
+        when(authorityRepository.findById(Mockito.anyLong()))
+                .thenReturn(Optional.of(new Authority()));
+        Mockito.doThrow(new IllegalArgumentException()).when(authorityRepository).deleteById(Mockito.anyLong());
+        // Act and Assert
+        assertThrows(
+                AuthorityInUseException.class,
+                () -> authorityService.deleteAuthority(42L),
+                "Authority in use exception to be thrown"
         );
     }
 }

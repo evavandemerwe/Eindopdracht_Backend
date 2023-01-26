@@ -28,14 +28,13 @@ public class BreedSoftUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Optional<User> foundUser = userRepository.findByUsername(username);
 
-        if(foundUser.isEmpty()) {
+        if(
+            foundUser.isEmpty() ||
+            !foundUser.get().getUsername().equals(username)
+        ) {
             throw new UsernameNotFoundException("Invalid credentials");
         }
-
         User user = foundUser.get();
-        if(!user.getUsername().equals(username)) {
-            throw new UsernameNotFoundException("Invalid credentials");
-        }
         Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
         user.getAuthorities().forEach(
                 authority -> grantedAuthorities.add(new SimpleGrantedAuthority(authority.getAuthority()))

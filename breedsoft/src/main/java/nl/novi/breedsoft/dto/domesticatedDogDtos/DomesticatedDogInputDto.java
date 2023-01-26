@@ -20,23 +20,23 @@ public class DomesticatedDogInputDto {
     @Null
     public Long id;
 
-    @NotEmpty(message = "Please enter the name of the dog")
+    @NotEmpty(message = "Please enter the name of the dog.")
     private String name;
 
-    @NotEmpty(message = "Please enter the hair color of the dog")
+    @NotEmpty(message = "Please enter the hair color of the dog.")
     private String hairColor;
 
-    @NotEmpty(message = "Please enter dog's food")
+    @NotEmpty(message = "Please enter dog's food.")
     private String food;
 
-    @NotEmpty(message = "Please enter a sex")
-    @ValueOfEnum(enumClass = Sex.class, message = "Invalid sex")
+    @NotEmpty(message = "Please enter a sex.")
+    @ValueOfEnum(enumClass = Sex.class, message = "Invalid sex.")
     private String sex;
 
-    @NotNull(message = "Please enter a weight")
+    @NotNull(message = "Please enter a weight.")
     private double weightInGrams;
 
-    @NotEmpty(message = "Please enter kind of hair")
+    @NotEmpty(message = "Please enter kind of hair.")
     private String kindOfHair;
 
     @NotNull

@@ -164,7 +164,7 @@ class DomesticatedDogControllerTest {
         when(domesticatedDogService.getDomesticatedBreedDogs())
                 .thenReturn(domesticatedDogOutputDtoList);
         this.mockMvc
-                .perform(MockMvcRequestBuilders.get("/dogs/breeddogs").with(jwt()))
+                .perform(MockMvcRequestBuilders.get("/dogs/breeddog").with(jwt()))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.[0].name", is("Saar")));
