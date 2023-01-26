@@ -389,9 +389,9 @@ public class DomesticatedDogService {
      * @throws RecordNotFoundException throws an exception when the domesticated dog is not found
      */
     public void deleteDomesticatedDog(Long domesticatedDogId) {
-
-        if (domesticatedDogRepository.findById(domesticatedDogId).isPresent()){
-            DomesticatedDog dogToDelete = domesticatedDogRepository.getReferenceById(domesticatedDogId);
+        Optional<DomesticatedDog> optionalDog = domesticatedDogRepository.findById(domesticatedDogId);
+        if (optionalDog.isPresent()){
+            DomesticatedDog dogToDelete = optionalDog.get();
             //Delete appointments for domesticated dog
             List<VeterinarianAppointment> dogVeterinarianAppointments = dogToDelete.getVeterinarianAppointments();
             for(VeterinarianAppointment veterinarianAppointment : dogVeterinarianAppointments){

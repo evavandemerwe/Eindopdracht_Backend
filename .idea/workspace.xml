@@ -8,12 +8,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="df1da2f1-6519-430c-91f9-bd60597aff72" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/breedsoft/src/main/java/nl/novi/breedsoft/dto/personDtos/PersonOutputDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/breedsoft/src/main/java/nl/novi/breedsoft/dto/personDtos/PersonOutputDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/breedsoft/src/main/java/nl/novi/breedsoft/service/PersonService.java" beforeDir="false" afterPath="$PROJECT_DIR$/breedsoft/src/main/java/nl/novi/breedsoft/service/PersonService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/breedsoft/src/test/java/nl/novi/breedsoft/controller/JwtTokenControllerTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/breedsoft/src/test/java/nl/novi/breedsoft/controller/JwtTokenControllerTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/breedsoft/src/test/java/nl/novi/breedsoft/controller/PersonControllerTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/breedsoft/src/test/java/nl/novi/breedsoft/controller/PersonControllerTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/breedsoft/src/test/java/nl/novi/breedsoft/integration/PersonIntegrationTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/breedsoft/src/test/java/nl/novi/breedsoft/integration/PersonIntegrationTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/breedsoft/src/test/java/nl/novi/breedsoft/service/AuthorityServiceTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/breedsoft/src/test/java/nl/novi/breedsoft/service/AuthorityServiceTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/breedsoft/src/main/java/nl/novi/breedsoft/model/management/Person.java" beforeDir="false" afterPath="$PROJECT_DIR$/breedsoft/src/main/java/nl/novi/breedsoft/model/management/Person.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -110,7 +106,7 @@
       <recent name="nl.novi.breedsoft.repository" />
     </key>
   </component>
-  <component name="RunManager" selected="JUnit.nl.novi.breedsoft in breedsoft">
+  <component name="RunManager" selected="Application.BreedSoft">
     <configuration name="BreedSoft" type="Application" factoryName="Application">
       <option name="ALTERNATIVE_JRE_PATH" value="17" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
@@ -292,11 +288,6 @@
           <line>34</line>
           <option name="timeStamp" value="49" />
         </line-breakpoint>
-        <line-breakpoint type="java-line">
-          <url>file://$PROJECT_DIR$/breedsoft/src/main/java/nl/novi/breedsoft/model/management/Person.java</url>
-          <line>139</line>
-          <option name="timeStamp" value="50" />
-        </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
     <pin-to-top-manager>
@@ -400,7 +391,7 @@
     <SUITE FILE_PATH="coverage/eindopdracht_backend$PersonIntegrationTest_createPersonWithDog.ic" NAME="PersonIntegrationTest.createPersonWithDog Coverage Results" MODIFIED="1674727027288" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
       <FILTER>nl.novi.breedsoft.integration.*</FILTER>
     </SUITE>
-    <SUITE FILE_PATH="coverage/eindopdracht_backend$nl_novi_breedsoft_in_breedsoft.ic" NAME="nl.novi.breedsoft in breedsoft Coverage Results" MODIFIED="1674736386113" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
+    <SUITE FILE_PATH="coverage/eindopdracht_backend$nl_novi_breedsoft_in_breedsoft.ic" NAME="nl.novi.breedsoft in breedsoft Coverage Results" MODIFIED="1674738787411" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
       <FILTER>nl.novi.breedsoft.*</FILTER>
     </SUITE>
     <SUITE FILE_PATH="coverage/eindopdracht_backend$All_in_breedsoft.ic" NAME="All in breedsoft Coverage Results" MODIFIED="1674640442543" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
