@@ -45,7 +45,7 @@ public class Person extends Mammal {
     @OneToMany(mappedBy = "person", cascade = CascadeType.MERGE)
     private List<WaitingListItem> waitingListItems;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
