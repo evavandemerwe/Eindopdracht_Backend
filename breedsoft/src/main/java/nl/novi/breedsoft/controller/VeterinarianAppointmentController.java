@@ -61,7 +61,7 @@ public class VeterinarianAppointmentController {
             //VeterinarianAppointment is created, return new appointment id
             Long createdId = veterinarianAppointmentService.createVeterinarianAppointment(veterinarianAppointmentInputDto);
             URI uri = createUri(createdId, "/appointments/");
-            return ResponseEntity.created(uri).body("VeterinarianAppointment is successfully created!");
+            return ResponseEntity.created(uri).body("Veterinarian Appointment is successfully created!");
         }
     }
 
