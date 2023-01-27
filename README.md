@@ -1,5 +1,5 @@
 # Title
-BreedSoft - Software for breeders of dogs
+BreedSoft - Software for breeders of dogs.
 
 # Project description
 Final project for Backend course - Eva van de Merwe - HBO ICT Software Development Novi Hogeschool
