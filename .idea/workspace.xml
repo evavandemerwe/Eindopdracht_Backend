@@ -8,8 +8,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="df1da2f1-6519-430c-91f9-bd60597aff72" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_25-1-2023_22_25__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_25-1-2023_22_25__Changes_.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/breedsoft/src/main/java/nl/novi/breedsoft/model/authority/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/breedsoft/src/main/java/nl/novi/breedsoft/model/authority/User.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/breedsoft/src/main/java/nl/novi/breedsoft/model/management/Person.java" beforeDir="false" afterPath="$PROJECT_DIR$/breedsoft/src/main/java/nl/novi/breedsoft/model/management/Person.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/breedsoft/src/main/java/nl/novi/breedsoft/repository/PersonRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/breedsoft/src/main/java/nl/novi/breedsoft/repository/PersonRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/breedsoft/src/main/java/nl/novi/breedsoft/service/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/breedsoft/src/main/java/nl/novi/breedsoft/service/UserService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -391,7 +396,7 @@
     <SUITE FILE_PATH="coverage/eindopdracht_backend$PersonIntegrationTest_createPersonWithDog.ic" NAME="PersonIntegrationTest.createPersonWithDog Coverage Results" MODIFIED="1674727027288" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
       <FILTER>nl.novi.breedsoft.integration.*</FILTER>
     </SUITE>
-    <SUITE FILE_PATH="coverage/eindopdracht_backend$nl_novi_breedsoft_in_breedsoft.ic" NAME="nl.novi.breedsoft in breedsoft Coverage Results" MODIFIED="1674738787411" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
+    <SUITE FILE_PATH="coverage/eindopdracht_backend$nl_novi_breedsoft_in_breedsoft.ic" NAME="nl.novi.breedsoft in breedsoft Coverage Results" MODIFIED="1674761786558" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
       <FILTER>nl.novi.breedsoft.*</FILTER>
     </SUITE>
     <SUITE FILE_PATH="coverage/eindopdracht_backend$All_in_breedsoft.ic" NAME="All in breedsoft Coverage Results" MODIFIED="1674640442543" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
@@ -433,6 +438,9 @@
     </SUITE>
     <SUITE FILE_PATH="coverage/eindopdracht_backend$VeterinarianAppointmentControllerTest_getAllAppointmentsForDogId.ic" NAME="VeterinarianAppointmentControllerTest.getAllAppointmentsForDogId Coverage Results" MODIFIED="1674391904613" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
       <FILTER>nl.novi.breedsoft.controller.*</FILTER>
+    </SUITE>
+    <SUITE FILE_PATH="coverage/eindopdracht_backend$MedicalDataServiceTest.ic" NAME="MedicalDataServiceTest Coverage Results" MODIFIED="1674760706235" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
+      <FILTER>nl.novi.breedsoft.service.*</FILTER>
     </SUITE>
     <SUITE FILE_PATH="coverage/eindopdracht_backend$WaitingListItemServiceTest_getWaitingListItemBySex.ic" NAME="WaitingListItemServiceTest.getWaitingListItemBySex Coverage Results" MODIFIED="1674067014840" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
       <FILTER>nl.novi.breedsoft.service.*</FILTER>

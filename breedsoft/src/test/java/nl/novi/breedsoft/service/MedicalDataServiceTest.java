@@ -147,8 +147,8 @@ class MedicalDataServiceTest {
         );
         // Act
         medicalDataService.createMedicalData(medicalDataInputDto);
-        MedicalData storedMedicalData = medicalDataAtomicReference.get();
         // Assert
+        MedicalData storedMedicalData = medicalDataAtomicReference.get();
         assertEquals(expectedID, storedMedicalData.getId());
         assertEquals(expectedMedicalTreatmentDate, storedMedicalData.getDateOfMedicalTreatment());
         assertEquals(expectedDiagnose, storedMedicalData.getDiagnose());

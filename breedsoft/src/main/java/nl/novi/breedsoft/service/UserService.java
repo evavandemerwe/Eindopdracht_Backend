@@ -3,12 +3,15 @@ package nl.novi.breedsoft.service;
 import nl.novi.breedsoft.dto.userDtos.UserInputDto;
 import nl.novi.breedsoft.dto.userDtos.UserOutputDto;
 import nl.novi.breedsoft.dto.userDtos.UserPatchDto;
+import nl.novi.breedsoft.exception.AuthorityInUseException;
 import nl.novi.breedsoft.exception.DuplicateNotAllowedException;
 import nl.novi.breedsoft.exception.PasswordComplexityException;
 import nl.novi.breedsoft.exception.RecordNotFoundException;
 import nl.novi.breedsoft.model.authority.Authority;
 import nl.novi.breedsoft.model.authority.User;
+import nl.novi.breedsoft.model.management.Person;
 import nl.novi.breedsoft.repository.AuthorityRepository;
+import nl.novi.breedsoft.repository.PersonRepository;
 import nl.novi.breedsoft.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -19,11 +22,14 @@ public class UserService {
     private final UserRepository userRepository;
     private final AuthorityRepository authorityRepository;
     private final PasswordEncoder encoder;
+    private final PersonRepository personRepository;
 
-    public UserService(UserRepository userRepository, AuthorityRepository authorityRepository, PasswordEncoder encoder) {
+    public UserService(UserRepository userRepository, AuthorityRepository authorityRepository, PasswordEncoder encoder,
+                       PersonRepository personRepository) {
         this.userRepository = userRepository;
         this.authorityRepository = authorityRepository;
         this.encoder = encoder;
+        this.personRepository = personRepository;
     }
 
     /**
@@ -123,7 +129,19 @@ public class UserService {
      */
     public void deleteUser(Long userId){
         if(userRepository.findById(userId).isPresent()){
-            userRepository.deleteById(userId);
+            try {
+                //Delete user from person
+                Person person = personRepository.findByUserId(userId);
+                if(person!= null) {
+                    person.setUser(null);
+                    personRepository.save(person);
+                }
+
+                //Delete user
+                userRepository.deleteById(userId);
+            }catch(Exception ex){
+                throw new AuthorityInUseException("This user is still in use.");
+            }
         } else {
             throw new RecordNotFoundException("No user with given id found");
         }

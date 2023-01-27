@@ -14,4 +14,6 @@ public interface PersonRepository extends JpaRepository<Person , Long> {
      */
     List<Person> findByLastNameContaining(String firstName);
 
+    Person findByUserId(Long id);
+
 }
