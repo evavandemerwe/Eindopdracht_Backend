@@ -5,6 +5,7 @@ import nl.novi.breedsoft.dto.userDtos.UserOutputDto;
 import nl.novi.breedsoft.dto.userDtos.UserPatchDto;
 import nl.novi.breedsoft.model.authority.User;
 import nl.novi.breedsoft.repository.AuthorityRepository;
+import nl.novi.breedsoft.repository.PersonRepository;
 import nl.novi.breedsoft.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -34,6 +35,9 @@ class UserServiceTest {
     @Mock
     PasswordEncoder encoder;
 
+    @Mock
+    PersonRepository personRepository;
+
     UserService userService;
 
     @BeforeEach
@@ -41,7 +45,8 @@ class UserServiceTest {
         this.userService = new UserService(
             userRepository,
             authorityRepository,
-            encoder
+            encoder,
+            personRepository
         );
     }
 
